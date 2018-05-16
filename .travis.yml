@@ -1,0 +1,12 @@
+language: csharp
+solution: MSLaunches.sln
+os: linux
+dotnet: "2.0.0"
+mono: none
+install: dotnet restore
+script:
+  - dotnet build --configuration release
+  - dotnet test MSLaunches.Domain.Tests/MSLaunches.Domain.Tests.csproj --configuration release
+  - dotnet test MSLaunches.Infrastructure.Tests/MSLaunches.Infrastructure.Tests.csproj --configuration release
+  - dotnet test MSLaunches.Api.Tests/MSLaunches.Api.Tests.csproj --configuration release
+  - dotnet test MSLaunches.Data.Tests/MSLaunches.Data.Tests.csproj --configuration release
