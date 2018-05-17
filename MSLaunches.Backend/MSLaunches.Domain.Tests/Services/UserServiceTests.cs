@@ -20,13 +20,13 @@ namespace MSLaunches.Domain.Tests
             var createdUser = GetADefaultUser();
 
             User retrievedUser = null;
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 context.Add(createdUser);
                 context.SaveChanges();
             }
 
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 var userService = new UserService(context);
 
@@ -48,7 +48,7 @@ namespace MSLaunches.Domain.Tests
             // Arrange
             var optionsBuilder = DbContextBuilder("GetByIdAsync_ShouldReturnNull");
             User user;
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 var userService = new UserService(context);
 
@@ -72,13 +72,13 @@ namespace MSLaunches.Domain.Tests
             var createdUser = GetADefaultUser();
 
             int affectedRows;
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 context.Add(createdUser);
                 context.SaveChanges();
             }
 
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 var userService = new UserService(context);
 
@@ -86,7 +86,7 @@ namespace MSLaunches.Domain.Tests
                 affectedRows = await userService.DeleteByIdAsync(createdUser.Id);
             }
 
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 // Act
                 var user = await context.Users.FindAsync(createdUser.Id);
@@ -103,7 +103,7 @@ namespace MSLaunches.Domain.Tests
             // Arrange
             var optionsBuilder = DbContextBuilder("Delete_UserNotFound");
             int affectedRows;
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 var userService = new UserService(context);
 
@@ -126,13 +126,13 @@ namespace MSLaunches.Domain.Tests
             var optionsBuilder = DbContextBuilder("Update_ShouldUpdateIfUserExists");
             var createdUser = GetADefaultUser();
             int affectedRows;
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 context.Add(createdUser);
                 context.SaveChanges();
             }
 
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 var userService = new UserService(context);
 
@@ -151,7 +151,7 @@ namespace MSLaunches.Domain.Tests
             var optionsBuilder = DbContextBuilder("Update_ShouldReturnZeroIfUserNotExists");
             var createdUser = GetADefaultUser();
             int affectedRows;
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 var userService = new UserService(context);
 
@@ -175,13 +175,13 @@ namespace MSLaunches.Domain.Tests
             var createdUser = GetADefaultUser();
 
             int affectedRows;
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 context.Add(createdUser);
                 context.SaveChanges();
             }
 
-            using (var context = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var context = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 var userService = new UserService(context);
 
@@ -212,7 +212,7 @@ namespace MSLaunches.Domain.Tests
 
         private static DbContextOptionsBuilder DbContextBuilder(string name = "default")
         {
-            var optionsBuilder = new DbContextOptionsBuilder<WebApiCoreMSLaunchesContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<WebApiCoreLaunchesContext>();
             optionsBuilder.UseInMemoryDatabase(name);
             return optionsBuilder;
         }

@@ -38,7 +38,7 @@ namespace MSLaunches.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebApiCoreMSLaunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
+            services.AddDbContext<WebApiCoreLaunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
 
             // Add framework services.
             services.AddMvc();
@@ -78,11 +78,12 @@ namespace MSLaunches.Api
             services.AddTransient<IAuthZeroService>(sp => new AuthZeroService(sp.GetRequiredService<IAuthZeroClient>()));
 
             // Register Services
-            services.AddTransient<IUserService>(sp => new UserService(sp.GetRequiredService<WebApiCoreMSLaunchesContext>()));
+            services.AddTransient<IUserService>(sp => new UserService(sp.GetRequiredService<WebApiCoreLaunchesContext>()));
+            services.AddTransient<ILaunchService>(sp => new LaunchService(sp.GetRequiredService<WebApiCoreLaunchesContext>()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, WebApiCoreMSLaunchesContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, WebApiCoreLaunchesContext dbContext)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();

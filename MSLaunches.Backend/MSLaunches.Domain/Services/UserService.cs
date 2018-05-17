@@ -11,13 +11,13 @@ namespace MSLaunches.Domain.Services
     /// <inheritdoc/>
     public class UserService : IUserService
     {
-        private readonly WebApiCoreMSLaunchesContext _dbContext;
+        private readonly WebApiCoreLaunchesContext _dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
-        /// <param name="dbContext"><see cref="WebApiCoreMSLaunchesContext"/> instance required to access database </param>
-        public UserService(WebApiCoreMSLaunchesContext dbContext)
+        /// <param name="dbContext"><see cref="WebApiCoreLaunchesContext"/> instance required to access database </param>
+        public UserService(WebApiCoreLaunchesContext dbContext)
         {
             _dbContext = dbContext;
         }

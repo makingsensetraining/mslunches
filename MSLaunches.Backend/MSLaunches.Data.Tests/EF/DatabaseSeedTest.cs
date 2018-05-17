@@ -10,9 +10,9 @@ namespace MSLaunches.Data.Tests.EF
         [Fact]
         public async Task Initialize_ShouldCreateAUser()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<WebApiCoreMSLaunchesContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<WebApiCoreLaunchesContext>();
             optionsBuilder.UseInMemoryDatabase("GetByIdAsync_ShouldReturnUser");
-            using (var dbContext = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var dbContext = new WebApiCoreLaunchesContext(optionsBuilder.Options))
             {
                 DatabaseMSLaunches.Initialize(dbContext);
 
