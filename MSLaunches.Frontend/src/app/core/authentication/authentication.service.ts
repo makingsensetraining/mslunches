@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
+import { map, catchError } from 'rxjs/operators';
 
 export interface Credentials {
   // Customize received credentials here
@@ -16,6 +18,10 @@ export interface LoginContext {
 
 const credentialsKey = 'credentials';
 
+const routes = {
+  login : '/users/token'
+};
+
 /**
  * Provides a base for authentication workflow.
  * The Credentials interface as well as login/logout methods should be replaced with proper implementation.
@@ -25,7 +31,7 @@ export class AuthenticationService {
 
   private _credentials: Credentials | null;
 
-  constructor() {
+  constructor(private httpClient: HttpClient) {
     const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey);
     if (savedCredentials) {
       this._credentials = JSON.parse(savedCredentials);
@@ -38,13 +44,20 @@ export class AuthenticationService {
    * @return {Observable<Credentials>} The user credentials.
    */
   login(context: LoginContext): Observable<Credentials> {
-    // Replace by proper authentication call
-    const data = {
-      username: context.username,
-      token: '123456'
-    };
-    this.setCredentials(data, context.remember);
-    return of(data);
+    return this.httpClient
+    .cache()
+    .post(routes.login, context.username)
+    .pipe(
+      map((body: any) => {
+        let obs: Credentials;
+        obs = {
+          token: body,
+          username: context.username
+        };
+        this.setCredentials(obs);
+        return obs;
+      })
+    );
   }
 
   /**

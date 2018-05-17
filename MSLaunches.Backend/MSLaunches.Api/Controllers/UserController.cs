@@ -54,6 +54,12 @@ namespace MSLaunches.Api.Controllers
             return Ok(user);
         }
 
+        [HttpPost("token")]
+        public async Task<IActionResult> GetToken([FromForm]string base64Encoded)
+        {
+            return Ok("aaaaaa");
+        }
+
         /// <summary>
         /// Creates a new user
         /// </summary>
