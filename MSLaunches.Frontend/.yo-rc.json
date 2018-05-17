@@ -1,0 +1,20 @@
+{
+  "generator-ngx-rocket": {
+    "version": "4.2.0",
+    "props": {
+      "location": "path",
+      "appName": "MSLaunches Frontend",
+      "target": [
+        "web"
+      ],
+      "pwa": false,
+      "ui": "bootstrap",
+      "auth": true,
+      "lazy": false,
+      "angulartics": false,
+      "projectName": "ms-launches-frontend",
+      "packageManager": "npm",
+      "mobile": []
+    }
+  }
+}
