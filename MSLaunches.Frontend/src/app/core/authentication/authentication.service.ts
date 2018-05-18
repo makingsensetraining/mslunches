@@ -3,11 +3,17 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { map, catchError } from 'rxjs/operators';
+import * as auth0 from 'auth0-js';
+
+import { auth0Config } from '@env/environment';
 
 export interface Credentials {
   // Customize received credentials here
   username: string;
-  token: string;
+  accessToken: string;
+  idToken: string;
+  expiresAt: Number;
+  tokenPayload: string;
 }
 
 export interface LoginContext {
@@ -43,23 +49,21 @@ export class AuthenticationService {
    * @param {LoginContext} context The login parameters.
    * @return {Observable<Credentials>} The user credentials.
    */
-  login(context: LoginContext): Observable<Credentials> {
-    return this.httpClient
-    .cache()
-    .post(routes.login, context.username)
-    .pipe(
-      map((body: any) => {
-        let obs: Credentials;
-        obs = {
-          token: body,
-          username: context.username
-        };
-        this.setCredentials(obs);
-        return obs;
-      })
-    );
+  login() {
+    auth0Config.authorize();
   }
 
+  handleHash():void{
+    auth0Config.parseHash((err, authResult) => {
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        window.location.hash = '';
+        this.setCredentials(this.mapCredentials(authResult));
+      } else if (err) {
+        console.log(err);
+      }
+    });
+  }
+  
   /**
    * Logs out the user and clear credentials.
    * @return {Observable<boolean>} True if the user was logged out successfully.
@@ -75,7 +79,11 @@ export class AuthenticationService {
    * @return {boolean} True if the user is authenticated.
    */
   isAuthenticated(): boolean {
-    return !!this.credentials;
+    if(!!this.credentials){
+      return new Date().getTime() < this.credentials.expiresAt;
+    }
+
+    return false;
   }
 
   /**
@@ -105,4 +113,14 @@ export class AuthenticationService {
     }
   }
 
+  private mapCredentials(auth0Result:auth0.Auth0DecodedHash):Credentials{
+    let creds : Credentials = {
+      username: "username",
+      idToken: auth0Result.idToken,
+      expiresAt: (auth0Result.expiresIn * 1000) + new Date().getTime(),
+      accessToken: auth0Result.accessToken,
+      tokenPayload: auth0Result.idTokenPayload
+    };
+    return creds;
+  }
 }

@@ -27,22 +27,15 @@ export class LoginComponent implements OnInit {
     this.createForm();
   }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    if(this.authenticationService.isAuthenticated()){
+      this.router.navigate(['/home'], {replaceUrl: true});
+    }
+  }
 
   login() {
     this.isLoading = true;
-    this.authenticationService.login(this.loginForm.value)
-      .pipe(finalize(() => {
-        this.loginForm.markAsPristine();
-        this.isLoading = false;
-      }))
-      .subscribe(credentials => {
-        log.debug(`${credentials.username} successfully logged in`);
-        this.router.navigate(['/'], { replaceUrl: true });
-      }, error => {
-        log.debug(`Login error: ${error}`);
-        this.error = error;
-      });
+    this.authenticationService.login();
   }
 
   setLanguage(language: string) {

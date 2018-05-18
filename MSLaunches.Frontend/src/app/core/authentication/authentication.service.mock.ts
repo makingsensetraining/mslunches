@@ -7,13 +7,19 @@ export class MockAuthenticationService {
 
   credentials: Credentials | null = {
     username: 'test',
-    token: '123'
+    idToken: '123',
+    accessToken: 'asd',
+    expiresAt: 1000,
+    tokenPayload: ""
   };
 
   login(context: LoginContext): Observable<Credentials> {
     return of({
       username: context.username,
-      token: '123456'
+      idToken: '123',
+      accessToken: 'asd',
+      expiresAt: 1000,
+      tokenPayload : ""
     });
   }
 
