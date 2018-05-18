@@ -10,7 +10,8 @@ export class MockAuthenticationService {
     idToken: '123',
     accessToken: 'asd',
     expiresAt: 1000,
-    tokenPayload: ""
+    tokenPayload: "",
+    scopes : ""
   };
 
   login(context: LoginContext): Observable<Credentials> {
@@ -19,7 +20,8 @@ export class MockAuthenticationService {
       idToken: '123',
       accessToken: 'asd',
       expiresAt: 1000,
-      tokenPayload : ""
+      tokenPayload : "",
+      scopes : ''
     });
   }
 

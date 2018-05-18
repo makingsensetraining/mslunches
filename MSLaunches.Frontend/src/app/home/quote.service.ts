@@ -22,7 +22,6 @@ export class QuoteService {
     let creds = JSON.parse(sessionStorage.getItem('credentials')) || JSON.parse(localStorage.getItem('credentials'));
 
     return this.httpClient
-      .cache()
       .get('/users', { headers : new HttpHeaders().append("Authorization", "Bearer " + creds.accessToken)})
       .pipe(
         map((body: any) => body.value),

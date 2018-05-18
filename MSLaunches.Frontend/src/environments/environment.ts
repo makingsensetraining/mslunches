@@ -23,7 +23,7 @@ export const auth0Config = new WebAuth({
   clientID: 'f7FmdAiwLajMwcePFLfBQ6QWO3q6UvGp',
   domain: 'mslaunches.auth0.com',
   responseType: 'token id_token',
-  audience: 'https://mslaunches.auth0.com/userinfo',
+  audience: environment.serverUrl,
   redirectUri: 'http://localhost:4200/',
-  scope: 'openid'
+  scope: 'openid profile'
 });

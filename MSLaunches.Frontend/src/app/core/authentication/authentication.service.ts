@@ -14,6 +14,7 @@ export interface Credentials {
   idToken: string;
   expiresAt: Number;
   tokenPayload: string;
+  scopes: string;
 }
 
 export interface LoginContext {
@@ -54,7 +55,7 @@ export class AuthenticationService {
   }
 
   handleHash():void{
-    auth0Config.parseHash((err, authResult) => {
+    auth0Config.parseHash((err: auth0.Auth0Error, authResult: auth0.Auth0DecodedHash) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         window.location.hash = '';
         this.setCredentials(this.mapCredentials(authResult));
@@ -119,7 +120,8 @@ export class AuthenticationService {
       idToken: auth0Result.idToken,
       expiresAt: (auth0Result.expiresIn * 1000) + new Date().getTime(),
       accessToken: auth0Result.accessToken,
-      tokenPayload: auth0Result.idTokenPayload
+      tokenPayload: auth0Result.idTokenPayload,
+      scopes: auth0Result.scope
     };
     return creds;
   }

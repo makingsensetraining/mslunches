@@ -12,10 +12,9 @@ import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationGuard } from './authentication/authentication.guard';
 import { I18nService } from './i18n.service';
 import { HttpService } from './http/http.service';
-import { HttpCacheService } from './http/http-cache.service';
 import { ApiPrefixInterceptor } from './http/api-prefix.interceptor';
+import { AuthorizationInterceptor } from './http/authorization.interceptor';
 import { ErrorHandlerInterceptor } from './http/error-handler.interceptor';
-import { CacheInterceptor } from './http/cache.interceptor';
 
 @NgModule({
   imports: [
@@ -33,13 +32,17 @@ import { CacheInterceptor } from './http/cache.interceptor';
     AuthenticationService,
     AuthenticationGuard,
     I18nService,
-    HttpCacheService,
     ApiPrefixInterceptor,
     ErrorHandlerInterceptor,
-    CacheInterceptor,
+    AuthorizationInterceptor,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ApiPrefixInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthorizationInterceptor,
       multi: true
     },
     {
