@@ -2,6 +2,8 @@
 using Auth0.Core.Exceptions;
 using Auth0.ManagementApi.Models;
 using MSLaunches.Infrastructure.Result;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLaunches.Infrastructure.AuthZero
@@ -55,6 +57,26 @@ namespace MSLaunches.Infrastructure.AuthZero
             {
                 return new Result<User, ErrorResult>(new ErrorResult(e.ApiError.ErrorCode, e.ApiError.Message));
             }
+        }
+
+        public async Task<Result<IList<User>, ErrorResult>> GetUsers()
+        {
+            var getClientResult = await _authZeroClient.GetManagementApiClient();
+            if (!getClientResult.IsSuccessResult)
+                return new Result<IList<User>, ErrorResult>(InfrastructureError.Auth0ManagementApiAuthenticationFailed);
+
+            var managementApiClient = getClientResult.SuccessValue;
+
+            try
+            {
+                var users = await managementApiClient.Users.GetAllAsync();
+                return new Result<IList<User>, ErrorResult>(users.ToList());
+            }
+            catch(ApiException e)
+            {
+                return new Result<IList<User>, ErrorResult>(new ErrorResult(e.ApiError.ErrorCode, e.ApiError.Message));
+            }
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Auth0.Core;
 using MSLaunches.Infrastructure.Result;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MSLaunches.Infrastructure.AuthZero
@@ -17,5 +18,11 @@ namespace MSLaunches.Infrastructure.AuthZero
         /// <param name="roles"> Roles for this user </param>
         /// <returns> <see cref="Result{TSucces,TError}"/> user object as <see cref="Result{TSuccess,TError}.SuccessValue"/> or error information as <see cref="Result{TSuccess,TError}.ErrorValue"/> </returns>
         Task<Result<User, ErrorResult>> CreateUserAsync(string email, string password, string[] roles);
+
+        /// <summary>
+        /// Returns the list of users of Auth0
+        /// </summary>
+        /// <returns></returns>
+        Task<Result<IList<User>, ErrorResult>> GetUsers();
     }
 }
