@@ -1,0 +1,15 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<table [hidden]="isLoading">
+    <thead>
+        <th>Lunes</th>
+        <th>Martes</th>
+        <th>Miercoles</th>
+        <th>Jueves</th>
+        <th>Viernes</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let launch of launches">
+            <td>{{launch.description}}</td>
+        </tr>
+    </tbody>
+</table>

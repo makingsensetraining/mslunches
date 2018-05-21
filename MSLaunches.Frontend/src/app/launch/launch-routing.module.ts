@@ -6,7 +6,6 @@ import { LaunchComponent } from './launch.component';
 
 const routes: Routes = [
   Route.withShell([
-    { path: '', redirectTo: '/launch', pathMatch: 'full' },
     { path: 'launch', component: LaunchComponent, data: { title: extract('Launch') } }
   ])
 ];

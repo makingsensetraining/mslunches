@@ -11,16 +11,16 @@ import { Launch } from '@app/launch/launch.model';
 })
 export class LaunchComponent implements OnInit {
 
-  launch: Launch;
+  launches: Array<Launch>;
   isLoading: boolean;
 
   constructor(private launchService: LaunchService) { }
 
   ngOnInit() {
     this.isLoading = true;
-    this.launchService.getlaunches({ startDate: '2018-01-01', endDate: '2018-01-30'})
+    this.launchService.getLaunches(new Date(2018, 1, 1), new Date(2018, 1, 0))
       .pipe(finalize(() => { this.isLoading = false; }))
-      .subscribe((launches: Launch) => { this.launch = launch; });
+      .subscribe(launches => { this.launches = launches; });
   }
 
 }
