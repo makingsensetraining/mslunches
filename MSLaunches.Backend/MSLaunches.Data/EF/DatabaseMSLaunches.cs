@@ -16,12 +16,16 @@
         public static void Initialize(WebApiCoreLunchesContext dbContext)
         {
             dbContext.Database.EnsureCreated();
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var id3 = Guid.NewGuid();
+            var id4 = Guid.NewGuid();
 
             if (!dbContext.Users.Any())
             {
                 var users = new[]
                 {
-                    new User { CreatedBy = "System", CreatedOn = DateTime.Now, Email = "noreply@makingsense.com", FirstName = "John", LastName = "Doe", UserName = "JohnDoe" },
+                    new User { Id = id2, CreatedBy = "System", CreatedOn = DateTime.Now, Email = "noreply@makingsense.com", FirstName = "John", LastName = "Doe", UserName = "JohnDoe" },
                 };
 
                 dbContext.Users.AddRange(users);
@@ -45,7 +49,7 @@
             {
                 var lunches = new[]
                 {
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Crepes de verdura y calabza", LunchTypeId = 2},
+                    new Lunch {Id = id4, CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Crepes de verdura y calabza", LunchTypeId = 2},
                     new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Pechugas grilladas al limón con arroz al curry", LunchTypeId = 2},
                     new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Milhojas de vegetales con ensalada", LunchTypeId = 2},
                     new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Medallones de pescado con puré de calabaza", LunchTypeId = 2},
@@ -67,6 +71,33 @@
                     new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Gelatina con frutas", LunchTypeId = 5},
                     new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Pastelitos escaraperla", LunchTypeId = 5}
                 };
+
+
+                if (!dbContext.DailyLunches.Any())
+                {
+                    var dailyLunches = new[]
+                    {
+                    new DailyLunch {Id = id1,
+                        LunchId =id4,
+                        Date = DateTime.Today
+                    },
+                };
+
+                    dbContext.DailyLunches.AddRange(dailyLunches);
+                }
+
+                if (!dbContext.UserLunches.Any())
+                {
+                    var userLunches = new[]
+                    {
+                    new UserLunch {Id = id3,
+                        UserId = id2,
+                        DailyLunchId = id1
+                    },
+                };
+
+                    dbContext.UserLunches.AddRange(userLunches);
+                }
 
                 dbContext.Lunches.AddRange(lunches);
             }

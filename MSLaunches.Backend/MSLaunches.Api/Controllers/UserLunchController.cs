@@ -145,7 +145,7 @@ namespace MSLunches.Api.Controllers
         /// <param name="userLunches" cref="UserLunchDto">UserLunch model</param>
         /// <response code="204">UserLunch created</response>
         /// <response code="404">UserLunch could not be created</response>
-        [HttpPost]
+        [HttpPost("CreateWeek")]
         [ValidateModel]
         public async Task<IActionResult> CreateUserLunches([FromBody]List<UserLunchDto> userLunches)
         {

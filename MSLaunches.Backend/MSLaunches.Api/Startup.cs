@@ -80,6 +80,8 @@ namespace MSLunches.Api
             // Register Services
             services.AddTransient<IUserService>(sp => new UserService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
             services.AddTransient<ILunchService>(sp => new LunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
+            services.AddTransient<IUserLunchService>(sp => new UserLunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
+            services.AddTransient<IDailyLunchService>(sp => new DailyLunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

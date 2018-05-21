@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MSDailyLunches.Domain.Services
+namespace MSLunches.Domain.Services
 {
     public class DailyLunchService : IDailyLunchService
     {

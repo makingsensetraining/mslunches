@@ -137,14 +137,14 @@ namespace MSDailyLunches.Api.Controllers
             return Ok(await _dailyLunchService.GetAllLunchesAvailableInWeek());
         }
 
-        
+
         /// <summary>
         /// Creates a new UserDailyLunch
         /// </summary>
         /// <param name="dailyDailyLunches" cref="DailyLunchDto">DailyLunch model</param>
         /// <response code="204">DailyLunch created</response>
         /// <response code="404">DailyLunch could not be created</response>
-        [HttpPost]
+        [HttpPost("CreateWeekLunch")]
         [ValidateModel]
         public async Task<IActionResult> CreateWeekLunch([FromBody]List<DailyLunchDto> dailyDailyLunches)
         {
