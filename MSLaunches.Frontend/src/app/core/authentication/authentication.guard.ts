@@ -6,6 +6,7 @@ import { Logger } from '../logger.service';
 import { AuthenticationService } from './authentication.service';
 import { of } from 'rxjs/observable/of';
 import { Observer } from 'rxjs/Observer';
+import { map } from 'rxjs/operators';
 
 const log = new Logger('AuthenticationGuard');
 
@@ -16,15 +17,15 @@ export class AuthenticationGuard implements CanActivate {
               private authenticationService: AuthenticationService) { }
 
   canActivate(): Observable<boolean> {
-    return Observable.create((observer: Observer<boolean>) => {
-      this.authenticationService.loggedSubscriber.subscribe((res) => {
-        if (!res) {
+    return this.authenticationService.hashHandled.pipe(
+      map(asd => {
+        if (!this.authenticationService.isAuthenticated()) {
           log.debug('Not authenticated, redirecting...');
           this.router.navigate(['/login'], { replaceUrl: true });
+          return false;
         }
-
-        observer.next(res);
-      });
-    });
+        return true;
+      })
+    );
   }
 }

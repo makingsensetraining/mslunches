@@ -3,12 +3,14 @@ import { Observable } from 'rxjs/Observable';
 import { concat } from 'rxjs/observable/concat';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, timeout, timeInterval } from 'rxjs/operators';
 import * as auth0 from 'auth0-js';
 
 import { auth0Config } from '@env/environment';
 import { Observer } from 'rxjs/Observer';
 import { merge } from 'rxjs/observable/merge';
+import { promise } from 'protractor';
+import { Subject } from 'rxjs/Subject';
 
 export interface Credentials {
   // Customize received credentials here
@@ -40,19 +42,11 @@ const routes = {
 @Injectable()
 export class AuthenticationService {
 
-  private _credentials: Credentials | null;
-  private _isLogged = false;
-  private _loggedSubscriber: Observable<boolean> = new Observable();
-
+  private _hashHandled: Subject<boolean> = new Subject<boolean>();
+  private timeout: NodeJS.Timer;
   constructor(private httpClient: HttpClient) {
-    this._loggedSubscriber = Observable.create((observer: Observer<boolean>) => {
-      if (!this.setupCredentials()) {
-        if (this.handleHash()) {
-          this.setCredentials();
-        }
-      }
-      observer.next(this._isLogged);
-    });
+    // workaround to update notify subscribers if handle hash does not execute or executes early
+    this.timeout = setTimeout(() => { this._hashHandled.next(true); }, 2000);
   }
 
   /**
@@ -69,6 +63,7 @@ export class AuthenticationService {
   logout(): Observable<boolean> {
     // Customize credentials invalidation here
     this.setCredentials();
+    this.timeout = setTimeout(() => { this._hashHandled.next(true); }, 2000);
     return of(true);
   }
 
@@ -89,40 +84,24 @@ export class AuthenticationService {
    * @return {Credentials} The user credentials or null if the user is not authenticated.
    */
   get credentials(): Credentials | null {
-    return this._credentials;
+    return JSON.parse(sessionStorage.getItem(credentialsKey));
   }
 
-  get isLogged(): boolean {
-    return this._isLogged;
+  get hashHandled(): Subject<boolean> {
+    return this._hashHandled;
   }
 
-  get loggedSubscriber(): Observable<boolean> {
-    return this._loggedSubscriber;
-  }
-
-
-  private handleHash(): boolean {
-    if (!this._isLogged && !this.isAuthenticated()) {
+  handleHash() {
+    if (!this.isAuthenticated()) {
       auth0Config.parseHash((err: auth0.Auth0Error, authResult: auth0.Auth0DecodedHash) => {
         if (authResult && authResult.accessToken && authResult.idToken) {
           window.location.hash = '';
-          this._isLogged = this.setCredentials(this.mapCredentials(authResult));
-        } else {
-          this._isLogged = false;
+          this.setCredentials(this.mapCredentials(authResult));
         }
+        this._hashHandled.next(true);
+        this.timeout.unref();
       });
     }
-    return this._isLogged;
-  }
-
-  private setupCredentials(): boolean {
-    const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey);
-    if (savedCredentials) {
-      this._credentials = JSON.parse(savedCredentials);
-      this._isLogged = true;
-    }
-
-    return this._isLogged;
   }
 
   /**
@@ -132,16 +111,16 @@ export class AuthenticationService {
    * @param {Credentials=} credentials The user credentials.
    * @param {boolean=} remember True to remember credentials across sessions.
    */
-  private setCredentials(credentials?: Credentials, remember?: boolean): boolean {
-    this._credentials = credentials || null;
-
+  private setCredentials(credentials?: Credentials): boolean {
     if (credentials) {
-      const storage = remember ? localStorage : sessionStorage;
+      const storage = sessionStorage;
       storage.setItem(credentialsKey, JSON.stringify(credentials));
+      this._hashHandled.next(true);
       return true;
     } else {
       sessionStorage.removeItem(credentialsKey);
       localStorage.removeItem(credentialsKey);
+      this._hashHandled.next(true);
       return false;
     }
   }

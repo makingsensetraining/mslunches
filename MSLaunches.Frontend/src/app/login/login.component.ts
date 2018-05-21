@@ -6,6 +6,7 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { environment } from '@env/environment';
 import { Logger, I18nService, AuthenticationService } from '@app/core';
+import { Credentials } from 'crypto';
 
 const log = new Logger('Login');
 
@@ -24,13 +25,13 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router,
               private formBuilder: FormBuilder,
               private i18nService: I18nService,
-    private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
     console.log(this.authenticationService);
-    this.logSubscription = this.authenticationService.loggedSubscriber.subscribe((res) => {
-      if (res && this.authenticationService.isLogged && this.authenticationService.isAuthenticated()) {
+    this.authenticationService.hashHandled.subscribe(() => {
+      if (this.authenticationService.isAuthenticated()) {
         this.router.navigate(['/home'], {replaceUrl: true});
       } else {
         this.isLoading = false;

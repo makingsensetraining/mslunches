@@ -20,7 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
     HttpClientModule,
     TranslateModule.forRoot(),
     NgbModule.forRoot(),
-    CoreModule,
+    CoreModule.forRoot(),
     SharedModule,
     HomeModule,
     AboutModule,
@@ -29,7 +29,6 @@ import { AppRoutingModule } from './app-routing.module';
   ],
   declarations: [AppComponent],
   providers: [
-    AuthenticationService
   ],
   bootstrap: [AppComponent]
 })

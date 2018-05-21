@@ -11,7 +11,7 @@ import { environment } from '@env/environment';
 export class AuthorizationInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		var accessToken:string = sessionStorage.getItem('Credentials')['accessToken'];
+    const accessToken = sessionStorage.getItem('Credentials')['accessToken'];
     request.headers.append('Authorization', accessToken);
     return next.handle(request);
   }
