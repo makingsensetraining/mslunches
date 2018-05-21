@@ -89,7 +89,6 @@ export class AuthenticationService {
           this.setCredentials(this.mapCredentials(authResult));
         }
         this._hashHandled.next(true);
-        clearTimeout(this._timeout);
       });
     }
   }
@@ -121,11 +120,13 @@ export class AuthenticationService {
       const storage = sessionStorage;
       storage.setItem(credentialsKey, JSON.stringify(credentials));
       this._hashHandled.next(true);
+      clearTimeout(this._timeout);
       return true;
     } else {
       sessionStorage.removeItem(credentialsKey);
       localStorage.removeItem(credentialsKey);
       this._hashHandled.next(true);
+      clearTimeout(this._timeout);
       return false;
     }
   }
