@@ -12,6 +12,11 @@
     "Username is required": "Ingrese el nombre de usuario",
     "Username or password incorrect.": "Nombre de usuario o contraseña incorrecta.",
     "Remember me": "Recodame",
-    "Version": "Version"
+    "Version": "Version",
+    "Monday": "Lunes",
+    "Tuesday": "Martes",
+    "Wendsday": "Miercoles",
+    "Thursday": "Jueves",
+    "Friday": "Viernes"
 }
   
