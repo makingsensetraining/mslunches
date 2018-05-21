@@ -31,11 +31,11 @@
             {
                 var launchTypes = new[]
                 {
-                    new LaunchType {LaunchTypeId = 1 ,LaunchTypeDescription = "Calórico"},
-                    new LaunchType {LaunchTypeId = 2 ,LaunchTypeDescription = "Light"},
-                    new LaunchType {LaunchTypeId = 3 ,LaunchTypeDescription = "Vegetariano"},
-                    new LaunchType {LaunchTypeId = 4 ,LaunchTypeDescription = "Sandwich"},
-                    new LaunchType {LaunchTypeId = 5 ,LaunchTypeDescription = "Postre"}
+                    new LaunchType {Id = 1 ,Description = "Calórico"},
+                    new LaunchType {Id = 2 ,Description = "Light"},
+                    new LaunchType {Id = 3 ,Description = "Vegetariano"},
+                    new LaunchType {Id = 4 ,Description = "Sandwich"},
+                    new LaunchType {Id = 5 ,Description = "Postre"}
                 };
 
                 dbContext.LaunchTypes.AddRange(launchTypes);

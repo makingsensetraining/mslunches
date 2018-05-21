@@ -33,7 +33,7 @@ namespace Seed.Domain.Tests
             // Assert
             Assert.NotNull(retrievedLaunch);
             Assert.Equal(createdLaunch.LaunchName, retrievedLaunch.LaunchName);
-            Assert.Equal(createdLaunch.LaunchTypeId, retrievedLaunch.LaunchTypeId);
+            Assert.Equal(createdLaunch.Id, retrievedLaunch.Id);
             context.VerifyAll();
         }
 
@@ -202,14 +202,14 @@ namespace Seed.Domain.Tests
         private static Launch GetADefaultLaunch(Guid? id = null)
         {
             var sanitizedId = id ?? Guid.NewGuid();
-            var launchType = new LaunchType { LaunchTypeId = 2, LaunchTypeDescription = "Light" };
+            var launchType = new LaunchType { Id = 2, Description = "Light" };
 
             return new Launch
             {
                 CreatedBy = "System",
                 CreatedOn = DateTime.Now,
                 LaunchName = "Crepes de verdura y calabza",
-                LaunchTypeId = 2,
+                Id = 2,
                 LaunchType = launchType
             };
         }

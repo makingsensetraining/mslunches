@@ -24,6 +24,10 @@ namespace MSLaunches.Domain.Services.Interfaces
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<int> CreateAsync(Launch launch);
 
+        Task<int> CreateUserLaunchAsync(List<UserLaunch> userLaunches);
+
+        Task<int> CreateDailyLaunchesAsync(List<DailyLaunch> dailyLaunches);
+
         /// <summary>
         /// Deletes a launch by Id
         /// </summary>
@@ -43,7 +47,7 @@ namespace MSLaunches.Domain.Services.Interfaces
         /// <param name="launch">Launch to update</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<int> UpdateAsync(Launch launch);
-        
+
         /// <summary>
         ///A list of available launches by week
         /// </summary>

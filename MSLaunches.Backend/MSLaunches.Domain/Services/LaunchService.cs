@@ -39,6 +39,27 @@ namespace MSLaunches.Domain.Services
             return await _dbContext.SaveChangesAsync();
         }
 
+
+        public async Task<int> CreateUserLaunchAsync(List<UserLaunch> userLaunches)
+        {
+            foreach (var userLaunch in userLaunches)
+            {
+                userLaunch.CreatedOn = DateTime.Now;
+                _dbContext.UserLaunch.Add(userLaunch);
+            }
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> CreateDailyLaunchesAsync(List<DailyLaunch> dailyLaunches)
+        {
+            foreach (var dailyLaunch in dailyLaunches)
+            {
+                dailyLaunch.CreatedOn = DateTime.Now;
+                _dbContext.DailyLaunch.Add(dailyLaunch);
+            }
+            return await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<int> UpdateAsync(Launch launch)
         {
             var launchToUpdate = await _dbContext.Launches.FirstOrDefaultAsync(u => u.Id == launch.Id);

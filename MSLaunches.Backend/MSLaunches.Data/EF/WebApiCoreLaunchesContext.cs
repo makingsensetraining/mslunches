@@ -40,7 +40,7 @@ namespace MSLaunches.Data.EF
 
             modelBuilder.Entity<LaunchType>()
                         .ToTable("LaunchType")
-                        .HasIndex(x => x.LaunchTypeId)
+                        .HasIndex(x => x.Id)
                         .IsUnique();
 
             modelBuilder.Entity<UserLaunch>()
@@ -56,7 +56,7 @@ namespace MSLaunches.Data.EF
             modelBuilder.Entity<LaunchType>()
                         .HasMany(e => e.Launches)
                         .WithOne(e => e.LaunchType)
-                        .HasForeignKey(e => e.LaunchTypeId);
+                        .HasForeignKey(e => e.Id);
 
             modelBuilder.Entity<DailyLaunch>()
                       .HasMany(e => e.UserLaunches)

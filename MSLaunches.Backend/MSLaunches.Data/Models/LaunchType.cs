@@ -18,13 +18,13 @@
         /// </summary>
         [Key]
         [Required]
-        public int LaunchTypeId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// LaunchDescription of the launch type.
         /// </summary>
         [MaxLength(100)]
-        public string LaunchTypeDescription { get; set; }
+        public string Description { get; set; }
 
         public virtual ICollection<Launch> Launches { get; set; }
     }

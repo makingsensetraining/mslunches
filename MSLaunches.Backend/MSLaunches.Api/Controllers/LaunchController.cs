@@ -136,6 +136,68 @@ namespace MSLaunches.Api.Controllers
         {
             return Ok(await _launchService.GetAllLaunchesAvailableByWeek());
         }
+
+        /// <summary>
+        /// Creates a new UserLaunch
+        /// </summary>
+        /// <param name="userLaunches" cref="UserLaunchDto">UserLaunch model</param>
+        /// <response code="204">Launch created</response>
+        /// <response code="404">Launch could not be created</response>
+        [HttpPost]
+        [ValidateModel]
+        public async Task<IActionResult> CreateUserLaunch([FromBody]List<UserLaunchDto> userLaunches)
+        {
+            if (userLaunches == null)
+            {
+                return BadRequest();
+            }
+            var userLaunchList = new List<UserLaunch>();
+            foreach (var userLaunchDto in userLaunches)
+            {
+                var userLaunch = new UserLaunch
+                {
+                    Id = Guid.NewGuid(),
+                    DailyLaunchId = userLaunchDto.DailyLaunchId,
+                    UserId = userLaunchDto.UserId,
+                    CreatedBy = "Test"
+                    // TODO: get createdBy from current launch
+                };
+                userLaunchList.Add(userLaunch);
+            }
+            var affectedRows = await _launchService.CreateUserLaunchAsync(userLaunchList);
+            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+        }
+
+        /// <summary>
+        /// Creates a new UserLaunch
+        /// </summary>
+        /// <param name="dailyLaunches" cref="DailyLaunchDto">DailyLaunch model</param>
+        /// <response code="204">Launch created</response>
+        /// <response code="404">Launch could not be created</response>
+        [HttpPost]
+        [ValidateModel]
+        public async Task<IActionResult> CreateDailyLaunch([FromBody]List<DailyLaunchDto> dailyLaunches)
+        {
+            if (dailyLaunches == null)
+            {
+                return BadRequest();
+            }
+            var dailyLaunchList = new List<DailyLaunch>();
+            foreach (var dailyLaunchDto in dailyLaunches)
+            {
+                var dailyLaunch = new DailyLaunch
+                {
+                    Id = Guid.NewGuid(),
+                    LaunchId = dailyLaunchDto.LaunchId,
+                    Date = dailyLaunchDto.Date,
+                    CreatedBy = "Test"
+                    // TODO: get createdBy from current launch
+                };
+                dailyLaunchList.Add(dailyLaunch);
+            }
+            var affectedRows = await _launchService.CreateDailyLaunchesAsync(dailyLaunchList);
+            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+        }
     }
 }
 
