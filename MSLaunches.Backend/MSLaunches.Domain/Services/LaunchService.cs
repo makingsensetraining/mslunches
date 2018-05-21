@@ -4,6 +4,7 @@ using MSLaunches.Data.Models;
 using MSLaunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLaunches.Domain.Services
@@ -42,7 +43,7 @@ namespace MSLaunches.Domain.Services
         {
             var launchToUpdate = await _dbContext.Launches.FirstOrDefaultAsync(u => u.Id == launch.Id);
 
-            if(launchToUpdate == null)
+            if (launchToUpdate == null)
             {
                 return 0;
             }
@@ -52,7 +53,7 @@ namespace MSLaunches.Domain.Services
             launchToUpdate.LaunchType = launch.LaunchType;
             launchToUpdate.UpdatedBy = launch.UpdatedBy;
             launchToUpdate.UpdatedOn = DateTime.Now;
-              
+
             return await _dbContext.SaveChangesAsync();
         }
 
@@ -65,7 +66,26 @@ namespace MSLaunches.Domain.Services
             }
 
             _dbContext.Launches.Remove(launch);
-            return await _dbContext.SaveChangesAsync();           
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<DailyLaunch>> GetAllLaunchesAvailableByWeek()
+        {
+            var daysInWeek = GetDaysInWeek();
+            return await (from x in _dbContext.DailyLaunch
+                          where daysInWeek.Contains(x.Date)
+                          select x).ToListAsync();
+        }
+
+        private List<DateTime> GetDaysInWeek()
+        {
+            var now = DateTime.Now;
+            var currentDay = now.DayOfWeek;
+            int days = (int)currentDay;
+            DateTime sunday = now.AddDays(-days);
+            return Enumerable.Range(0, 7)
+                .Select(d => sunday.AddDays(d))
+                .ToList();
         }
     }
 }

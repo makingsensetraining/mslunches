@@ -22,6 +22,8 @@ namespace MSLaunches.Data.EF
         public DbSet<User> Users { get; set; }
         public DbSet<Launch> Launches { get; set; }
         public DbSet<LaunchType> LaunchTypes { get; set; }
+        public DbSet<DailyLaunch> DailyLaunch { get; set; }
+        public DbSet<UserLaunch> UserLaunch { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,18 +35,38 @@ namespace MSLaunches.Data.EF
 
             modelBuilder.Entity<Launch>()
                         .ToTable("Launch")
-                        .HasIndex(x => x.LaunchName)
+                        .HasIndex(x => x.Id)
                         .IsUnique();
+
             modelBuilder.Entity<LaunchType>()
                         .ToTable("LaunchType")
                         .HasIndex(x => x.LaunchTypeId)
                         .IsUnique();
+
+            modelBuilder.Entity<UserLaunch>()
+                        .ToTable("UserLaunch")
+                        .HasIndex(x => x.Id)
+                        .IsUnique();
+
+            modelBuilder.Entity<DailyLaunch>()
+                     .ToTable("DailyLaunch")
+                     .HasIndex(x => x.Id)
+                     .IsUnique();
 
             modelBuilder.Entity<LaunchType>()
                         .HasMany(e => e.Launches)
                         .WithOne(e => e.LaunchType)
                         .HasForeignKey(e => e.LaunchTypeId);
 
+            modelBuilder.Entity<DailyLaunch>()
+                      .HasMany(e => e.UserLaunches)
+                      .WithOne(e => e.DailyLaunch)
+                      .HasForeignKey(e => e.DailyLaunchId);
+
+            modelBuilder.Entity<User>()
+                    .HasMany(e => e.UserLaunches)
+                    .WithOne(e => e.User)
+                    .HasForeignKey(e => e.UserId);
         }
     }
 }

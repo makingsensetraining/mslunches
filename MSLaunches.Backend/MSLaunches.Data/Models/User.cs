@@ -1,5 +1,6 @@
 ﻿namespace MSLaunches.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -7,10 +8,14 @@
     /// </summary>
     public class User : BaseEntity
     {
+        public User()
+        {
+            UserLaunches = new HashSet<UserLaunch>();
+        }
         /// <summary>
         /// First name of the person.
         /// </summary>
-        [Required(ErrorMessage ="You should provide a first name value")]
+        [Required(ErrorMessage = "You should provide a first name value")]
         [MaxLength(50)]
         public string FirstName { get; set; }
 
@@ -35,5 +40,7 @@
         [Required]
         [MaxLength(100)]
         public string UserName { get; set; }
+
+        public virtual ICollection<UserLaunch> UserLaunches { get; set; }
     }
 }

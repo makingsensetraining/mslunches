@@ -127,6 +127,17 @@ namespace MSLaunches.Api.Controllers
 
             return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
+
+        /// <summary>
+        /// A list of available launches by week
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(List<DailyLaunch>), 200)]
+        public async Task<IActionResult> GetAllLaunchesAvailableByWeek()
+        {
+            return Ok(await _launchService.GetAllLaunchesAvailableByWeek());
+        }
     }
 }
 

@@ -43,5 +43,12 @@ namespace MSLaunches.Domain.Services.Interfaces
         /// <param name="launch">Launch to update</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<int> UpdateAsync(Launch launch);
+        
+        /// <summary>
+        ///A list of available launches by week
+        /// </summary>
+        /// <returns></returns>
+        Task<List<DailyLaunch>> GetAllLaunchesAvailableByWeek();
+
     }
 }
