@@ -33,7 +33,6 @@ namespace Seed.Domain.Tests
             // Assert
             Assert.NotNull(retrievedLaunch);
             Assert.Equal(createdLaunch.LaunchName, retrievedLaunch.LaunchName);
-            Assert.Equal(createdLaunch.LaunchDescription, retrievedLaunch.LaunchDescription);
             Assert.Equal(createdLaunch.LaunchTypeId, retrievedLaunch.LaunchTypeId);
             context.VerifyAll();
         }

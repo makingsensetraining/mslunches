@@ -8,30 +8,17 @@
     {
         public DailyLaunch()
         {
+            UserLaunches = new HashSet<UserLaunch>();
         }
 
         [Required]
-        public Launch CaloricoId { get; set; }
-
-        [Required]
-        public Launch LightId { get; set; }
-
-        [Required]
-        public Launch VegetarianoId { get; set; }
-
-        [Required]
-        public Launch SandwichId { get; set; }
-
-        [Required]
-        public int DessertId { get; set; }
+        public int LaunchId { get; set; }
 
         [Required]
         public DateTime Date { get; set; }
 
-        public virtual Launch Calorico { get; set; }
-        public virtual Launch Light { get; set; }
-        public virtual Launch Vegetariano { get; set; }
-        public virtual Launch Sandwich { get; set; }
-        public virtual Launch Dessert { get; set; }
+        public virtual Launch Launch { get; set; }
+        public virtual ICollection<UserLaunch> UserLaunches { get; set; }
+
     }
 }

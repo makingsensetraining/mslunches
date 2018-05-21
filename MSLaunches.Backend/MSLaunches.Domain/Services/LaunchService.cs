@@ -49,7 +49,6 @@ namespace MSLaunches.Domain.Services
             }
 
             launchToUpdate.LaunchName = launch.LaunchName;
-            launchToUpdate.LaunchDescription = launch.LaunchDescription;
             launchToUpdate.LaunchType = launch.LaunchType;
             launchToUpdate.UpdatedBy = launch.UpdatedBy;
             launchToUpdate.UpdatedOn = DateTime.Now;

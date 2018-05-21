@@ -12,12 +12,6 @@ namespace MSLaunches.Api.Models
         public string LaunchName { get; set; }
 
         /// <summary>
-        /// LaunchDescription of the launch.
-        /// </summary>
-        [MaxLength(100)]
-        public string LaunchDescription { get; set; }
-
-        /// <summary>
         /// FK to LaunchType.
         /// </summary>
         public int LaunchTypeId { get; set; }

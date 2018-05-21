@@ -72,7 +72,6 @@ namespace MSLaunches.Api.Controllers
             var affectedRows = await _launchService.CreateAsync(new Launch
             {
                 Id = Guid.NewGuid(),
-                LaunchDescription = launch.LaunchDescription,
                 LaunchName = launch.LaunchName,
                 LaunchTypeId = launch.LaunchTypeId,
                 CreatedOn = DateTime.Now,
@@ -102,7 +101,6 @@ namespace MSLaunches.Api.Controllers
             var affectedRows = await _launchService.UpdateAsync(new Launch
             {
                 Id = id,
-                LaunchDescription = launch.LaunchDescription,
                 LaunchName = launch.LaunchName,
                 LaunchTypeId = launch.LaunchTypeId,
                 CreatedOn = DateTime.Now,

@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using MSLaunches.Data.EF;
 using MSLaunches.Data.Models;
 using MSLaunches.Domain.Services;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 //WebApiCoreLaunchesContext
@@ -12,7 +14,7 @@ namespace MSLaunches.Domain.Tests
     {
         #region Members
 
-        private readonly Mock<WebApiCoreSeedContext> _context;
+        private readonly Mock<WebApiCoreLaunchesContext> _context;
         private readonly UserService _userService;
 
         #endregion
@@ -21,7 +23,7 @@ namespace MSLaunches.Domain.Tests
 
         public UserServiceTests()
         {
-            _context = new Mock<WebApiCoreSeedContext>();
+            _context = new Mock<WebApiCoreLaunchesContext>();
             _userService = new UserService(_context.Object);
         }
 
@@ -196,5 +198,4 @@ namespace MSLaunches.Domain.Tests
 
         #endregion
     }
-}
 }
