@@ -1,7 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { concat } from 'rxjs/observable/concat';
-import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { map, catchError, timeout, timeInterval } from 'rxjs/operators';
 import * as auth0 from 'auth0-js';
@@ -43,10 +42,10 @@ const routes = {
 export class AuthenticationService {
 
   private _hashHandled: Subject<boolean> = new Subject<boolean>();
-  private timeout: NodeJS.Timer;
-  constructor(private httpClient: HttpClient) {
+  private _timeout: NodeJS.Timer;
+  constructor() {
     // workaround to update notify subscribers if handle hash does not execute or executes early
-    this.timeout = setTimeout(() => { this._hashHandled.next(true); }, 2000);
+    this._timeout = setTimeout(() => { this._hashHandled.next(true); }, 2000);
   }
 
   /**
@@ -54,17 +53,6 @@ export class AuthenticationService {
    */
   login() {
     auth0Config.authorize();
-  }
-
-  /**
-   * Logs out the user and clear credentials.
-   * @return {Observable<boolean>} True if the user was logged out successfully.
-   */
-  logout(): Observable<boolean> {
-    // Customize credentials invalidation here
-    this.setCredentials();
-    this.timeout = setTimeout(() => { this._hashHandled.next(true); }, 2000);
-    return of(true);
   }
 
   /**
@@ -80,17 +68,19 @@ export class AuthenticationService {
   }
 
   /**
-   * Gets the user credentials.
-   * @return {Credentials} The user credentials or null if the user is not authenticated.
+   * Logs out the user and clear credentials.
+   * @return {Observable<boolean>} True if the user was logged out successfully.
    */
-  get credentials(): Credentials | null {
-    return JSON.parse(sessionStorage.getItem(credentialsKey));
+  logout(): Observable<boolean> {
+    // Customize credentials invalidation here
+    this.setCredentials();
+    this._timeout = setTimeout(() => { this._hashHandled.next(true); }, 2000);
+    return of(true);
   }
 
-  get hashHandled(): Subject<boolean> {
-    return this._hashHandled;
-  }
-
+  /**
+   * gets the auth0 hash, and saves it into a session storage
+   */
   handleHash() {
     if (!this.isAuthenticated()) {
       auth0Config.parseHash((err: auth0.Auth0Error, authResult: auth0.Auth0DecodedHash) => {
@@ -99,9 +89,24 @@ export class AuthenticationService {
           this.setCredentials(this.mapCredentials(authResult));
         }
         this._hashHandled.next(true);
-        this.timeout.unref();
+        clearTimeout(this._timeout);
       });
     }
+  }
+
+  /**
+   * Gets the user credentials.
+   * @return {Credentials} The user credentials or null if the user is not authenticated.
+   */
+  get credentials(): Credentials | null {
+    return JSON.parse(sessionStorage.getItem(credentialsKey));
+  }
+
+  /**
+   * returns an event representing whether the hash was handled or not
+   */
+  get hashHandled(): Subject<boolean> {
+    return this._hashHandled;
   }
 
   /**

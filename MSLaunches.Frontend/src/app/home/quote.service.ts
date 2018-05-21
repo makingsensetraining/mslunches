@@ -19,10 +19,8 @@ export class QuoteService {
   constructor(private httpClient: HttpClient) { }
 
   getRandomQuote(context: RandomQuoteContext): Observable<string> {
-    let creds = JSON.parse(sessionStorage.getItem('credentials')) || JSON.parse(localStorage.getItem('credentials'));
-
     return this.httpClient
-      .get('/users', { headers : new HttpHeaders().append("Authorization", "Bearer " + creds.accessToken)})
+      .get(routes.quote(context))
       .pipe(
         map((body: any) => body.value),
         catchError(() => of('Error, could not load joke :-('))
