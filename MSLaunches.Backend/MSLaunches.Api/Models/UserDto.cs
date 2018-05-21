@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MSLaunches.Api.Models
+namespace MSLunches.Api.Models
 {
     public class UserDto
     {

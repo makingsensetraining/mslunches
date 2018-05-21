@@ -2,12 +2,12 @@
 using Auth0.Core;
 using Auth0.Core.Exceptions;
 using Auth0.ManagementApi;
-using MSLaunches.Infrastructure.RestClient;
-using MSLaunches.Infrastructure.Result;
+using MSLunches.Infrastructure.RestClient;
+using MSLunches.Infrastructure.Result;
 using System;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Infrastructure.AuthZero
+namespace MSLunches.Infrastructure.AuthZero
 {
     public class AuthZeroClient : IAuthZeroClient
     {

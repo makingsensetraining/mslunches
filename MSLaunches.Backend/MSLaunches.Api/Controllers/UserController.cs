@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MSLaunches.Api.Filters;
-using MSLaunches.Api.Models;
-using MSLaunches.Data.Models;
-using MSLaunches.Domain.Services.Interfaces;
+using MSLunches.Api.Filters;
+using MSLunches.Api.Models;
+using MSLunches.Data.Models;
+using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Api.Controllers
+namespace MSLunches.Api.Controllers
 {
     [Route("api/users")]
     [Produces("Application/json")]

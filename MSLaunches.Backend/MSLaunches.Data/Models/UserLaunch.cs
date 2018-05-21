@@ -1,19 +1,22 @@
-﻿namespace MSLaunches.Data.Models
+﻿namespace MSLunches.Data.Models
 {
     using System;
     using System.ComponentModel.DataAnnotations;
 
-    public class UserLaunch : BaseEntity
+    /// <summary>
+    /// Represents the selected lunch by user in our system.
+    /// </summary>
+    public class UserLunch : BaseEntity
     {
         [Required]
-        public int DailyLaunchId { get; set; }
+        public Guid DailyLunchId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public bool Approved { get; set; }
 
-        public virtual DailyLaunch DailyLaunch { get; set; }
+        public virtual DailyLunch DailyLunch { get; set; }
         public virtual User User { get; set; }
     }
 }

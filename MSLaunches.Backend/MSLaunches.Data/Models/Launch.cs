@@ -1,26 +1,26 @@
-﻿namespace MSLaunches.Data.Models
+﻿namespace MSLunches.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// Represents a person in our system
+    /// Represents the meal in our system
     /// </summary>
-    public class Launch : BaseEntity
+    public class Lunch : BaseEntity
     {
         /// <summary>
-        /// LaunchName of the launch.
+        /// Name of the lunch.
         /// </summary>
         [Required]
         [MaxLength(100)]
-        public string LaunchName { get; set; }
+        public string LunchName { get; set; }
 
         /// <summary>
-        /// FK to LaunchType.
+        /// Id of the lunch type
         /// </summary>
         [Required]
-        public int LaunchTypeId { get; set; }
+        public int LunchTypeId { get; set; }
 
-        public virtual LaunchType LaunchType { get; set; }
+        public virtual LunchType LunchType { get; set; }
 
     }
 }

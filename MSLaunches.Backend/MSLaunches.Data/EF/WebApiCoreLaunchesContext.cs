@@ -1,29 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MSLaunches.Data.Models;
+using MSLunches.Data.Models;
 
-namespace MSLaunches.Data.EF
+namespace MSLunches.Data.EF
 {
-    public class WebApiCoreLaunchesContext : DbContext
+    public class WebApiCoreLunchesContext : DbContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebApiCoreLaunchesContext"/> class.
+        /// Initializes a new instance of the <see cref="WebApiCoreLunchesContext"/> class.
         ///
         /// DbContextOptions parameter is required by AspNet core initialization
         /// </summary>
-        /// <param name="options">Options used to create this <see cref="WebApiCoreLaunchesContext"/> instance </param>
-        public WebApiCoreLaunchesContext(DbContextOptions options) : base(options) { }
+        /// <param name="options">Options used to create this <see cref="WebApiCoreLunchesContext"/> instance </param>
+        public WebApiCoreLunchesContext(DbContextOptions options) : base(options) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebApiCoreLaunchesContext"/> class without parameters.
+        /// Initializes a new instance of the <see cref="WebApiCoreLunchesContext"/> class without parameters.
         /// </summary>
-        public WebApiCoreLaunchesContext() : base() { }
+        public WebApiCoreLunchesContext() : base() { }
 
-        /// <summary> All users registered on WebApiCoreMSLaunches database</summary>
+        /// <summary> All users registered on WebApiCoreMSLunches database</summary>
         public DbSet<User> Users { get; set; }
-        public DbSet<Launch> Launches { get; set; }
-        public DbSet<LaunchType> LaunchTypes { get; set; }
-        public DbSet<DailyLaunch> DailyLaunch { get; set; }
-        public DbSet<UserLaunch> UserLaunch { get; set; }
+        public DbSet<Lunch> Lunches { get; set; }
+        public DbSet<LunchType> LunchTypes { get; set; }
+        public DbSet<DailyLunch> DailyLunches { get; set; }
+        public DbSet<UserLunch> UserLunches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,38 +33,38 @@ namespace MSLaunches.Data.EF
                         .HasIndex(x => x.UserName)
                         .IsUnique();
 
-            modelBuilder.Entity<Launch>()
-                        .ToTable("Launch")
+            modelBuilder.Entity<Lunch>()
+                        .ToTable("Lunch")
                         .HasIndex(x => x.Id)
                         .IsUnique();
 
-            modelBuilder.Entity<LaunchType>()
-                        .ToTable("LaunchType")
+            modelBuilder.Entity<LunchType>()
+                        .ToTable("LunchType")
                         .HasIndex(x => x.Id)
                         .IsUnique();
 
-            modelBuilder.Entity<UserLaunch>()
-                        .ToTable("UserLaunch")
+            modelBuilder.Entity<UserLunch>()
+                        .ToTable("UserLunch")
                         .HasIndex(x => x.Id)
                         .IsUnique();
 
-            modelBuilder.Entity<DailyLaunch>()
-                     .ToTable("DailyLaunch")
+            modelBuilder.Entity<DailyLunch>()
+                     .ToTable("DailyLunch")
                      .HasIndex(x => x.Id)
                      .IsUnique();
 
-            modelBuilder.Entity<LaunchType>()
-                        .HasMany(e => e.Launches)
-                        .WithOne(e => e.LaunchType)
-                        .HasForeignKey(e => e.Id);
+            modelBuilder.Entity<LunchType>()
+                        .HasMany(e => e.Lunches)
+                        .WithOne(e => e.LunchType)
+                        .HasForeignKey(e => e.LunchTypeId);
 
-            modelBuilder.Entity<DailyLaunch>()
-                      .HasMany(e => e.UserLaunches)
-                      .WithOne(e => e.DailyLaunch)
-                      .HasForeignKey(e => e.DailyLaunchId);
+            modelBuilder.Entity<DailyLunch>()
+                      .HasMany(e => e.UserLunches)
+                      .WithOne(e => e.DailyLunch)
+                      .HasForeignKey(e => e.DailyLunchId);
 
             modelBuilder.Entity<User>()
-                    .HasMany(e => e.UserLaunches)
+                    .HasMany(e => e.UserLunches)
                     .WithOne(e => e.User)
                     .HasForeignKey(e => e.UserId);
         }

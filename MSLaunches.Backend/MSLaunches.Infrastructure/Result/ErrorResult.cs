@@ -1,4 +1,4 @@
-﻿namespace MSLaunches.Infrastructure.Result
+﻿namespace MSLunches.Infrastructure.Result
 {
     /// <summary>
     /// Multi-purpose wrapper for generic error response with code+description structure

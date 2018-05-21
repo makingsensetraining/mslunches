@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using MSLaunches.Data.Enums;
+using MSLunches.Data.Enums;
 using System;
 
-namespace MSLaunches.Api.Authorization
+namespace MSLunches.Api.Authorization
 {
     public class AuthorizationPolicies : IAuthorizationPolicies
     {

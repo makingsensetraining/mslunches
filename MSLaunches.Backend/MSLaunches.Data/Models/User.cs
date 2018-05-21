@@ -1,4 +1,4 @@
-﻿namespace MSLaunches.Data.Models
+﻿namespace MSLunches.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -10,7 +10,7 @@
     {
         public User()
         {
-            UserLaunches = new HashSet<UserLaunch>();
+            UserLunches = new HashSet<UserLunch>();
         }
         /// <summary>
         /// First name of the person.
@@ -41,6 +41,6 @@
         [MaxLength(100)]
         public string UserName { get; set; }
 
-        public virtual ICollection<UserLaunch> UserLaunches { get; set; }
+        public virtual ICollection<UserLunch> UserLunches { get; set; }
     }
 }

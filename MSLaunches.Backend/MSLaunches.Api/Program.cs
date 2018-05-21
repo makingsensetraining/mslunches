@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 
-namespace MSLaunches.Api
+namespace MSLunches.Api
 {
     public class Program
     {

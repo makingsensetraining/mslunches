@@ -1,9 +1,9 @@
-﻿using MSLaunches.Data.Models;
+﻿using MSLunches.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Domain.Services.Interfaces
+namespace MSLunches.Domain.Services.Interfaces
 {
     /// <summary>
     /// Service responsible of handling users

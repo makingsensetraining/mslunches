@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using MSLaunches.Api.Models;
-using MSLaunches.Domain.Exceptions;
+using MSLunches.Api.Models;
+using MSLunches.Domain.Exceptions;
 using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Api.Middleware
+namespace MSLunches.Api.Middleware
 {
     /// <summary>
     /// Middleware responsible for catching unhandled exceptions and provide useful/meaningful responses to API consumers

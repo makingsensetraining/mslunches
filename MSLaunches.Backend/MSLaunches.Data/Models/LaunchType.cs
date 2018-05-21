@@ -1,31 +1,31 @@
-﻿namespace MSLaunches.Data.Models
+﻿namespace MSLunches.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// Represents a person in our system
+    /// Represents a type of lunch in our system
     /// </summary>
-    public class LaunchType
+    public class LunchType
     {
-        public LaunchType()
+        public LunchType()
         {
-            Launches = new HashSet<Launch>();
+            Lunches = new HashSet<Lunch>();
         }
 
         /// <summary>
-        /// Launch Type Id.
+        /// Lunch Type Id.
         /// </summary>
         [Key]
         [Required]
         public int Id { get; set; }
 
         /// <summary>
-        /// LaunchDescription of the launch type.
+        /// Description of the lunch type.
         /// </summary>
         [MaxLength(100)]
         public string Description { get; set; }
 
-        public virtual ICollection<Launch> Launches { get; set; }
+        public virtual ICollection<Lunch> Lunches { get; set; }
     }
 }

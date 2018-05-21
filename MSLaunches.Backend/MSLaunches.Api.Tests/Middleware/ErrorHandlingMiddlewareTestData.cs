@@ -1,9 +1,9 @@
-﻿using MSLaunches.Domain.Exceptions;
+﻿using MSLunches.Domain.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace MSLaunches.Api.Tests.Middleware
+namespace MSLunches.Api.Tests.Middleware
 {
     public class ErrorHandlingMiddlewareTestData : IEnumerable<object[]>
     {

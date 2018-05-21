@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System;
 
-namespace MSLaunches.Api.Authorization
+namespace MSLunches.Api.Authorization
 {
     /// <summary>
-    /// Set of authorization policies defined for WebApiCoreMSLaunches
+    /// Set of authorization policies defined for WebApiCoreMSLunches
     /// </summary>
     public interface IAuthorizationPolicies
     {

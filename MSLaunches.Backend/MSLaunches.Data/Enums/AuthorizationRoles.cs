@@ -1,4 +1,4 @@
-﻿namespace MSLaunches.Data.Enums
+﻿namespace MSLunches.Data.Enums
 {
     public enum AuthorizationRoles
     {

@@ -1,24 +1,32 @@
-﻿namespace MSLaunches.Data.Models
+﻿namespace MSLunches.Data.Models
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class DailyLaunch : BaseEntity
+    /// <summary>
+    /// Represents the lunches available by day in our system
+    /// </summary>
+    public class DailyLunch : BaseEntity
     {
-        public DailyLaunch()
+        public DailyLunch()
         {
-            UserLaunches = new HashSet<UserLaunch>();
+            UserLunches = new HashSet<UserLunch>();
         }
 
+        /// <summary>
+        /// Lunch Id.
+        /// </summary>
         [Required]
-        public int LaunchId { get; set; }
+        public Guid LunchId { get; set; }
 
+        /// <summary>
+        /// Day of the lunch
+        /// </summary>
         [Required]
         public DateTime Date { get; set; }
 
-        public virtual Launch Launch { get; set; }
-        public virtual ICollection<UserLaunch> UserLaunches { get; set; }
-
+        public virtual Lunch Lunch { get; set; }
+        public virtual ICollection<UserLunch> UserLunches { get; set; }
     }
 }

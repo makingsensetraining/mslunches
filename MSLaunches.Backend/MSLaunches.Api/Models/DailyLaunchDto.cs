@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MSLaunches.Api.Models
+namespace MSLunches.Api.Models
 {
-    public class DailyLaunchDto
+    public class DailyLunchDto
     {
         [Required]
-        public int LaunchId { get; set; }
+        public Guid LunchId { get; set; }
 
         [Required]
         public DateTime Date { get; set; }

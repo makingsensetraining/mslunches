@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using MSLaunches.Data.EF;
-using MSLaunches.Data.Models;
-using MSLaunches.Domain.Services;
+using MSLunches.Data.EF;
+using MSLunches.Data.Models;
+using MSLunches.Domain.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,30 +10,30 @@ using Xunit;
 
 namespace Seed.Domain.Tests
 {
-    public class LaunchServiceTests
+    public class LunchServiceTests
     {
         #region GetById Tests
 
         [Fact]
-        public async Task GetByIdAsync_ShouldReturnLaunch()
+        public async Task GetByIdAsync_ShouldReturnLunch()
         {
             // Arrange
-            var context = new Mock<WebApiCoreLaunchesContext>();
-            var launches = new Mock<DbSet<Launch>>();
-            var createdLaunch = GetADefaultLaunch();
-            context.Setup(x => x.Launches).Returns(launches.Object);
-            launches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == createdLaunch.Id)))
-                 .ReturnsAsync(createdLaunch)
+            var context = new Mock<WebApiCoreLunchesContext>();
+            var Lunches = new Mock<DbSet<Lunch>>();
+            var createdLunch = GetADefaultLunch();
+            context.Setup(x => x.Lunches).Returns(Lunches.Object);
+            Lunches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == createdLunch.Id)))
+                 .ReturnsAsync(createdLunch)
                  .Verifiable();
-            var launchService = new LaunchService(context.Object);
+            var LunchService = new LunchService(context.Object);
 
             // Act
-            var retrievedLaunch = await launchService.GetByIdAsync(createdLaunch.Id);
+            var retrievedLunch = await LunchService.GetByIdAsync(createdLunch.Id);
 
             // Assert
-            Assert.NotNull(retrievedLaunch);
-            Assert.Equal(createdLaunch.LaunchName, retrievedLaunch.LaunchName);
-            Assert.Equal(createdLaunch.Id, retrievedLaunch.Id);
+            Assert.NotNull(retrievedLunch);
+            Assert.Equal(createdLunch.LunchName, retrievedLunch.LunchName);
+            Assert.Equal(createdLunch.Id, retrievedLunch.Id);
             context.VerifyAll();
         }
 
@@ -41,22 +41,22 @@ namespace Seed.Domain.Tests
         public async Task GetByIdAsync_ShouldReturnNull()
         {
             // Arrange
-            var context = new Mock<WebApiCoreLaunchesContext>();
-            var launches = new Mock<DbSet<Launch>>();
+            var context = new Mock<WebApiCoreLunchesContext>();
+            var Lunches = new Mock<DbSet<Lunch>>();
             var id = Guid.NewGuid();
-            Launch launch = null;
-            context.Setup(x => x.Launches)
-                   .Returns(launches.Object);
-            launches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == id)))
-                 .ReturnsAsync(launch)
+            Lunch Lunch = null;
+            context.Setup(x => x.Lunches)
+                   .Returns(Lunches.Object);
+            Lunches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == id)))
+                 .ReturnsAsync(Lunch)
                  .Verifiable();
-            var launchService = new LaunchService(context.Object);
+            var LunchService = new LunchService(context.Object);
 
             //Act
-            var retrievedLaunch = await launchService.GetByIdAsync(id);
+            var retrievedLunch = await LunchService.GetByIdAsync(id);
 
             // Assert
-            Assert.Null(retrievedLaunch);
+            Assert.Null(retrievedLunch);
             context.VerifyAll();
         }
 
@@ -65,53 +65,53 @@ namespace Seed.Domain.Tests
         #region Detele Tests
 
         [Fact]
-        public async void Delete_ShouldDeleteLaunch()
+        public async void Delete_ShouldDeleteLunch()
         {
             // Arrange
-            var context = new Mock<WebApiCoreLaunchesContext>();
-            var launches = new Mock<DbSet<Launch>>();
-            var createdLaunch = GetADefaultLaunch();
-            context.Setup(x => x.Launches)
-                   .Returns(launches.Object);
-            launches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == createdLaunch.Id)))
-                 .ReturnsAsync(createdLaunch)
+            var context = new Mock<WebApiCoreLunchesContext>();
+            var Lunches = new Mock<DbSet<Lunch>>();
+            var createdLunch = GetADefaultLunch();
+            context.Setup(x => x.Lunches)
+                   .Returns(Lunches.Object);
+            Lunches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == createdLunch.Id)))
+                 .ReturnsAsync(createdLunch)
                  .Verifiable();
-            launches.Setup(x => x.Remove(It.Is<Launch>(y => y.Id == createdLaunch.Id)))
+            Lunches.Setup(x => x.Remove(It.Is<Lunch>(y => y.Id == createdLunch.Id)))
                  .Verifiable();
             context.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
                    .ReturnsAsync(1);
-            var launchService = new LaunchService(context.Object);
+            var LunchService = new LunchService(context.Object);
 
             // Act
-            var affectedRows = await launchService.DeleteByIdAsync(createdLaunch.Id);
+            var affectedRows = await LunchService.DeleteByIdAsync(createdLunch.Id);
 
             // Assert
             Assert.True(affectedRows > 0);
-            launches.Verify(x => x.Remove(It.Is<Launch>(y => y.Id == createdLaunch.Id)), Times.Once);
+            Lunches.Verify(x => x.Remove(It.Is<Lunch>(y => y.Id == createdLunch.Id)), Times.Once);
             context.VerifyAll();
         }
 
         [Fact]
-        public async void Delete_LaunchNotFound()
+        public async void Delete_LunchNotFound()
         {
             // Arrange
-            var context = new Mock<WebApiCoreLaunchesContext>();
-            var launches = new Mock<DbSet<Launch>>();
+            var context = new Mock<WebApiCoreLunchesContext>();
+            var Lunches = new Mock<DbSet<Lunch>>();
             var id = Guid.NewGuid();
-            Launch launch = null;
-            context.Setup(x => x.Launches)
-                   .Returns(launches.Object);
-            launches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == id)))
-                 .ReturnsAsync(launch)
+            Lunch Lunch = null;
+            context.Setup(x => x.Lunches)
+                   .Returns(Lunches.Object);
+            Lunches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == id)))
+                 .ReturnsAsync(Lunch)
                  .Verifiable();
-            var launchService = new LaunchService(context.Object);
+            var LunchService = new LunchService(context.Object);
 
             //Act
-            var affectedRows = await launchService.DeleteByIdAsync(Guid.NewGuid());
+            var affectedRows = await LunchService.DeleteByIdAsync(Guid.NewGuid());
 
             // Assert
             Assert.Equal(0, affectedRows);
-            launches.Verify(x => x.Remove(It.Is<Launch>(y => y.Id == id)), Times.Never);
+            Lunches.Verify(x => x.Remove(It.Is<Lunch>(y => y.Id == id)), Times.Never);
             context.VerifyAll();
         }
 
@@ -120,23 +120,23 @@ namespace Seed.Domain.Tests
         #region Update Tests
 
         [Fact]
-        public async void Update_ShouldUpdateIfLaunchExists()
+        public async void Update_ShouldUpdateIfLunchExists()
         {
             // Arrange
-            var context = new Mock<WebApiCoreLaunchesContext>();
-            var launches = new Mock<DbSet<Launch>>();
-            var launch = GetADefaultLaunch();
-            context.Setup(x => x.Launches)
-                   .Returns(launches.Object);
-            launches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == launch.Id)))
-                 .ReturnsAsync(launch)
+            var context = new Mock<WebApiCoreLunchesContext>();
+            var Lunches = new Mock<DbSet<Lunch>>();
+            var Lunch = GetADefaultLunch();
+            context.Setup(x => x.Lunches)
+                   .Returns(Lunches.Object);
+            Lunches.Setup(x => x.FindAsync(It.Is<Guid>(y => y == Lunch.Id)))
+                 .ReturnsAsync(Lunch)
                  .Verifiable();
             context.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
                    .ReturnsAsync(1);
-            var launchService = new LaunchService(context.Object);
+            var LunchService = new LunchService(context.Object);
 
             // Act
-            int affectedRows = await launchService.UpdateAsync(launch);
+            int affectedRows = await LunchService.UpdateAsync(Lunch);
 
             // Assert
             Assert.True(affectedRows > 0);
@@ -145,24 +145,24 @@ namespace Seed.Domain.Tests
         }
 
         [Fact]
-        public async void Update_ShouldReturnZeroIfLaunchNotExists()
+        public async void Update_ShouldReturnZeroIfLunchNotExists()
         {
             // Arrange
-            var context = new Mock<WebApiCoreLaunchesContext>();
-            var launches = new Mock<DbSet<Launch>>();
-            var createdLaunch = GetADefaultLaunch();
-            context.Setup(x => x.Launches)
-                   .Returns(launches.Object);
+            var context = new Mock<WebApiCoreLunchesContext>();
+            var Lunches = new Mock<DbSet<Lunch>>();
+            var createdLunch = GetADefaultLunch();
+            context.Setup(x => x.Lunches)
+                   .Returns(Lunches.Object);
 
             var id = Guid.NewGuid();
-            launches.Setup(a => a.FindAsync(It.Is<Guid>(g => g == id), It.IsAny<CancellationToken>()))
-                 .Returns<Launch>(null);
+            Lunches.Setup(a => a.FindAsync(It.Is<Guid>(g => g == id), It.IsAny<CancellationToken>()))
+                 .Returns<Lunch>(null);
             context.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
                    .ReturnsAsync(1);
-            var launchService = new LaunchService(context.Object);
+            var LunchService = new LunchService(context.Object);
 
             // Act
-            var affectedRows = await launchService.UpdateAsync(createdLaunch);
+            var affectedRows = await LunchService.UpdateAsync(createdLunch);
 
             // Assert
             Assert.Equal(0, affectedRows);
@@ -177,40 +177,40 @@ namespace Seed.Domain.Tests
         public async void Create_ShoulReturnOneIfCreated()
         {
             // Arrange
-            var context = new Mock<WebApiCoreLaunchesContext>();
-            var launches = new Mock<DbSet<Launch>>();
-            var createdLaunch = GetADefaultLaunch();
-            context.Setup(x => x.Launches)
-                   .Returns(launches.Object);
-            launches.Setup(x => x.Add(It.Is<Launch>(y => y.Id == createdLaunch.Id)))
+            var context = new Mock<WebApiCoreLunchesContext>();
+            var Lunches = new Mock<DbSet<Lunch>>();
+            var createdLunch = GetADefaultLunch();
+            context.Setup(x => x.Lunches)
+                   .Returns(Lunches.Object);
+            Lunches.Setup(x => x.Add(It.Is<Lunch>(y => y.Id == createdLunch.Id)))
                  .Verifiable();
             context.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
                    .ReturnsAsync(1);
-            var launchService = new LaunchService(context.Object);
+            var LunchService = new LunchService(context.Object);
             // Act
-            var affectedRows = await launchService.CreateAsync(createdLaunch);
+            var affectedRows = await LunchService.CreateAsync(createdLunch);
             // Assert
             Assert.Equal(1, affectedRows);
             context.VerifyAll();
-            launches.Verify(x => x.Add(It.Is<Launch>(y => y.Id == createdLaunch.Id)), Times.Once);
+            Lunches.Verify(x => x.Add(It.Is<Lunch>(y => y.Id == createdLunch.Id)), Times.Once);
         }
 
         #endregion
 
         #region Private Methods
 
-        private static Launch GetADefaultLaunch(Guid? id = null)
+        private static Lunch GetADefaultLunch(Guid? id = null)
         {
             var sanitizedId = id ?? Guid.NewGuid();
-            var launchType = new LaunchType { Id = 2, Description = "Light" };
+            var LunchType = new LunchType { Id = 2, Description = "Light" };
 
-            return new Launch
+            return new Lunch
             {
                 CreatedBy = "System",
                 CreatedOn = DateTime.Now,
-                LaunchName = "Crepes de verdura y calabza",
-                Id = 2,
-                LaunchType = launchType
+                LunchName = "Crepes de verdura y calabza",
+                Id = Guid.NewGuid(),
+                LunchType = LunchType
             };
         }
 

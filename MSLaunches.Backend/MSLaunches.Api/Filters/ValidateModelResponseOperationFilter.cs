@@ -3,7 +3,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MSLaunches.Api.Filters
+namespace MSLunches.Api.Filters
 {
     public class ValidateModelResponseOperationFilter : IOperationFilter
     {

@@ -1,19 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MSLaunches.Api.Models
+namespace MSLunches.Api.Models
 {
-    public class LaunchDto
+    public class LunchDto
     {
         /// <summary>
-        /// LaunchName of the launch.
+        /// LunchName of the lunch.
         /// </summary>
         [Required]
         [MaxLength(100)]
-        public string LaunchName { get; set; }
+        public string LunchName { get; set; }
 
         /// <summary>
-        /// FK to LaunchType.
+        /// FK to LunchType.
         /// </summary>
-        public int LaunchTypeId { get; set; }
+        public int LunchTypeId { get; set; }
     }
 }

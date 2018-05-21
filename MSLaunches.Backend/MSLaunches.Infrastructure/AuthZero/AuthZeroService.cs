@@ -1,10 +1,10 @@
 ﻿using Auth0.Core;
 using Auth0.Core.Exceptions;
 using Auth0.ManagementApi.Models;
-using MSLaunches.Infrastructure.Result;
+using MSLunches.Infrastructure.Result;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Infrastructure.AuthZero
+namespace MSLunches.Infrastructure.AuthZero
 {
     public class AuthZeroService : IAuthZeroService
     {

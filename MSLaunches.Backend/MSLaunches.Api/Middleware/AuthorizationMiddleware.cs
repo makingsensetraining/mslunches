@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using MSLaunches.Api.Models;
+using MSLunches.Api.Models;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Api.Middleware
+namespace MSLunches.Api.Middleware
 {
     /// <summary>
     /// Middleware to handle global authorization policies

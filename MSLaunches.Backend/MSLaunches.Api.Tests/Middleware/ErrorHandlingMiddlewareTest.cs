@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
-using MSLaunches.Api.Middleware;
+using MSLunches.Api.Middleware;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MSLaunches.Api.Tests.Middleware
+namespace MSLunches.Api.Tests.Middleware
 {
     public class ErrorHandlingMiddlewareTest
     {

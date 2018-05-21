@@ -5,21 +5,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MSLaunches.Api.Authorization;
-using MSLaunches.Api.Filters;
-using MSLaunches.Api.Middleware;
-using MSLaunches.Data.EF;
-using MSLaunches.Domain.Services;
-using MSLaunches.Domain.Services.Interfaces;
-using MSLaunches.Infrastructure.AuthZero;
-using MSLaunches.Infrastructure.RestClient;
+using MSLunches.Api.Authorization;
+using MSLunches.Api.Filters;
+using MSLunches.Api.Middleware;
+using MSLunches.Data.EF;
+using MSLunches.Domain.Services;
+using MSLunches.Domain.Services.Interfaces;
+using MSLunches.Infrastructure.AuthZero;
+using MSLunches.Infrastructure.RestClient;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
 
-namespace MSLaunches.Api
+namespace MSLunches.Api
 {
     public class Startup
     {
@@ -38,7 +38,7 @@ namespace MSLaunches.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebApiCoreLaunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
+            services.AddDbContext<WebApiCoreLunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
 
             // Add framework services.
             services.AddMvc();
@@ -78,12 +78,12 @@ namespace MSLaunches.Api
             services.AddTransient<IAuthZeroService>(sp => new AuthZeroService(sp.GetRequiredService<IAuthZeroClient>()));
 
             // Register Services
-            services.AddTransient<IUserService>(sp => new UserService(sp.GetRequiredService<WebApiCoreLaunchesContext>()));
-            services.AddTransient<ILaunchService>(sp => new LaunchService(sp.GetRequiredService<WebApiCoreLaunchesContext>()));
+            services.AddTransient<IUserService>(sp => new UserService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
+            services.AddTransient<ILunchService>(sp => new LunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, WebApiCoreLaunchesContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, WebApiCoreLunchesContext dbContext)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -99,11 +99,11 @@ namespace MSLaunches.Api
             {
                 //Sets swagger UI route on root, "GET {baseUrl}/ "
                 c.RoutePrefix = string.Empty;
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiCoreMSLaunches V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiCoreMSLunches V1");
             });
             
             app.UseMvc();
-            DatabaseMSLaunches.Initialize(dbContext);
+            DatabaseMSLunches.Initialize(dbContext);
         }
 
         /// <summary>
@@ -114,10 +114,10 @@ namespace MSLaunches.Api
         {
             return new Info 
             { 
-                Title = "WebApiCoreMSLaunches", 
+                Title = "WebApiCoreMSLunches", 
                 Version = "v1",
-                Description = "Web Api MSLaunches for MS",
-                TermsOfService = "https://github.com/MakingSense/WebApiCore-MSLaunches",
+                Description = "Web Api MSLunches for MS",
+                TermsOfService = "https://github.com/MakingSense/WebApiCore-MSLunches",
                 Contact = new Contact
                 {
                     Name = "Gastón Cerioni",
@@ -126,7 +126,7 @@ namespace MSLaunches.Api
                 License = new License
                 {
                     Name = "I would love to put one c:",
-                    Url = "https://github.com/MakingSense/WebApiCore-MSLaunches"
+                    Url = "https://github.com/MakingSense/WebApiCore-MSLunches"
                 }
             };
         }

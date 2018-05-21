@@ -1,4 +1,4 @@
-﻿namespace MSLaunches.Infrastructure.Result
+﻿namespace MSLunches.Infrastructure.Result
 {
     /// <summary>
     /// Multi-purpose wrapper for result objects with success and error results.

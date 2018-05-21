@@ -1,13 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace MSLaunches.Api.Models
+namespace MSLunches.Api.Models
 {
-    public class UserLaunchDto
+    public class UserLunchDto
     {
         [Required]
-        public int DailyLaunchId { get; set; }
+        public Guid DailyLunchId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
+
+        public bool Approved { get; set; }
     }
 }

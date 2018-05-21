@@ -1,23 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MSLaunches.Data.EF;
-using MSLaunches.Data.Models;
-using MSLaunches.Domain.Services.Interfaces;
+using MSLunches.Data.EF;
+using MSLunches.Data.Models;
+using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Domain.Services
+namespace MSLunches.Domain.Services
 {
     /// <inheritdoc/>
     public class UserService : IUserService
     {
-        private readonly WebApiCoreLaunchesContext _dbContext;
+        private readonly WebApiCoreLunchesContext _dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
-        /// <param name="dbContext"><see cref="WebApiCoreLaunchesContext"/> instance required to access database </param>
-        public UserService(WebApiCoreLaunchesContext dbContext)
+        /// <param name="dbContext"><see cref="WebApiCoreLunchesContext"/> instance required to access database </param>
+        public UserService(WebApiCoreLunchesContext dbContext)
         {
             _dbContext = dbContext;
         }

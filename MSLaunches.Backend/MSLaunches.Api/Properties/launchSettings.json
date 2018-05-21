@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "MSLaunches.Api": {
+    "MSLunches.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "",

@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using MSLaunches.Api.Controllers;
-using MSLaunches.Api.Models;
-using MSLaunches.Data.Models;
-using MSLaunches.Domain.Services.Interfaces;
+using MSLunches.Api.Controllers;
+using MSLunches.Api.Models;
+using MSLunches.Data.Models;
+using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace MSLaunches.Api.Tests.Controllers
+namespace MSLunches.Api.Tests.Controllers
 {
     public class UserControllerTest
     {

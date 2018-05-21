@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MSLaunches.Domain.Exceptions
+namespace MSLunches.Domain.Exceptions
 {
     /// <summary>
     /// Exception thrown when the current role/user does not satisfy authorization requirements

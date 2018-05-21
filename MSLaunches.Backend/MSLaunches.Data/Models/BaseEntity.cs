@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MSLaunches.Data.Models
+namespace MSLunches.Data.Models
 {
     public class BaseEntity
     {
