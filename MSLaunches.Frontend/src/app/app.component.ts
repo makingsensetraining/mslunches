@@ -6,8 +6,7 @@ import { merge } from 'rxjs/observable/merge';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
-import { Logger, I18nService } from '@app/core';
-import { AuthenticationService } from '@app/core/'
+import { Logger, I18nService, AuthenticationService } from '@app/core';
 
 const log = new Logger('App');
 
@@ -23,43 +22,42 @@ export class AppComponent implements OnInit {
               private titleService: Title,
               private translateService: TranslateService,
               private i18nService: I18nService,
-              private authenticationService: AuthenticationService) { 
-    authenticationService.handleHash();
-  }
+              private authenticationService: AuthenticationService) {}
 
   ngOnInit() {
     // Setup logger
     if (environment.production) {
       Logger.enableProductionMode();
     }
-
     log.debug('init');
 
+    this.authenticationService.loggedSubscriber.subscribe(res => {
 
-    // Setup translations
-    this.i18nService.init(environment.defaultLanguage, environment.supportedLanguages);
+      // Setup translations
+      this.i18nService.init(environment.defaultLanguage, environment.supportedLanguages);
 
-    const onNavigationEnd = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
+      const onNavigationEnd = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
 
-    // Change page title on navigation or language change, based on route data
-    merge(this.translateService.onLangChange, onNavigationEnd)
-      .pipe(
-        map(() => {
-          let route = this.activatedRoute;
-          while (route.firstChild) {
-            route = route.firstChild;
+      // Change page title on navigation or language change, based on route data
+      merge(this.translateService.onLangChange, onNavigationEnd)
+        .pipe(
+          map(() => {
+            let route = this.activatedRoute;
+            while (route.firstChild) {
+              route = route.firstChild;
+            }
+            return route;
+          }),
+          filter(route => route.outlet === 'primary'),
+          mergeMap(route => route.data)
+        )
+        .subscribe(event => {
+          const title = event['title'];
+          if (title) {
+            this.titleService.setTitle(this.translateService.instant(title));
           }
-          return route;
-        }),
-        filter(route => route.outlet === 'primary'),
-        mergeMap(route => route.data)
-      )
-      .subscribe(event => {
-        const title = event['title'];
-        if (title) {
-          this.titleService.setTitle(this.translateService.instant(title));
-        }
-      });
+        });
+    });
   }
 
 }

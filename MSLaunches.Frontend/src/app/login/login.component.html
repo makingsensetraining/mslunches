@@ -20,15 +20,10 @@
           <h4 class="card-title text-center">
             <i class="far fa-3x fa-user-circle text-muted"></i>
           </h4>
-          <form (ngSubmit)="login()" [formGroup]="loginForm" novalidate>
-            <div class="alert alert-danger" [hidden]="!error || isLoading" translate>
-              Username or password incorrect.
-            </div>
-            <button class="btn btn-primary w-100" type="submit" [disabled]="isLoading">
+            <button (click)="login()" class="btn btn-primary w-100" type="submit" [disabled]="isLoading">
               <i class="fas fa-cog fa-spin" [hidden]="!isLoading"></i>
               <span translate>Login</span>
             </button>
-          </form>
         </div>
       </div>
     </div>

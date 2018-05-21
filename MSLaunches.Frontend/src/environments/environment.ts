@@ -25,5 +25,5 @@ export const auth0Config = new WebAuth({
   responseType: 'token id_token',
   audience: environment.serverUrl,
   redirectUri: 'http://localhost:4200/',
-  scope: 'openid profile'
+  scope: 'openid profile email'
 });

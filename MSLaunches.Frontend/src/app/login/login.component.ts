@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
+import { ISubscription } from 'rxjs/Subscription';
 
 import { environment } from '@env/environment';
 import { Logger, I18nService, AuthenticationService } from '@app/core';
@@ -17,20 +18,24 @@ export class LoginComponent implements OnInit {
 
   version: string = environment.version;
   error: string;
-  loginForm: FormGroup;
-  isLoading = false;
+  logSubscription: ISubscription;
+  isLoading = true;
 
   constructor(private router: Router,
               private formBuilder: FormBuilder,
               private i18nService: I18nService,
-              private authenticationService: AuthenticationService) {
-    this.createForm();
+    private authenticationService: AuthenticationService) {
   }
 
-  ngOnInit() { 
-    if(this.authenticationService.isAuthenticated()){
-      this.router.navigate(['/home'], {replaceUrl: true});
-    }
+  ngOnInit() {
+    console.log(this.authenticationService);
+    this.logSubscription = this.authenticationService.loggedSubscriber.subscribe((res) => {
+      if (res && this.authenticationService.isLogged && this.authenticationService.isAuthenticated()) {
+        this.router.navigate(['/home'], {replaceUrl: true});
+      } else {
+        this.isLoading = false;
+      }
+    });
   }
 
   login() {
@@ -48,14 +53,6 @@ export class LoginComponent implements OnInit {
 
   get languages(): string[] {
     return this.i18nService.supportedLanguages;
-  }
-
-  private createForm() {
-    this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      remember: true
-    });
   }
 
 }
