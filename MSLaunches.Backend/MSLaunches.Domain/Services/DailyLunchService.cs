@@ -22,7 +22,7 @@ namespace MSLunches.Domain.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="DailyLunchService"/> class.
         /// </summary>
-        /// <param name="dbContext"><see cref="WebApiCoreDailyLunchesContext"/> instance required to access database </param>
+        /// <param name="dbContext"><see cref="WebApiCoreLunchesContext"/> instance required to access database </param>
         public DailyLunchService(WebApiCoreLunchesContext dbContext)
         {
             _dbContext = dbContext;
@@ -43,12 +43,13 @@ namespace MSLunches.Domain.Services
             return await _dbContext.DailyLunches.ToListAsync();
         }
 
-        public async Task<int> CreateAsync(DailyLunch dailyLunch)
+        public async Task<DailyLunch> CreateAsync(DailyLunch dailyLunch)
         {
             dailyLunch.CreatedOn = DateTime.Now;
             _dbContext.DailyLunches
                       .Add(dailyLunch);
-            return await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
+            return dailyLunch;
         }
 
         public async Task<int> CreateDailyLunchesAsync(List<DailyLunch> dailyDailyLunches)
@@ -62,22 +63,20 @@ namespace MSLunches.Domain.Services
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateAsync(DailyLunch dailyLunch)
+        public async Task<DailyLunch> UpdateAsync(DailyLunch dailyLunch)
         {
             var dailyLunchToUpdate = await _dbContext.DailyLunches
-                                                 .FirstOrDefaultAsync(u => u.Id == dailyLunch.Id);
+                                                     .FirstOrDefaultAsync(u => u.Id == dailyLunch.Id);
 
-            if (dailyLunchToUpdate == null)
-            {
-                return 0;
-            }
+            if (dailyLunchToUpdate == null) return null;
 
             dailyLunchToUpdate.Date = dailyLunch.Date;
             dailyLunchToUpdate.LunchId = dailyLunch.LunchId;
             dailyLunchToUpdate.UpdatedBy = dailyLunch.UpdatedBy;
             dailyLunchToUpdate.UpdatedOn = DateTime.Now;
 
-            return await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
+            return dailyLunchToUpdate;
         }
 
         public async Task<int> DeleteByIdAsync(Guid dailyLunchId)

@@ -19,11 +19,11 @@ namespace MSLunches.Data.EF
         public WebApiCoreLunchesContext() : base() { }
 
         /// <summary> All users registered on WebApiCoreMSLunches database</summary>
-        public DbSet<User> Users { get; set; }
-        public DbSet<Lunch> Lunches { get; set; }
-        public DbSet<LunchType> LunchTypes { get; set; }
-        public DbSet<DailyLunch> DailyLunches { get; set; }
-        public DbSet<UserLunch> UserLunches { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Lunch> Lunches { get; set; }
+        public virtual DbSet<LunchType> LunchTypes { get; set; }
+        public virtual DbSet<DailyLunch> DailyLunches { get; set; }
+        public virtual DbSet<UserLunch> UserLunches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

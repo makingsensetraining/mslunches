@@ -11,25 +11,25 @@ namespace MSLunches.Domain.Services.Interfaces
     public interface IUserLunchService
     {
         /// <summary>
-        /// Gets a lunch by Id
+        /// Gets a userLunch by Id
         /// </summary>
-        /// <param name="dailyLunchId">Id of the lunch to be retrieved</param>
-        /// <returns>A <see cref="DailyLunch"/> object if the lunch is found, otherwise null</returns>
-        Task<UserLunch> GetByIdAsync(Guid UuserLunchId);
+        /// <param name="userLunchId">Id of the userLunch to be retrieved</param>
+        /// <returns>A <see cref="DailyLunch"/> object if the userLunch is found, otherwise null</returns>
+        Task<UserLunch> GetByIdAsync(Guid userLunchId);
 
         /// <summary>
-        /// Creates a lunch
+        /// Creates a userLunch
         /// </summary>
-        /// <param name="lunch">Lunch to create</param>
+        /// <param name="userLunch">Lunch to create</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
-        Task<int> CreateAsync(UserLunch userLunch);
+        Task<UserLunch> CreateAsync(UserLunch userLunch);
 
         Task<int> CreateUserLunchesAsync(List<UserLunch> userLunches);
 
         /// <summary>
-        /// Deletes a lunch by Id
+        /// Deletes a userLunch by Id
         /// </summary>
-        /// <param name="lunchId">Id of the lunch to delete</param>
+        /// <param name="lunchId">Id of the userLunch to delete</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<int> DeleteByIdAsync(Guid lunchId);
 
@@ -40,11 +40,11 @@ namespace MSLunches.Domain.Services.Interfaces
         Task<List<UserLunch>> GetAsync();
 
         /// <summary>
-        /// Updates a lunch
+        /// Updates a userLunch
         /// </summary>
-        /// <param name="lunch">Lunch to update</param>
+        /// <param name="userLunch">userLunch to update</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
-        Task<int> UpdateAsync(UserLunch userLunch);
+        Task<UserLunch> UpdateAsync(UserLunch userLunch);
 
         Task<List<UserLunch>> GetlLunchesByUserByWeekAsync(Guid userId);
     }

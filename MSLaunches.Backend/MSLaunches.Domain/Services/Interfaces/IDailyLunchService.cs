@@ -11,25 +11,25 @@ namespace MSLunches.Domain.Services.Interfaces
     public interface IDailyLunchService
     {
         /// <summary>
-        /// Gets a lunch by Id
+        /// Gets a dailyLunch by Id
         /// </summary>
-        /// <param name="dailyLunchId">Id of the lunch to be retrieved</param>
+        /// <param name="dailyLunchId">Id of the dailyLunch to be retrieved</param>
         /// <returns>A <see cref="DailyLunch"/> object if the lunch is found, otherwise null</returns>
         Task<DailyLunch> GetByIdAsync(Guid dailyLunchId);
 
         /// <summary>
-        /// Creates a lunch
+        /// Creates a dailyLunch
         /// </summary>
-        /// <param name="lunch">Lunch to create</param>
+        /// <param name="dailyLunch">DailyLunch to create</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
-        Task<int> CreateAsync(DailyLunch dailyLunch);
+        Task<DailyLunch> CreateAsync(DailyLunch dailyLunch);
 
         Task<int> CreateDailyLunchesAsync(List<DailyLunch> dailyLunches);
 
         /// <summary>
-        /// Deletes a lunch by Id
+        /// Deletes a dailyLunch by Id
         /// </summary>
-        /// <param name="lunchId">Id of the lunch to delete</param>
+        /// <param name="lunchId">Id of the dailyLunch to delete</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<int> DeleteByIdAsync(Guid lunchId);
 
@@ -40,11 +40,11 @@ namespace MSLunches.Domain.Services.Interfaces
         Task<List<DailyLunch>> GetAsync();
 
         /// <summary>
-        /// Updates a lunch
+        /// Updates a dailyLunch
         /// </summary>
-        /// <param name="lunch">Lunch to update</param>
+        /// <param name="dailyLunch">dailyLunch to update</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
-        Task<int> UpdateAsync(DailyLunch dailyLunch);
+        Task<DailyLunch> UpdateAsync(DailyLunch dailyLunch);
 
         /// <summary>
         ///A list of available lunches by week

@@ -4,7 +4,6 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLunches.Domain.Services
@@ -43,36 +42,36 @@ namespace MSLunches.Domain.Services
             return await _dbContext.Lunches.ToListAsync();
         }
 
-        public async Task<int> CreateAsync(Lunch lunch)
+        public async Task<Lunch> CreateAsync(Lunch lunch)
         {
             lunch.CreatedOn = DateTime.Now;
             _dbContext.Lunches
                       .Add(lunch);
-            return await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
+            return lunch;
         }
 
-        public async Task<int> UpdateAsync(Lunch lunch)
+        public async Task<Lunch> UpdateAsync(Lunch lunch)
         {
-            var lunchToUpdate = await _dbContext.Lunches
-                                                 .FirstOrDefaultAsync(u => u.Id == lunch.Id);
 
-            if (lunchToUpdate == null)
-            {
-                return 0;
-            }
+            var lunchToUpdate = await _dbContext.Lunches
+                                                .FindAsync(lunch.Id);
+
+            if (lunchToUpdate == null) return null;
 
             lunchToUpdate.LunchName = lunch.LunchName;
-            lunchToUpdate.LunchType = lunch.LunchType;
+            lunchToUpdate.LunchTypeId = lunch.LunchTypeId;
             lunchToUpdate.UpdatedBy = lunch.UpdatedBy;
             lunchToUpdate.UpdatedOn = DateTime.Now;
 
-            return await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
+            return lunchToUpdate;
         }
 
         public async Task<int> DeleteByIdAsync(Guid lunchId)
         {
             var lunch = await _dbContext.Lunches
-                                         .FirstOrDefaultAsync(item => item.Id == lunchId);
+                                        .FindAsync(lunchId);
             if (lunch == null)
             {
                 return 0;

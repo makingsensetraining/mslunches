@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MSLunches.Data.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSLunches.Api.Models
 {
-    public class LunchDto
+    public class InputLunchDto
     {
         /// <summary>
         /// LunchName of the lunch.

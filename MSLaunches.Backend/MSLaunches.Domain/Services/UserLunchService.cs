@@ -44,12 +44,32 @@ namespace MSLunches.Domain.Services
                                    .ToListAsync();
         }
 
-        public async Task<int> CreateAsync(UserLunch userLunch)
+        public async Task<UserLunch> CreateAsync(UserLunch userLunch)
         {
+            userLunch.Id = Guid.NewGuid();
             userLunch.CreatedOn = DateTime.Now;
-            _dbContext.UserLunches
-                      .Add(userLunch);
-            return await _dbContext.SaveChangesAsync();
+
+            await _dbContext.UserLunches.AddAsync(userLunch);
+            await _dbContext.SaveChangesAsync();
+
+            return userLunch;
+        }
+
+        public async Task<UserLunch> UpdateAsync(UserLunch userLunch)
+        {
+            var userLunchToUpdate = await _dbContext.UserLunches.FindAsync(userLunch.Id);
+
+            if (userLunchToUpdate == null) return null;
+           
+            userLunchToUpdate.DailyLunchId = userLunch.DailyLunchId;
+            userLunchToUpdate.UserId = userLunch.UserId;
+            userLunchToUpdate.Approved = userLunch.Approved;
+            userLunchToUpdate.UpdatedBy = userLunch.UpdatedBy;
+            userLunchToUpdate.UpdatedOn = DateTime.Now;
+
+            await _dbContext.SaveChangesAsync();
+
+            return userLunchToUpdate;
         }
 
         public async Task<int> CreateUserLunchesAsync(List<UserLunch> userLunches)
@@ -60,25 +80,6 @@ namespace MSLunches.Domain.Services
                 _dbContext.UserLunches
                           .Add(userLunch);
             }
-            return await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<int> UpdateAsync(UserLunch userLunch)
-        {
-            var userLunchToUpdate = await _dbContext.UserLunches
-                                                 .FirstOrDefaultAsync(u => u.Id == userLunch.Id);
-
-            if (userLunchToUpdate == null)
-            {
-                return 0;
-            }
-
-            userLunchToUpdate.DailyLunchId = userLunch.DailyLunchId;
-            userLunchToUpdate.UserId = userLunch.UserId;
-            userLunchToUpdate.Approved = userLunch.Approved;
-            userLunchToUpdate.UpdatedBy = userLunch.UpdatedBy;
-            userLunchToUpdate.UpdatedOn = DateTime.Now;
-
             return await _dbContext.SaveChangesAsync();
         }
 

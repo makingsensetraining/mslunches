@@ -1,22 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace MSDailyLunches.Api.Controllers
+namespace MSLunches.Api.Controllers
 {
     [Route("api/dailyLunches")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]
-    public class UserDailyLunchController : Controller
+    public class DailyLunchController : Controller
     {
         private readonly IDailyLunchService _dailyLunchService;
 
-        public UserDailyLunchController(IDailyLunchService dailyLunchService)
+        public DailyLunchController(IDailyLunchService dailyLunchService)
         {
             _dailyLunchService = dailyLunchService;
         }
@@ -26,7 +26,7 @@ namespace MSDailyLunches.Api.Controllers
         /// </summary>
         /// <response code="200">A list of lunchs</response>
         /// <return>A list of lunchs</return>
-        [HttpGet("GetAll")]
+        [HttpGet()]
         [ProducesResponseType(typeof(List<DailyLunch>), 200)]
         public async Task<IActionResult> GetAll()
         {
@@ -55,60 +55,56 @@ namespace MSDailyLunches.Api.Controllers
         }
 
         /// <summary>
-        /// Creates a new lunch
+        /// Creates a new DailyLunch
         /// </summary>
-        /// <param name="lunch" cref="DailyLunchDto">DailyLunch model</param>
-        /// <response code="204">DailyLunch created</response>
-        /// <response code="404">DailyLunch could not be created</response>
+        /// <param name="dailyLunch" cref="InputDailyLunchDto">User data</param>
+        /// <response code="201">User created</response>
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody]DailyLunchDto lunch)
+        [ProducesResponseType(typeof(DailyLunch), 201)]
+        public async Task<IActionResult> Create([FromBody]InputDailyLunchDto dailyLunch)
         {
-            if (lunch == null)
-            {
-                return BadRequest();
-            }
+            // TODO: Fix validation attribute, it's not working as expected.
+            if (dailyLunch == null) return BadRequest();
 
-            var affectedRows = await _dailyLunchService.CreateAsync(new DailyLunch
+            var dailyLunchToCreate = new DailyLunch
             {
-                Id = Guid.NewGuid(),
-                Date = lunch.Date,
-                LunchId = lunch.LunchId,
-                CreatedOn = DateTime.Now,
-                CreatedBy = "Test"
-                // TODO: get createdBy from current lunch
-            });
+                Date = dailyLunch.Date,
+                LunchId = dailyLunch.LunchId
+            };
 
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            var result = await _dailyLunchService.CreateAsync(dailyLunchToCreate);
+
+            return CreatedAtAction(nameof(Get), new { userId = result.Id }, new DailyLunchDto(result));
         }
 
         ///<summary>
         /// Updates an lunch given his id
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the lunch</param>
-        ///<param name="lunch" cref="DailyLunchDto">DailyLunch model</param>
+        ///<param name="dailyLunchDto" cref="InputDailyLunchDto">DailyLunch model</param>
         ///<response code="204">DailyLunch created</response>
         ///<response code="404">DailyLunch not found / DailyLunch could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]DailyLunchDto lunch)
+        public async Task<IActionResult> Update(Guid id, [FromBody]InputDailyLunchDto dailyLunchDto)
         {
-            if (lunch == null)
-            {
-                return BadRequest();
-            }
+            // TODO: Fix validation attribute, it's not working as expected.
+            if (dailyLunchDto == null) return BadRequest();
 
-            var affectedRows = await _dailyLunchService.UpdateAsync(new DailyLunch
+            var dailyLunchToUpdate = new DailyLunch
             {
                 Id = id,
-                Date = lunch.Date,
-                LunchId = lunch.LunchId,
-                CreatedOn = DateTime.Now,
-                CreatedBy = "Test"
-                // TODO: get UpdatedBy from current lunch
-            });
+                Date = dailyLunchDto.Date,
+                LunchId = dailyLunchDto.LunchId,
+                UpdatedBy = "Test" //TODO: Add user.
+            };
 
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            var result = await _dailyLunchService.UpdateAsync(dailyLunchToUpdate);
+
+            if (result == null) return NotFound();
+
+            return NoContent();
         }
 
         ///<summary>
@@ -130,7 +126,7 @@ namespace MSDailyLunches.Api.Controllers
         /// A list of available lunches by week
         /// </summary>
         /// <returns></returns>
-        [HttpGet("GetAllLunchesAvailableInWeek")]
+        [HttpGet("LunchesInWeek")]
         [ProducesResponseType(typeof(List<DailyLunch>), 200)]
         public async Task<IActionResult> GetAllLunchesAvailableInWeek()
         {
@@ -144,7 +140,7 @@ namespace MSDailyLunches.Api.Controllers
         /// <param name="dailyDailyLunches" cref="DailyLunchDto">DailyLunch model</param>
         /// <response code="204">DailyLunch created</response>
         /// <response code="404">DailyLunch could not be created</response>
-        [HttpPost("CreateWeekLunch")]
+        [HttpPost("LunchSelection")]
         [ValidateModel]
         public async Task<IActionResult> CreateWeekLunch([FromBody]List<DailyLunchDto> dailyDailyLunches)
         {

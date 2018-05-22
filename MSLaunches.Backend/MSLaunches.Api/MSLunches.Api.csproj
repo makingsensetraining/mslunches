@@ -23,9 +23,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MSLaunches.Data\MSLaunches.Data.csproj" />
-    <ProjectReference Include="..\MSLaunches.Domain\MSLaunches.Domain.csproj" />
-    <ProjectReference Include="..\MSLaunches.Infrastructure\MSLaunches.Infrastructure.csproj" />
+    <ProjectReference Include="..\MSLaunches.Data\MSLunches.Data.csproj" />
+    <ProjectReference Include="..\MSLaunches.Domain\MSLunches.Domain.csproj" />
+    <ProjectReference Include="..\MSLaunches.Infrastructure\MSLunches.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

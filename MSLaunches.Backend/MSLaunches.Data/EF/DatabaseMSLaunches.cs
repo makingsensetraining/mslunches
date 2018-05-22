@@ -1,6 +1,6 @@
 ﻿namespace MSLunches.Data.EF
 {
-    using MSLunches.Data.Models;
+    using Models;
     using System;
     using System.Linq;
 

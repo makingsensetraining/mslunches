@@ -1,21 +1,20 @@
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Moq;
 using MSLunches.Data.EF;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
+
 //WebApiCoreLunchesContext
-namespace MSLunches.Domain.Tests
+namespace MSLunches.Domain.Tests.Services
 {
     public class UserServiceTests
     {
         #region Members
 
         private readonly Mock<WebApiCoreLunchesContext> _context;
-        private readonly UserService _userService;
 
         #endregion
 
@@ -24,7 +23,6 @@ namespace MSLunches.Domain.Tests
         public UserServiceTests()
         {
             _context = new Mock<WebApiCoreLunchesContext>();
-            _userService = new UserService(_context.Object);
         }
 
         #endregion
@@ -34,15 +32,15 @@ namespace MSLunches.Domain.Tests
         [Fact]
         public async Task GetByIdAsync_ShouldReturnUser()
         {
-            // Arrang
+            // Arrange
+            var service = new UserService(_context.Object);
             var user = GetADefaultUser();
             _context.Setup(x => x.Users.FindAsync(It.Is<Guid>(y => y == user.Id)))
                  .ReturnsAsync(user)
                  .Verifiable();
 
-
             // Act
-            var retrievedUser = await _userService.GetByIdAsync(user.Id);
+            var retrievedUser = await service.GetByIdAsync(user.Id);
 
             // Assert
             Assert.NotNull(retrievedUser);
@@ -57,13 +55,14 @@ namespace MSLunches.Domain.Tests
         public async Task GetByIdAsync_ShouldReturnNull()
         {
             // Arrange 
+            var service = new UserService(_context.Object);
             var id = Guid.NewGuid();
             _context.Setup(x => x.Users.FindAsync(It.Is<Guid>(y => y == id)))
                  .ReturnsAsync((User)null)
                  .Verifiable();
 
             //Act
-            var retrievedUser = await _userService.GetByIdAsync(id);
+            var retrievedUser = await service.GetByIdAsync(id);
 
             // Assert
             Assert.Null(retrievedUser);
@@ -77,7 +76,8 @@ namespace MSLunches.Domain.Tests
         [Fact]
         public async void Delete_ShouldDeleteUser()
         {
-            // Arrang
+            // Arrange
+            var service = new UserService(_context.Object);
             var createdUser = GetADefaultUser();
             _context.Setup(x => x.Users.FindAsync(It.Is<Guid>(y => y == createdUser.Id)))
                  .ReturnsAsync(createdUser)
@@ -88,7 +88,7 @@ namespace MSLunches.Domain.Tests
                    .ReturnsAsync(1);
 
             // Act
-            var affectedRows = await _userService.DeleteByIdAsync(createdUser.Id);
+            var affectedRows = await service.DeleteByIdAsync(createdUser.Id);
 
             // Assert
             Assert.True(affectedRows > 0);
@@ -99,13 +99,14 @@ namespace MSLunches.Domain.Tests
         public async void Delete_UserNotFound()
         {
             // Arrange  
+            var service = new UserService(_context.Object);
             var id = Guid.NewGuid();
             _context.Setup(x => x.Users.FindAsync(It.Is<Guid>(y => y == id)))
                  .ReturnsAsync((User)null)
                  .Verifiable();
 
             //Act
-            var affectedRows = await _userService.DeleteByIdAsync(Guid.NewGuid());
+            var affectedRows = await service.DeleteByIdAsync(Guid.NewGuid());
 
             // Assert
             Assert.Equal(0, affectedRows);
@@ -119,7 +120,8 @@ namespace MSLunches.Domain.Tests
         [Fact]
         public async void Update_ShouldUpdateIfUserExists()
         {
-            // Arrange    
+            // Arrange
+            var service = new UserService(_context.Object);
             var user = GetADefaultUser();
             _context.Setup(x => x.Users.FindAsync(It.Is<Guid>(y => y == user.Id)))
                  .ReturnsAsync(user)
@@ -128,18 +130,19 @@ namespace MSLunches.Domain.Tests
                    .ReturnsAsync(1);
 
             // Act
-            int affectedRows = await _userService.UpdateAsync(user);
+            var result = await service.UpdateAsync(user);
 
             // Assert
-            Assert.True(affectedRows > 0);
+            Assert.NotNull(result);
             _context.Verify(x => x.Users.FindAsync(It.Is<Guid>(y => y == user.Id)), Times.Once);
             _context.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
-        public async void Update_ShouldReturnZeroIfUserNotExists()
+        public async void Update_ReturnsNull_WhenUserNotExists()
         {
             // Arrange
+            var service = new UserService(_context.Object);
             var createdUser = GetADefaultUser();
             _context.Setup(a => a.Users.FindAsync(It.Is<Guid>(g => g == createdUser.Id)))
                     .ReturnsAsync((User)null);
@@ -147,35 +150,12 @@ namespace MSLunches.Domain.Tests
                     .ReturnsAsync(1);
 
             // Act
-            var affectedRows = await _userService.UpdateAsync(createdUser);
+            var result = await service.UpdateAsync(createdUser);
 
             // Assert
-            Assert.Equal(0, affectedRows);
+            Assert.Null(result);
             _context.Verify(x => x.Users.FindAsync(It.Is<Guid>(y => y == createdUser.Id)), Times.Once);
             _context.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
-        }
-
-        #endregion
-
-        #region Create Tests
-
-        [Fact]
-        public async void Create_ShoulReturnOneIfCreated()
-        {
-            // Arrange    
-            var createdUser = GetADefaultUser();
-            _context.Setup(x => x.Users.Add(It.Is<User>(y => y.Id == createdUser.Id)))
-                    .Verifiable();
-            _context.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
-                   .ReturnsAsync(1);
-
-            // Act
-            var affectedRows = await _userService.CreateAsync(createdUser);
-
-            // Assert
-            Assert.Equal(1, affectedRows);
-            _context.Verify(x => x.Users.Add(It.Is<User>(y => y.Id == createdUser.Id)), Times.Once);
-            _context.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         #endregion
@@ -184,11 +164,9 @@ namespace MSLunches.Domain.Tests
 
         private static User GetADefaultUser(Guid? id = null)
         {
-            var sanitizedId = id ?? Guid.NewGuid();
-
             return new User
             {
-                Id = new Guid("d58893fd-3836-4308-b840-85f4fe548264"),
+                Id = id ?? Guid.NewGuid(),
                 FirstName = "John",
                 LastName = "Doe",
                 Email = "JohnDoe@makinsense.com",

@@ -26,7 +26,7 @@ namespace MSLunches.Api.Controllers
         /// </summary>
         /// <response code="200">A list of lunches selected by user</response>
         /// <return>A list of UserLunch</return>
-        [HttpGet("GetAll")]
+        [HttpGet()]
         [ProducesResponseType(typeof(List<UserLunch>), 200)]
         public async Task<IActionResult> GetAll()
         {
@@ -57,60 +57,56 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Creates a new lunch selection for user.
         /// </summary>
-        /// <param name="userLunchDto" cref="UserLunchDto">UserLunch model</param>
+        /// <param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         /// <response code="204">UserLunch created</response>
         /// <response code="404">UserLunch could not be created</response>
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody]UserLunchDto userLunchDto)
+        public async Task<IActionResult> Create([FromBody]InputUserLunchDto userLunch)
         {
-            if (userLunchDto == null)
-            {
-                return BadRequest();
-            }
+            if (userLunch == null) return BadRequest();
 
-            var affectedRows = await _userLunchService.CreateAsync(new UserLunch
+            var userLunchToCreate = new UserLunch
             {
-                Id = Guid.NewGuid(),
-                UserId = userLunchDto.UserId,
-                DailyLunchId = userLunchDto.DailyLunchId,
-                Approved = userLunchDto.Approved,
-                CreatedOn = DateTime.Now,
-                CreatedBy = "Test"
-                // TODO: get createdBy from current lunch
-            });
+                DailyLunchId = userLunch.DailyLunchId,
+                UserId = userLunch.UserId,
+                Approved = userLunch.Approved,
+                CreatedBy = "Test" //TODO: Add user.-
+            };
 
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            var result = await _userLunchService.CreateAsync(userLunchToCreate);
+
+            return CreatedAtAction(nameof(Get), new { userId = result.Id }, new UserLunchDto(result));
         }
 
         ///<summary>
         /// Updates a lunch selection by user.
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the lunch</param>
-        ///<param name="userLunchDto" cref="UserLunchDto">UserLunch model</param>
+        ///<param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         ///<response code="204">UserLunch created</response>
         ///<response code="404">UserLunch not found / UserLunch could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]UserLunchDto userLunchDto)
+        public async Task<IActionResult> Update(Guid id, [FromBody]InputUserLunchDto userLunch)
         {
-            if (userLunchDto == null)
-            {
-                return BadRequest();
-            }
+            // TODO: Fix validation attribute, it's not working as expected.
+            if (userLunch == null) return BadRequest();
 
-            var affectedRows = await _userLunchService.UpdateAsync(new UserLunch
+            var userLunchToUpdate = new UserLunch
             {
                 Id = id,
-                UserId = userLunchDto.UserId,
-                DailyLunchId = userLunchDto.DailyLunchId,
-                Approved = userLunchDto.Approved,
-                CreatedOn = DateTime.Now,
-                CreatedBy = "Test"
-                // TODO: get UpdatedBy from current lunch
-            });
+                DailyLunchId = userLunch.DailyLunchId,
+                UserId = userLunch.UserId,
+                Approved = userLunch.Approved,
+                UpdatedBy = "Test" //TODO: Add user.
+            };
 
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            var result = await _userLunchService.UpdateAsync(userLunchToUpdate);
+
+            if (result == null) return NotFound();
+
+            return NoContent();
         }
 
         ///<summary>
@@ -132,7 +128,7 @@ namespace MSLunches.Api.Controllers
         /// A list of available lunches by week
         /// </summary>
         /// <returns></returns>
-        [HttpGet("GetlLunchesByUserByWeek")]
+        [HttpGet("LunchesByUserAndWeek")]
         [ProducesResponseType(typeof(List<UserLunch>), 200)]
         public async Task<IActionResult> GetlLunchesByUserByWeek(Guid userId)
         {

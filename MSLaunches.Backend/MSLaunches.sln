@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLaunches.Data", "MSLaunches.Data\MSLaunches.Data.csproj", "{9E4A5EDD-291B-40E2-96D0-541271208A0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLunches.Data", "MSLaunches.Data\MSLunches.Data.csproj", "{9E4A5EDD-291B-40E2-96D0-541271208A0B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLaunches.Api", "MSLaunches.Api\MSLaunches.Api.csproj", "{C7B52B24-AF58-46AD-BCCC-672347A45955}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLunches.Api", "MSLaunches.Api\MSLunches.Api.csproj", "{C7B52B24-AF58-46AD-BCCC-672347A45955}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLaunches.Domain", "MSLaunches.Domain\MSLaunches.Domain.csproj", "{271EEE25-6BA2-4BF8-A782-94E6F2FCACA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLunches.Domain", "MSLaunches.Domain\MSLunches.Domain.csproj", "{271EEE25-6BA2-4BF8-A782-94E6F2FCACA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLaunches.Infrastructure", "MSLaunches.Infrastructure\MSLaunches.Infrastructure.csproj", "{0BB5DD31-2AC0-40B0-A551-55E5D26EBA23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLunches.Infrastructure", "MSLaunches.Infrastructure\MSLunches.Infrastructure.csproj", "{0BB5DD31-2AC0-40B0-A551-55E5D26EBA23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLaunches.Infrastructure.Tests", "MSLaunches.Infrastructure.Tests\MSLaunches.Infrastructure.Tests.csproj", "{52B21622-93CE-4049-BCA7-469555BC7D7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLunches.Infrastructure.Tests", "MSLaunches.Infrastructure.Tests\MSLunches.Infrastructure.Tests.csproj", "{52B21622-93CE-4049-BCA7-469555BC7D7E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLaunches.Domain.Tests", "MSLaunches.Domain.Tests\MSLaunches.Domain.Tests.csproj", "{0C7CDAE6-0D4F-456B-8CAE-E908A048F06F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLunches.Domain.Tests", "MSLaunches.Domain.Tests\MSLunches.Domain.Tests.csproj", "{0C7CDAE6-0D4F-456B-8CAE-E908A048F06F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLaunches.Data.Tests", "MSLaunches.Data.Tests\MSLaunches.Data.Tests.csproj", "{9542D55B-2B0F-4F00-A2AC-6AFAEF9B15AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLunches.Data.Tests", "MSLaunches.Data.Tests\MSLunches.Data.Tests.csproj", "{9542D55B-2B0F-4F00-A2AC-6AFAEF9B15AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLaunches.Api.Tests", "MSLaunches.Api.Tests\MSLaunches.Api.Tests.csproj", "{9ABE3C23-4C0E-4387-90D9-6F7DEF6342C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSLunches.Api.Tests", "MSLaunches.Api.Tests\MSLunches.Api.Tests.csproj", "{9ABE3C23-4C0E-4387-90D9-6F7DEF6342C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

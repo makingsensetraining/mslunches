@@ -5,6 +5,7 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
@@ -24,92 +25,91 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Gets a list of users
         /// </summary>
-        /// <response code="200">A list of users</response>
-        /// <return>A list of users</return>
+        /// <response code="200">List of users</response>
         [HttpGet]
-        [ProducesResponseType(typeof(List<User>), 200)]
+        [ProducesResponseType(typeof(List<UserDto>), 200)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _userService.GetAsync());
+            var users = await _userService.GetAsync();
+            var result = users.Select(u => new UserDto(u)).ToList();
+
+            return Ok(result);
         }
 
         /// <summary>
-        /// Gets a user based on his id
+        /// Gets a user for the given id
         /// </summary>
-        /// <param name="id" cref="Guid">Guid of the user</param>
-        /// <response code="200">The user that has the given id</response>
-        /// <response code="404">User with the given id was not found</response>
-        /// <return>A users</return>
-        [HttpGet("{id}")]
-        [ValidateModel]
-        [ProducesResponseType(typeof(User), 200)]
-        public async Task<IActionResult> Get(Guid id)
+        /// <param name="userId" cref="Guid">Guid of the user</param>
+        /// <response code="200">User for the given id</response>
+        /// <response code="404">User not found</response>
+        [HttpGet("{userId}")]
+        [ProducesResponseType(typeof(UserDto), 200)]
+        public async Task<IActionResult> Get(Guid userId)
         {
-            var user = await _userService.GetByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var user = await _userService.GetByIdAsync(userId);
 
-            return Ok(user);
+            if (user == null) return NotFound();
+
+            var result = new UserDto(user);
+
+            return Ok(result);
         }
 
         /// <summary>
         /// Creates a new user
         /// </summary>
-        /// <param name="user" cref="UserDto">User model</param>
-        /// <response code="204">User created</response>
-        /// <response code="404">User could not be created</response>
+        /// <param name="user" cref="InputUserDto">User data</param>
+        /// <response code="201">User created</response>
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody]UserDto user)
+        [ProducesResponseType(typeof(User), 201)]
+        public async Task<IActionResult> Create([FromBody]InputUserDto user)
         {
-            if (user == null)
-            {
-                return BadRequest();
-            }
+            // TODO: Fix validation attribute, it's not working as expected.
+            if (user == null) return BadRequest();
 
-            var affectedRows = await _userService.CreateAsync(new User
+            var userToCreate = new User
             {
-                Id = Guid.NewGuid(),
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserName = user.UserName,
-                CreatedBy = "Test"
-                // TODO: get createdBy from current user
-            });
+                UserName = user.UserName
+            };
 
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            var result = await _userService.CreateAsync(userToCreate);
+
+            return CreatedAtAction(nameof(Get), new { userId = result.Id }, new UserDto(result));
         }
 
         ///<summary>
-        /// Updates an user given his id
+        /// Updates a user
         ///</summary>
-        ///<param name="id" cref="Guid">Guid of the user</param>
-        ///<param name="user" cref="UserDto">User model</param>
-        ///<response code="204">User created</response>
-        ///<response code="404">User not found / User could not be updated</response>
+        ///<param name="id" cref="Guid">Guid of the user to update</param>
+        ///<param name="user" cref="InputUserDto">User data</param>
+        ///<response code="204">User updated successfully</response>
+        ///<response code="404">User not found</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]UserDto user)
+        public async Task<IActionResult> Update(Guid id, [FromBody]InputUserDto user)
         {
-            if (user == null)
-            {
-                return BadRequest();
-            }
+            // TODO: Fix validation attribute, it's not working as expected.
+            if (user == null) return BadRequest();
 
-            var affectedRows = await _userService.UpdateAsync(new User
+            var userToUpdate = new User
             {
                 Id = id,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserName = user.UserName
-                // TODO: get UpdatedBy from current user
-            });
+                UserName = user.UserName,
+                UpdatedBy = "Test" //TODO: Add user.
+            };
 
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            var result = await _userService.UpdateAsync(userToUpdate);
+
+            if (result == null) return NotFound();
+
+            return NoContent();
         }
 
         ///<summary>

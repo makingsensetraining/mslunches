@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MSLunches.Api.Models
 {
-    public class UserLunchDto
+    public class InputUserLunchDto
     {
         [Required]
         public Guid DailyLunchId { get; set; }

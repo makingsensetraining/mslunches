@@ -22,7 +22,7 @@ namespace MSLunches.Domain.Services.Interfaces
         /// </summary>
         /// <param name="lunch">Lunch to create</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
-        Task<int> CreateAsync(Lunch lunch);
+        Task<Lunch> CreateAsync(Lunch lunch);
 
         /// <summary>
         /// Deletes a lunch by Id
@@ -42,6 +42,6 @@ namespace MSLunches.Domain.Services.Interfaces
         /// </summary>
         /// <param name="lunch">Lunch to update</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
-        Task<int> UpdateAsync(Lunch lunch);
+        Task<Lunch> UpdateAsync(Lunch lunch);
     }
 }

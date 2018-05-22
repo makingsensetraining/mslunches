@@ -57,58 +57,54 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Creates a new lunch
         /// </summary>
-        /// <param name="lunch" cref="LunchDto">Lunch model</param>
+        /// <param name="lunch" cref="InputLunchDto">Lunch model</param>
         /// <response code="204">Lunch created</response>
         /// <response code="404">Lunch could not be created</response>
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody]LunchDto lunch)
+        public async Task<IActionResult> Create([FromBody]InputLunchDto lunch)
         {
-            if (lunch == null)
-            {
-                return BadRequest();
-            }
+            // TODO: Fix validation attribute, it's not working as expected.
+            if (lunch == null) return BadRequest();
 
-            var affectedRows = await _lunchService.CreateAsync(new Lunch
+            var lunchToCreate = new Lunch
             {
-                Id = Guid.NewGuid(),
                 LunchName = lunch.LunchName,
-                LunchTypeId = lunch.LunchTypeId,
-                CreatedOn = DateTime.Now,
-                CreatedBy = "Test"
-                // TODO: get createdBy from current lunch
-            });
+                LunchTypeId = lunch.LunchTypeId
+            };
 
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            var result = await _lunchService.CreateAsync(lunchToCreate);
+
+            return CreatedAtAction(nameof(Get), new { userId = result.Id }, new LunchDto(result));
         }
 
         ///<summary>
         /// Updates an lunch given his id
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the lunch</param>
-        ///<param name="lunch" cref="LunchDto">Lunch model</param>
+        ///<param name="lunch" cref="InputLunchDto">Lunch model</param>
         ///<response code="204">Lunch created</response>
         ///<response code="404">Lunch not found / Lunch could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]LunchDto lunch)
+        public async Task<IActionResult> Update(Guid id, [FromBody]InputLunchDto lunch)
         {
-            if (lunch == null)
-            {
-                return BadRequest();
-            }
+            // TODO: Fix validation attribute, it's not working as expected.
+            if (lunch == null) return BadRequest();
 
-            var affectedRows = await _lunchService.UpdateAsync(new Lunch
+            var lunchToUpdate = new Lunch
             {
                 Id = id,
                 LunchName = lunch.LunchName,
                 LunchTypeId = lunch.LunchTypeId,
-                CreatedOn = DateTime.Now,
-                CreatedBy = "Test"
-                // TODO: get UpdatedBy from current lunch
-            });
+                UpdatedBy = "Test" //TODO: Add user.
+            };
 
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            var result = await _lunchService.UpdateAsync(lunchToUpdate);
+
+            if (result == null) return NotFound();
+
+            return NoContent();
         }
 
         ///<summary>
@@ -125,6 +121,6 @@ namespace MSLunches.Api.Controllers
 
             return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
-        
+
     }
 }
