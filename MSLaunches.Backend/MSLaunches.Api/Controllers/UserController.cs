@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MSLaunches.Api.Filters;
 using MSLaunches.Api.Models;
 using MSLaunches.Data.Models;
@@ -12,6 +13,7 @@ namespace MSLaunches.Api.Controllers
     [Route("api/users")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

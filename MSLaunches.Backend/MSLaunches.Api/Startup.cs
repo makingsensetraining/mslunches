@@ -57,7 +57,7 @@ namespace MSLaunches.Api
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(option =>
             {
-                option.Audience = Configuration["auth0:clientId"];
+                option.Audience = Configuration["auth0:audience"];
                 option.Authority = $"https://{Configuration["auth0:domain"]}/";
             });
 
@@ -76,6 +76,18 @@ namespace MSLaunches.Api
             services.AddScoped<IRestClient>(sp => new RestClient($"https://{Configuration["auth0:domain"]}", new HttpClient()));
             services.AddSingleton<IAuthZeroClient>(sp => new AuthZeroClient(sp.GetRequiredService<IRestClient>(), Configuration["auth0:NonInteractiveClientId"], Configuration["auth0:NonInteractiveClientSecret"], Configuration["auth0:domain"]));
             services.AddTransient<IAuthZeroService>(sp => new AuthZeroService(sp.GetRequiredService<IAuthZeroClient>()));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
 
             // Register Services
             services.AddTransient<IUserService>(sp => new UserService(sp.GetRequiredService<WebApiCoreMSLaunchesContext>()));
@@ -101,6 +113,9 @@ namespace MSLaunches.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiCoreMSLaunches V1");
             });
             
+            //TODO : Add a list of supported origins on a config
+            app.UseCors("AllowAllOrigins");
+            app.UseAuthentication();
             app.UseMvc();
             DatabaseMSLaunches.Initialize(dbContext);
         }

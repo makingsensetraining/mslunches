@@ -45,4 +45,8 @@ export class HeaderComponent implements OnInit {
     return credentials ? credentials.username : null;
   }
 
+  get image(): string | null {
+    const credentials = this.authenticationService.credentials;
+    return credentials ? credentials.image : null;
+  }
 }

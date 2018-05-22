@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
 import { MockAuthenticationService } from './authentication.service.mock';
 import { AuthenticationGuard } from './authentication.guard';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 
 describe('AuthenticationGuard', () => {
   let authenticationGuard: AuthenticationGuard;
@@ -38,18 +40,22 @@ describe('AuthenticationGuard', () => {
   });
 
   it('should return true if user is authenticated', () => {
-    expect(authenticationGuard.canActivate()).toBe(true);
+    authenticationService.hashHandled = Observable.create((obs: Observer<boolean>) => obs.next(true));
+    authenticationGuard.canActivate().subscribe(res => {
+      expect(res).toBe(true);
+    });
   });
 
   it('should return false and redirect to login if user is not authenticated', () => {
     // Arrange
+    authenticationService.hashHandled = Observable.create((obs: Observer<boolean>) => obs.next(true));
     authenticationService.credentials = null;
 
     // Act
-    const result = authenticationGuard.canActivate();
-
-    // Assert
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {replaceUrl: true});
-    expect(result).toBe(false);
+    authenticationGuard.canActivate().subscribe(result => {
+      // Assert
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {replaceUrl: true});
+      expect(result).toBe(false);
+    });
   });
 });
