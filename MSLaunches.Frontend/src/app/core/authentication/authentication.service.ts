@@ -58,11 +58,7 @@ export class AuthenticationService {
    * @return {boolean} True if the user is authenticated.
    */
   isAuthenticated(): boolean {
-    if (!!this.credentials) {
-      return new Date().getTime() < this.credentials.expiresAt;
-    }
-
-    return false;
+    return !!this.credentials;
   }
 
   /**
