@@ -31,75 +31,75 @@
                 dbContext.Users.AddRange(users);
             }
 
-            if (!dbContext.LunchTypes.Any())
+            if (!dbContext.MealTypes.Any())
             {
-                var lunchTypes = new[]
+                var mealTypes = new[]
                 {
-                    new LunchType {Id = 1 ,Description = "Calórico"},
-                    new LunchType {Id = 2 ,Description = "Light"},
-                    new LunchType {Id = 3 ,Description = "Vegetariano"},
-                    new LunchType {Id = 4 ,Description = "Sandwich"},
-                    new LunchType {Id = 5 ,Description = "Postre"}
+                    new MealType { Description = "Calórico"},
+                    new MealType { Description = "Light"},
+                    new MealType { Description = "Vegetariano"},
+                    new MealType { Description = "Sandwich"},
+                    new MealType { Description = "Postre"}
                 };
 
-                dbContext.LunchTypes.AddRange(lunchTypes);
+                dbContext.MealTypes.AddRange(mealTypes);
+            }
+
+            if (!dbContext.Meals.Any())
+            {
+                var meals = new[]
+                {
+                    new Meal {Id = id4, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Crepes de verdura y calabza", TypeId = 2},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pechugas grilladas al limón con arroz al curry", TypeId = 2},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milhojas de vegetales con ensalada", TypeId = 2},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de pescado con puré de calabaza", TypeId = 2},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Triangulitos integrales con vegetales y ensalada", TypeId = 2},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Arrollado de pollo con ensalada de champignones y papas al horno", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Canelones de jamón y queso con salsa bolognesa", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de pecero napilitana con arroz primavera", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Filet de merluza con puré", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas caseras completas con fritas", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de soja rellenas con ensalada", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de lentejas con ensalada", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Tarta capresse con ensalada", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Budincitos de acelga y calabaza con ensalada", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas veganas con calabazas en cubo", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Baguette de milanesa de carne con lechuga y tomate", TypeId = 4},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Postre de vainillas", TypeId = 5},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Alfajores de maizena", TypeId = 5},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Roll de dulce de leche", TypeId = 5},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Gelatina con frutas", TypeId = 5},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pastelitos escaraperla", TypeId = 5}
+                };
+
+                dbContext.Meals.AddRange(meals);
             }
 
             if (!dbContext.Lunches.Any())
             {
                 var lunches = new[]
                 {
-                    new Lunch {Id = id4, CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Crepes de verdura y calabza", LunchTypeId = 2},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Pechugas grilladas al limón con arroz al curry", LunchTypeId = 2},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Milhojas de vegetales con ensalada", LunchTypeId = 2},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Medallones de pescado con puré de calabaza", LunchTypeId = 2},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Triangulitos integrales con vegetales y ensalada", LunchTypeId = 2},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Arrollado de pollo con ensalada de champignones y papas al horno", LunchTypeId = 1},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Canelones de jamón y queso con salsa bolognesa", LunchTypeId = 1},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Milanesas de pecero napilitana con arroz primavera", LunchTypeId = 1},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Filet de merluza con puré", LunchTypeId = 1},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Hamburguesas caseras completas con fritas", LunchTypeId = 1},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Milanesas de soja rellenas con ensalada", LunchTypeId = 3},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Medallones de lentejas con ensalada", LunchTypeId = 3},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Tarta capresse con ensalada", LunchTypeId = 3},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Budincitos de acelga y calabaza con ensalada", LunchTypeId = 3},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Hamburguesas veganas con calabazas en cubo", LunchTypeId = 3},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Baguette de milanesa de carne con lechuga y tomate", LunchTypeId = 4},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Postre de vainillas", LunchTypeId = 5},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Alfajores de maizena", LunchTypeId = 5},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Roll de dulce de leche", LunchTypeId = 5},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Gelatina con frutas", LunchTypeId = 5},
-                    new Lunch { CreatedBy = "System", CreatedOn = DateTime.Now, LunchName = "Pastelitos escaraperla", LunchTypeId = 5}
-                };
-
-
-                if (!dbContext.DailyLunches.Any())
-                {
-                    var dailyLunches = new[]
-                    {
-                    new DailyLunch {Id = id1,
-                        LunchId =id4,
-                        Date = DateTime.Today
+                    new Lunch {Id = id1,
+                        MealId =id4,
+                        Date = DateTime.Today,
+                        CreatedBy = "System"
                     },
                 };
+                dbContext.Lunches.AddRange(lunches);
+            }
 
-                    dbContext.DailyLunches.AddRange(dailyLunches);
-                }
-
-                if (!dbContext.UserLunches.Any())
+            if (!dbContext.UserLunches.Any())
+            {
+                var userLunches = new[]
                 {
-                    var userLunches = new[]
-                    {
                     new UserLunch {Id = id3,
                         UserId = id2,
-                        DailyLunchId = id1
+                        LunchId = id1,
+                        CreatedBy = "System"
                     },
                 };
 
-                    dbContext.UserLunches.AddRange(userLunches);
-                }
-
-                dbContext.Lunches.AddRange(lunches);
+                dbContext.UserLunches.AddRange(userLunches);
             }
 
             dbContext.SaveChanges();

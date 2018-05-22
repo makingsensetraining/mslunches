@@ -20,9 +20,9 @@ namespace MSLunches.Data.EF
 
         /// <summary> All users registered on WebApiCoreMSLunches database</summary>
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Meal> Meals { get; set; }
+        public virtual DbSet<MealType> MealTypes { get; set; }
         public virtual DbSet<Lunch> Lunches { get; set; }
-        public virtual DbSet<LunchType> LunchTypes { get; set; }
-        public virtual DbSet<DailyLunch> DailyLunches { get; set; }
         public virtual DbSet<UserLunch> UserLunches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,13 +33,13 @@ namespace MSLunches.Data.EF
                         .HasIndex(x => x.UserName)
                         .IsUnique();
 
-            modelBuilder.Entity<Lunch>()
-                        .ToTable("Lunch")
+            modelBuilder.Entity<Meal>()
+                        .ToTable("Meal")
                         .HasIndex(x => x.Id)
                         .IsUnique();
 
-            modelBuilder.Entity<LunchType>()
-                        .ToTable("LunchType")
+            modelBuilder.Entity<MealType>()
+                        .ToTable("MealType")
                         .HasIndex(x => x.Id)
                         .IsUnique();
 
@@ -48,20 +48,20 @@ namespace MSLunches.Data.EF
                         .HasIndex(x => x.Id)
                         .IsUnique();
 
-            modelBuilder.Entity<DailyLunch>()
-                     .ToTable("DailyLunch")
+            modelBuilder.Entity<Lunch>()
+                     .ToTable("Lunch")
                      .HasIndex(x => x.Id)
                      .IsUnique();
 
-            modelBuilder.Entity<LunchType>()
-                        .HasMany(e => e.Lunches)
-                        .WithOne(e => e.LunchType)
-                        .HasForeignKey(e => e.LunchTypeId);
+            modelBuilder.Entity<MealType>()
+                        .HasMany(e => e.Meals)
+                        .WithOne(e => e.MealType)
+                        .HasForeignKey(e => e.TypeId);
 
-            modelBuilder.Entity<DailyLunch>()
+            modelBuilder.Entity<Lunch>()
                       .HasMany(e => e.UserLunches)
-                      .WithOne(e => e.DailyLunch)
-                      .HasForeignKey(e => e.DailyLunchId);
+                      .WithOne(e => e.Lunch)
+                      .HasForeignKey(e => e.LunchId);
 
             modelBuilder.Entity<User>()
                     .HasMany(e => e.UserLunches)

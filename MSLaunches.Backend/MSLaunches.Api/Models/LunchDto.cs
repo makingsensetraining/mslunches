@@ -6,22 +6,20 @@ namespace MSLunches.Api.Models
 {
     public class LunchDto
     {
-        public LunchDto() { }
-
         public LunchDto(Lunch lunch)
         {
             Id = lunch.Id;
             CreatedOn = lunch.CreatedOn;
             UpdatedOn = lunch.UpdatedOn;
-            LunchName = lunch.LunchName;
-            LunchTypeId = lunch.LunchTypeId;
+            MealId = lunch.MealId;
+            Date = lunch.Date;
         }
 
         public Guid Id { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
         public DateTimeOffset UpdatedOn { get; set; }
 
-        public string LunchName { get; set; }
-        public int LunchTypeId { get; set; }
+        public Guid MealId { get; set; }
+        public DateTime Date { get; set; }
     }
 }

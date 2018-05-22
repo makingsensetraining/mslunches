@@ -61,7 +61,7 @@ namespace MSLunches.Domain.Services
 
             if (userLunchToUpdate == null) return null;
            
-            userLunchToUpdate.DailyLunchId = userLunch.DailyLunchId;
+            userLunchToUpdate.LunchId = userLunch.LunchId;
             userLunchToUpdate.UserId = userLunch.UserId;
             userLunchToUpdate.Approved = userLunch.Approved;
             userLunchToUpdate.UpdatedBy = userLunch.UpdatedBy;

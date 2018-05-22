@@ -34,7 +34,7 @@ namespace MSLunches.Api.Controllers
         }
 
         /// <summary>
-        /// Gets a lunch selection by user based on his id
+        /// Gets a meal selection by user based on his id
         /// </summary>
         /// <param name="id" cref="Guid">Guid of the UserLunch</param>
         /// <response code="200">The UserLunch that has the given id</response>
@@ -55,7 +55,7 @@ namespace MSLunches.Api.Controllers
         }
 
         /// <summary>
-        /// Creates a new lunch selection for user.
+        /// Creates a new meal selection for user.
         /// </summary>
         /// <param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         /// <response code="204">UserLunch created</response>
@@ -68,7 +68,7 @@ namespace MSLunches.Api.Controllers
 
             var userLunchToCreate = new UserLunch
             {
-                DailyLunchId = userLunch.DailyLunchId,
+                LunchId = userLunch.LunchId,
                 UserId = userLunch.UserId,
                 Approved = userLunch.Approved,
                 CreatedBy = "Test" //TODO: Add user.-
@@ -80,9 +80,9 @@ namespace MSLunches.Api.Controllers
         }
 
         ///<summary>
-        /// Updates a lunch selection by user.
+        /// Updates a meal selection by user.
         ///</summary>
-        ///<param name="id" cref="Guid">Guid of the lunch</param>
+        ///<param name="id" cref="Guid">Guid of the meal</param>
         ///<param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         ///<response code="204">UserLunch created</response>
         ///<response code="404">UserLunch not found / UserLunch could not be updated</response>
@@ -96,7 +96,7 @@ namespace MSLunches.Api.Controllers
             var userLunchToUpdate = new UserLunch
             {
                 Id = id,
-                DailyLunchId = userLunch.DailyLunchId,
+                LunchId = userLunch.LunchId,
                 UserId = userLunch.UserId,
                 Approved = userLunch.Approved,
                 UpdatedBy = "Test" //TODO: Add user.
@@ -110,11 +110,11 @@ namespace MSLunches.Api.Controllers
         }
 
         ///<summary>
-        /// Deletes an lunch given his id
+        /// Deletes an meal given his id
         ///</summary>
-        ///<param name="id" cref="Guid">Guid of the lunch</param>
-        ///<response code="204">Lunch Deleted</response>
-        ///<response code="404">Lunch not found / Lunch could not be deleted</response>
+        ///<param name="id" cref="Guid">Guid of the meal</param>
+        ///<response code="204">Meal Deleted</response>
+        ///<response code="404">Meal not found / Meal could not be deleted</response>
         [HttpDelete("{id}")]
         [ValidateModel]
         public async Task<IActionResult> Delete(Guid id)
@@ -155,10 +155,10 @@ namespace MSLunches.Api.Controllers
                 var userLunch = new UserLunch
                 {
                     Id = Guid.NewGuid(),
-                    DailyLunchId = userLunchDto.DailyLunchId,
+                    LunchId = userLunchDto.LunchId,
                     UserId = userLunchDto.UserId,
                     CreatedBy = "Test"
-                    // TODO: get createdBy from current lunch
+                    // TODO: get createdBy from current meal
                 };
                 userLunchList.Add(userLunch);
             }

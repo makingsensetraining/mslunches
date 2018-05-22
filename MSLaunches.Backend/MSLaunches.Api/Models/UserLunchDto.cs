@@ -13,7 +13,7 @@ namespace MSLunches.Api.Models
             Id = userLunch.Id;
             CreatedOn = userLunch.CreatedOn;
             UpdatedOn = userLunch.UpdatedOn;
-            DailyLunchId = userLunch.DailyLunchId;
+            LunchId = userLunch.LunchId;
             UserId = userLunch.UserId;
             Approved = userLunch.Approved;
         }
@@ -22,7 +22,7 @@ namespace MSLunches.Api.Models
         public DateTimeOffset CreatedOn { get; set; }
         public DateTimeOffset UpdatedOn { get; set; }
 
-        public Guid DailyLunchId { get; set; }
+        public Guid LunchId { get; set; }
         public Guid UserId { get; set; }
         public bool Approved { get; set; }
     }

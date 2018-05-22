@@ -14,7 +14,7 @@ namespace MSLunches.Domain.Services.Interfaces
         /// Gets a lunch by Id
         /// </summary>
         /// <param name="lunchId">Id of the lunch to be retrieved</param>
-        /// <returns>A <see cref="Lunch"/> object if the lunch is found, otherwise null</returns>
+        /// <returns>A <see cref="Lunch"/> object if the meal is found, otherwise null</returns>
         Task<Lunch> GetByIdAsync(Guid lunchId);
 
         /// <summary>
@@ -23,6 +23,8 @@ namespace MSLunches.Domain.Services.Interfaces
         /// <param name="lunch">Lunch to create</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<Lunch> CreateAsync(Lunch lunch);
+
+        Task<int> CreateLunchesAsync(List<Lunch> lunches);
 
         /// <summary>
         /// Deletes a lunch by Id
@@ -40,8 +42,14 @@ namespace MSLunches.Domain.Services.Interfaces
         /// <summary>
         /// Updates a lunch
         /// </summary>
-        /// <param name="lunch">Lunch to update</param>
+        /// <param name="lunch">lunch to update</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<Lunch> UpdateAsync(Lunch lunch);
+
+        /// <summary>
+        ///A list of available lunches by week
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Lunch>> GetAllLunchesAvailableInWeek();
     }
 }

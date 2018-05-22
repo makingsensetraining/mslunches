@@ -14,13 +14,13 @@ namespace MSLunches.Domain.Services.Interfaces
         /// Gets a userLunch by Id
         /// </summary>
         /// <param name="userLunchId">Id of the userLunch to be retrieved</param>
-        /// <returns>A <see cref="DailyLunch"/> object if the userLunch is found, otherwise null</returns>
+        /// <returns>A <see cref="Lunch"/> object if the userLunch is found, otherwise null</returns>
         Task<UserLunch> GetByIdAsync(Guid userLunchId);
 
         /// <summary>
         /// Creates a userLunch
         /// </summary>
-        /// <param name="userLunch">Lunch to create</param>
+        /// <param name="userLunch">Meal to create</param>
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<UserLunch> CreateAsync(UserLunch userLunch);
 
