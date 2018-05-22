@@ -5,7 +5,7 @@ import { finalize } from 'rxjs/operators';
 import { ISubscription } from 'rxjs/Subscription';
 
 import { environment } from '@env/environment';
-import { Logger, I18nService, AuthenticationService } from '@app/core';
+import { Logger, I18nService, AuthenticationService} from '@app/core';
 import { Credentials } from 'crypto';
 
 const log = new Logger('Login');
@@ -30,12 +30,14 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.authenticationService);
+    this.authenticationService.setUpTimeout();
     this.authenticationService.hashHandled.subscribe(() => {
       if (this.authenticationService.isAuthenticated()) {
         this.router.navigate(['/home'], {replaceUrl: true});
       } else {
         this.isLoading = false;
       }
+      this.authenticationService.cleanTimeout();
     });
   }
 

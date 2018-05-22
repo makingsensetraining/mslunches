@@ -11,9 +11,10 @@ import { environment } from '@env/environment';
 export class AuthorizationInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const accessToken = sessionStorage.getItem('Credentials')['accessToken'];
-    request.headers.append('Authorization', accessToken);
+    const credentials = sessionStorage.getItem('credentials');
+    if (credentials) {
+      request.headers.append('Authorization', JSON.parse(credentials).accessToken);
+    }
     return next.handle(request);
   }
-
 }

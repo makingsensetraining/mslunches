@@ -17,10 +17,12 @@ export class AuthenticationGuard implements CanActivate {
               private authenticationService: AuthenticationService) { }
 
   canActivate(): Observable<boolean> {
+    this.authenticationService.setUpTimeout();
     return this.authenticationService.hashHandled.pipe(
       map(asd => {
         if (!this.authenticationService.isAuthenticated()) {
           log.debug('Not authenticated, redirecting...');
+          this.authenticationService.cleanTimeout();
           this.router.navigate(['/login'], { replaceUrl: true });
           return false;
         }

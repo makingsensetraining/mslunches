@@ -44,8 +44,6 @@ export class AuthenticationService {
   private _hashHandled: Subject<boolean> = new Subject<boolean>();
   private _timeout: NodeJS.Timer;
   constructor() {
-    // workaround to update notify subscribers if handle hash does not execute or executes early
-    this._timeout = setTimeout(() => { this._hashHandled.next(true); }, 2000);
   }
 
   /**
@@ -74,7 +72,6 @@ export class AuthenticationService {
   logout(): Observable<boolean> {
     // Customize credentials invalidation here
     this.setCredentials();
-    this._timeout = setTimeout(() => { this._hashHandled.next(true); }, 2000);
     return of(true);
   }
 
@@ -91,6 +88,16 @@ export class AuthenticationService {
         this._hashHandled.next(true);
       });
     }
+  }
+
+  setUpTimeout() {
+    this._timeout = setTimeout(() => {
+      this._hashHandled.next(true);
+    }, 2000);
+  }
+
+  cleanTimeout() {
+    clearTimeout(this._timeout);
   }
 
   /**
@@ -120,13 +127,11 @@ export class AuthenticationService {
       const storage = sessionStorage;
       storage.setItem(credentialsKey, JSON.stringify(credentials));
       this._hashHandled.next(true);
-      clearTimeout(this._timeout);
       return true;
     } else {
       sessionStorage.removeItem(credentialsKey);
       localStorage.removeItem(credentialsKey);
       this._hashHandled.next(true);
-      clearTimeout(this._timeout);
       return false;
     }
   }
