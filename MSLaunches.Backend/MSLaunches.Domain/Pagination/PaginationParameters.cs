@@ -1,4 +1,4 @@
-﻿namespace MSLaunches.Domain.Pagination
+﻿namespace MSLunches.Domain.Pagination
 {
     using System;
 

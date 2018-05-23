@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MSLaunches.Data\MSLaunches.Data.csproj" />
+    <ProjectReference Include="..\MSLaunches.Data\MSLunches.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace MSLaunches.Infrastructure.RestClient
+namespace MSLunches.Infrastructure.RestClient
 {
     /// <summary>
     /// Interface to provide an easy way to perform REST requests

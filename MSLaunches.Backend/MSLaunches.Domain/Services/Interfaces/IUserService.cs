@@ -1,9 +1,9 @@
-﻿using MSLaunches.Data.Models;
+﻿using MSLunches.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Domain.Services.Interfaces
+namespace MSLunches.Domain.Services.Interfaces
 {
     /// <summary>
     /// Service responsible of handling users
@@ -21,8 +21,8 @@ namespace MSLaunches.Domain.Services.Interfaces
         /// Creates a user
         /// </summary>
         /// <param name="user">User to create</param>
-        /// <returns>An integer indicating the amount of affected rows</returns>
-        Task<int> CreateAsync(User user);
+        /// <returns>Created user</returns>
+        Task<User> CreateAsync(User user);
 
         /// <summary>
         /// Deletes a user by Id
@@ -41,7 +41,7 @@ namespace MSLaunches.Domain.Services.Interfaces
         /// Updates a user
         /// </summary>
         /// <param name="user">User to update</param>
-        /// <returns>An integer indicating the amount of affected rows</returns>
-        Task<int> UpdateAsync(User user);
+        /// <returns>Updated user</returns>
+        Task<User> UpdateAsync(User user);
     }
 }

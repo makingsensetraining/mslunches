@@ -4,13 +4,13 @@ using Auth0.ManagementApi;
 using Auth0.ManagementApi.Clients;
 using Auth0.ManagementApi.Models;
 using Moq;
-using MSLaunches.Infrastructure.AuthZero;
-using MSLaunches.Infrastructure.Result;
+using MSLunches.Infrastructure.AuthZero;
+using MSLunches.Infrastructure.Result;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MSLaunches.Infrastructure.Tests.AuthZero
+namespace MSLunches.Infrastructure.Tests.AuthZero
 {
     public class AuthZeroServiceTests
     {

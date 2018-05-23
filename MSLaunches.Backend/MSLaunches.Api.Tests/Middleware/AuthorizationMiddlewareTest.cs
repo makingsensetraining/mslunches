@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Http;
 using Moq;
-using MSLaunches.Api.Middleware;
+using MSLunches.Api.Middleware;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MSLaunches.Api.Tests.Middleware
+namespace MSLunches.Api.Tests.Middleware
 {
     public class AuthorizationMiddlewareTest 
     {

@@ -1,8 +1,8 @@
 ﻿using Auth0.ManagementApi;
-using MSLaunches.Infrastructure.Result;
+using MSLunches.Infrastructure.Result;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Infrastructure.AuthZero
+namespace MSLunches.Infrastructure.AuthZero
 {
     /// <summary>
     /// Handles authentication to Auth0 API

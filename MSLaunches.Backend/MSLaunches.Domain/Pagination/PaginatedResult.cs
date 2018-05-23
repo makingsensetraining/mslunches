@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Domain.Pagination
+namespace MSLunches.Domain.Pagination
 {
     /// <summary> Wrapper for results exposed as pages </summary>
     /// <typeparam name="T"> Object type contained inside page's collection </typeparam>

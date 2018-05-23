@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MSLaunches.Infrastructure.AuthZero
+namespace MSLunches.Infrastructure.AuthZero
 {
     /// <summary>
     /// Token provided by Auth0 Authentication API (POST https://{yourdomain}.auth0.com/oauth/token)

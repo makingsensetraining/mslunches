@@ -1,6 +1,6 @@
-namespace MSLaunches.Infrastructure.Tests.RestClient
+namespace MSLunches.Infrastructure.Tests.RestClient
 {
-    using MSLaunches.Infrastructure.RestClient;
+    using MSLunches.Infrastructure.RestClient;
     using System;
     using System.Net;
     using System.Net.Http;

@@ -1,4 +1,4 @@
-namespace MSLaunches.Api.Models
+namespace MSLunches.Api.Models
 {
     /// <summary>
     /// Error data transfer object

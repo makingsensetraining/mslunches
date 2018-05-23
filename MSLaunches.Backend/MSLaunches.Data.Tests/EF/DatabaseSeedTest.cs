@@ -1,20 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MSLaunches.Data.EF;
+using MSLunches.Data.EF;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MSLaunches.Data.Tests.EF
+namespace MSLunches.Data.Tests.EF
 {
-    public class DatabaseMSLaunchesTest
+    public class DatabaseMSLunchesTest
     {
         [Fact]
         public async Task Initialize_ShouldCreateAUser()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<WebApiCoreMSLaunchesContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<WebApiCoreLunchesContext>();
             optionsBuilder.UseInMemoryDatabase("GetByIdAsync_ShouldReturnUser");
-            using (var dbContext = new WebApiCoreMSLaunchesContext(optionsBuilder.Options))
+            using (var dbContext = new WebApiCoreLunchesContext(optionsBuilder.Options))
             {
-                DatabaseMSLaunches.Initialize(dbContext);
+                DatabaseMSLunches.Initialize(dbContext);
 
                 Assert.Equal(1, await dbContext.Users.CountAsync());
             }

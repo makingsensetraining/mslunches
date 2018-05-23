@@ -1,28 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MSLaunches.Data.EF;
-using MSLaunches.Data.Models;
-using MSLaunches.Domain.Services.Interfaces;
+using MSLunches.Data.EF;
+using MSLunches.Data.Models;
+using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Domain.Services
+namespace MSLunches.Domain.Services
 {
     /// <inheritdoc/>
     public class UserService : IUserService
     {
-        private readonly WebApiCoreMSLaunchesContext _dbContext;
+        private readonly WebApiCoreLunchesContext _dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
-        /// <param name="dbContext"><see cref="WebApiCoreMSLaunchesContext"/> instance required to access database </param>
-        public UserService(WebApiCoreMSLaunchesContext dbContext)
+        /// <param name="dbContext"><see cref="WebApiCoreLunchesContext"/> instance required to access database </param>
+        public UserService(WebApiCoreLunchesContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc/>
         public async Task<User> GetByIdAsync(Guid userId)
         {
             return await _dbContext.Users.FindAsync(userId);
@@ -33,41 +32,45 @@ namespace MSLaunches.Domain.Services
             return await _dbContext.Users.ToListAsync();
         }
 
-        public async Task<int> CreateAsync(User user)
+        public async Task<User> CreateAsync(User user)
         {
+            user.Id = Guid.NewGuid();
             user.CreatedOn = DateTime.Now;
-            _dbContext.Users.Add(user);
-            return await _dbContext.SaveChangesAsync();
+
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+
+            return user;
         }
 
-        public async Task<int> UpdateAsync(User user)
+        public async Task<User> UpdateAsync(User user)
         {
-            var userToUpdate = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+            var userToUpdate = await _dbContext.Users.FindAsync(user.Id);
 
-            if(userToUpdate == null)
-            {
-                return 0;
-            }
+            if (userToUpdate == null) return null;
 
+            userToUpdate.Email = user.Email;
             userToUpdate.FirstName = user.FirstName;
             userToUpdate.LastName = user.LastName;
             userToUpdate.UserName = user.UserName;
-            userToUpdate.UpdatedBy = user.UpdatedBy;
             userToUpdate.UpdatedOn = DateTime.Now;
-              
-            return await _dbContext.SaveChangesAsync();
+            userToUpdate.UpdatedBy = user.UpdatedBy;
+
+            await _dbContext.SaveChangesAsync();
+
+            return userToUpdate;
         }
 
         public async Task<int> DeleteByIdAsync(Guid userId)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(item => item.Id == userId);
+            var user = await _dbContext.Users.FindAsync(userId);
             if (user == null)
             {
                 return 0;
             }
 
             _dbContext.Users.Remove(user);
-            return await _dbContext.SaveChangesAsync();           
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

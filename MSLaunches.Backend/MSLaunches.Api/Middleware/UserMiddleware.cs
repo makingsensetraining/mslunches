@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace MSLaunches.Api.Middleware
+namespace MSLunches.Api.Middleware
 {
     /// <summary>
     /// Middleware to handle global User Actions

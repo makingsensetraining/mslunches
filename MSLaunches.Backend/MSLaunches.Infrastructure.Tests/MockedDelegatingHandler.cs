@@ -1,4 +1,4 @@
-﻿namespace MSLaunches.Infrastructure.Tests
+﻿namespace MSLunches.Infrastructure.Tests
 {
     using System.Net.Http;
     using System.Threading.Tasks;

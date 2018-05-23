@@ -1,4 +1,4 @@
-﻿namespace MSLaunches.Infrastructure.Tests.RestClient
+﻿namespace MSLunches.Infrastructure.Tests.RestClient
 {
     public class TestDto
     {

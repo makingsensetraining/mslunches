@@ -2,13 +2,13 @@
 using Auth0.Core;
 using Auth0.Core.Exceptions;
 using Moq;
-using MSLaunches.Infrastructure.AuthZero;
-using MSLaunches.Infrastructure.RestClient;
+using MSLunches.Infrastructure.AuthZero;
+using MSLunches.Infrastructure.RestClient;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MSLaunches.Infrastructure.Tests.AuthZero
+namespace MSLunches.Infrastructure.Tests.AuthZero
 {
     public class AuthZeroClientTests
     {

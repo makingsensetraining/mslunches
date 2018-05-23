@@ -1,6 +1,6 @@
-using MSLaunches.Infrastructure.Result;
+using MSLunches.Infrastructure.Result;
 
-namespace MSLaunches.Infrastructure
+namespace MSLunches.Infrastructure
 {
     internal static class InfrastructureError
     {

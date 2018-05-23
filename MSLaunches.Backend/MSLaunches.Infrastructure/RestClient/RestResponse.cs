@@ -1,7 +1,7 @@
-﻿using MSLaunches.Infrastructure.Result;
+﻿using MSLunches.Infrastructure.Result;
 using System.Net;
 
-namespace MSLaunches.Infrastructure.RestClient
+namespace MSLunches.Infrastructure.RestClient
 {
     /// <summary>
     /// Simplified REST response object including content and Http status code
