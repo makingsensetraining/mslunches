@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { finalize } from 'rxjs/operators';
+import { filter, finalize } from 'rxjs/operators';
 
 import { LunchService } from './lunch.service';
 import { Lunch, DailyTypedLunches, WeeklyLunches } from '@app/lunch/lunch.model';
@@ -26,6 +26,20 @@ export class LunchComponent implements OnInit {
       });
   }
 
+  setLunchSelected(lunch: Lunch) {
+    let weeklyLunches: WeeklyLunches;
+    let lunchesByDay: DailyTypedLunches;
+    weeklyLunches = this.lunches.find(l =>
+      l.date.getDate() === (this.firstDayOfTheWeek(lunch.date)).toDate().getDate());
+
+    lunchesByDay = weeklyLunches.lunches.find(l => l.date.getDate() === lunch.date.getDate());
+    lunchesByDay.lunches.forEach(l => {
+      if (l.id !== lunch.id) {
+        l.isSelected = false;
+      }
+    });
+  }
+
   private mapToWeekly(lunches: Array<Lunch>): Array<WeeklyLunches> {
     lunches = lunches.sort(this.typeSorter);
 
@@ -33,20 +47,20 @@ export class LunchComponent implements OnInit {
       // Groups by date
       _.groupBy(lunches, (result: Lunch) => result.date),
       // Maps to entity
-      (value: Lunch[], key: string) => ({ date: new Date(key), lunches: value})
+      (value: Lunch[], key: string) => ({ date: new Date(key), lunches: value })
     );
 
     const weekly = _.map(
       // Groups by week
       _.groupBy(daily, (result: DailyTypedLunches) => moment(result.date, 'DD/MM/YYYY').startOf('isoWeek')),
       // maps to entity
-      (value: DailyTypedLunches[], key: string) =>  ({ date: new Date(key), lunches: value})
+      (value: DailyTypedLunches[], key: string) => ({ date: new Date(key), lunches: value })
     );
 
     weekly.forEach(dailyLunch => {
       let startOfTheweek: moment.Moment;
-      if (!!dailyLunch.lunches && dailyLunch.lunches.length < 5 ) {
-        startOfTheweek = this.firstDayofTheWeek(dailyLunch.date);
+      if (!!dailyLunch.lunches && dailyLunch.lunches.length < 5) {
+        startOfTheweek = this.firstDayOfTheWeek(dailyLunch.date);
         for (let i = 0; i < 5; i++) {
           if (!dailyLunch.lunches.some(item =>
             item.date.getDate() === startOfTheweek.toDate().getDate())
@@ -85,7 +99,7 @@ export class LunchComponent implements OnInit {
     return 0;
   }
 
-  private firstDayofTheWeek(date: Date): moment.Moment {
+  private firstDayOfTheWeek(date: Date): moment.Moment {
     return moment(date, 'DD/MM/YYYY').startOf('isoWeek');
   }
 }
