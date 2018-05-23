@@ -1,8 +1,15 @@
-export class Launch {
-    public description: String;
-    public type: String;
-    public date: Date;
+export interface Lunch {
+    description: String;
+    type: String;
+    date: Date;
+    isSelected: Boolean;
+}
 
-    constructor(description: String = '', type: String = '' ) {
-    }
+export interface DailyTypedLunches {
+    date: Date;
+    lunches: Array<Lunch>;
+}
+
+export interface WeeklyLunches {
+    lunches: Array<DailyTypedLunches>;
 }

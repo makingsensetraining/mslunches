@@ -4,6 +4,7 @@ import { map, mapTo } from 'rxjs/operators';
 import { Launch } from '@app/launch/launch.model';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
+import { tryStatement } from 'babel-types';
 
 @Injectable()
 export class LaunchService {
@@ -24,8 +25,34 @@ export class LaunchService {
             if (i !== 19 && i !== 20) {
                 result.push({
                     type: 'calorico',
-                    date: new Date(2018, 5, i),
-                    description: 'pollo con papas'});
+                    date: new Date(2018, 4, i),
+                    description: 'empanadas de carne',
+                    isSelected: true
+                });
+                result.push({
+                    type: 'vegetariano',
+                    date: new Date(2018, 4, i),
+                    description: 'empanadas vegetarianas de carne',
+                    isSelected: false
+                });
+                result.push({
+                    type: 'Light',
+                    date: new Date(2018, 4, i),
+                    description: 'empanadas de carne con casancrem',
+                    isSelected: false
+                });
+                result.push({
+                    type: 'Sanguche',
+                    date: new Date(2018, 4, i),
+                    description: 'baguette de empanadas de carne',
+                    isSelected: false
+                });
+                result.push({
+                    type: 'postre',
+                    date: new Date(2018, 4, i),
+                    description: 'empanadas de carne dulce',
+                    isSelected: true
+                });
             }
         }
         return result;
@@ -44,7 +71,8 @@ export class LaunchService {
         result = {
             description: body.description,
             type: body.type,
-            date: body.date
+            date: body.date,
+            isSelected: body.isSelected
         };
 
         return result;

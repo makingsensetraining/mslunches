@@ -1,0 +1,35 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<div [hidden]="isLoading">
+    <div class="container" *ngFor="let weeklylunch of lunches">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-2" *ngFor="let dailyLunch of weeklylunch.lunches">
+                <div class="row">
+                    <div class="col header-col">
+                        <span translate>{{dailyLunch.date | date : 'EEEE'}}</span><br />
+                        <span class="header-date">{{dailyLunch.date | date : 'yyyy-MM-dd'}}</span>
+                    </div>
+                </div>
+                <div class="row" *ngFor="let lunch of dailyLunch.lunches">
+                    <app-lunch-tile [lunch]="lunch"></app-lunch-tile>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+</div>
+<!--         
+        <div class="col">
+            <span class="col" translate>
+                Monday 
+                <p>{{weeklylunch.date | date: 'yyyy-MM-dd' }}</p>
+            </span>
+        </div>
+        <div *ngFor="let typedLunches of weeklylunch.lunches"  class="row">
+            <span class="col">{{typedLunches.type}}</span>
+            <div *ngFor="let lunch of typedLunches.lunches">
+                <app-lunch-tile [lunch]="lunch"></app-lunch-tile>
+            </div>
+        </div>
+    </div>
+</div> -->
