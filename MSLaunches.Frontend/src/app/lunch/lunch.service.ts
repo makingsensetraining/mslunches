@@ -1,26 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map, mapTo } from 'rxjs/operators';
-import { Launch } from '@app/launch/launch.model';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { tryStatement } from 'babel-types';
+import { Lunch } from '@app/lunch/lunch.model';
 
 @Injectable()
-export class LaunchService {
+export class LunchService {
     constructor(private httpClient: HttpClient) {
     }
 
 
-    getLaunches(startDate: Date, endDate: Date): Observable<Array<Launch>> {
+    getLaunches(startDate: Date, endDate: Date): Observable<Array<Lunch>> {
         /*return this.httpClient
             .get('/Launch')
             .pipe(map(this.mapToArrayOfLaunch));*/
         return of(this.mapToArrayOfLaunch(null));
     }
 
-    private mapToArrayOfLaunch(body: any): Array<Launch> {
-        const result = new Array<Launch>();
+    private mapToArrayOfLaunch(body: any): Array<Lunch> {
+        const result = new Array<Lunch>();
         for (let i = 14; i < 26; i++) {
             if (i !== 19 && i !== 20) {
                 result.push({
@@ -66,8 +66,8 @@ export class LaunchService {
         return result;*/
     }
 
-    private mapToLaunch(body: any): Launch {
-        let result: Launch;
+    private mapToLaunch(body: any): Lunch {
+        let result: Lunch;
         result = {
             description: body.description,
             type: body.type,

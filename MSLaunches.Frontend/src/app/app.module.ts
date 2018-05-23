@@ -8,7 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
 import { HomeModule } from './home/home.module';
-import { LaunchModule } from './launch/launch.module';
+import { LunchModule } from './lunch/lunch.module';
 import { AboutModule } from './about/about.module';
 import { LoginModule } from './login/login.module';
 import { AppComponent } from './app.component';
@@ -24,7 +24,7 @@ import { AppRoutingModule } from './app-routing.module';
     CoreModule,
     SharedModule,
     HomeModule,
-    LaunchModule,
+    LunchModule,
     AboutModule,
     LoginModule,
     AppRoutingModule

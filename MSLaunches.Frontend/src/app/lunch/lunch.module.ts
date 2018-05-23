@@ -4,9 +4,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
-import { LaunchRoutingModule } from './launch-routing.module';
-import { LaunchComponent } from './launch.component';
-import { LaunchService } from './launch.service';
+import { LunchRoutingModule } from './lunch-routing.module';
+import { LunchComponent } from './lunch.component';
+import { LunchService } from './lunch.service';
+import { LunchTileComponent } from '@app/lunch/lunch-tile/lunch-tile.component';
 
 @NgModule({
   imports: [
@@ -14,13 +15,14 @@ import { LaunchService } from './launch.service';
     TranslateModule,
     CoreModule,
     SharedModule,
-    LaunchRoutingModule
+    LunchRoutingModule
   ],
   declarations: [
-    LaunchComponent
+    LunchComponent,
+    LunchTileComponent
   ],
   providers: [
-    LaunchService
+    LunchService
   ]
 })
-export class LaunchModule { }
+export class LunchModule { }

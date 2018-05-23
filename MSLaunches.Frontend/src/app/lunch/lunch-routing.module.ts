@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { Route, extract } from '@app/core';
-import { LaunchComponent } from './launch.component';
+import { LunchComponent } from './lunch.component';
 
 const routes: Routes = [
   Route.withShell([
-    { path: 'launch', component: LaunchComponent, data: { title: extract('Launch') } }
+    { path: 'lunch', component: LunchComponent, data: { title: extract('Lunch') } }
   ])
 ];
 
@@ -15,4 +15,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: []
 })
-export class LaunchRoutingModule { }
+export class LunchRoutingModule { }
