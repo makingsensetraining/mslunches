@@ -1,11 +1,12 @@
 <div class="row">
-    <span class="col-md-2" >
-        <button [ngClass]="{
+    <span class="col-md-4 button" >
+        <button
+        [ngClass]="{
             'button-green': lunch.isSelected,
             'button-red': !lunch.isSelected
         }" (click)="select()"></button>
     </span>
-    <span class="col-md-10">
+    <span class="col-md-8 description">
         <p>{{lunch.description}}</p>
     </span>
 </div> 
