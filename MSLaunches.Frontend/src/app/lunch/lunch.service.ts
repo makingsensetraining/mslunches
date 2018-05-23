@@ -24,30 +24,35 @@ export class LunchService {
         for (let i = 14; i < 26; i++) {
             if (i !== 19 && i !== 20) {
                 result.push({
+                    id: '1',
                     type: 'calorico',
                     date: new Date(2018, 4, i),
                     description: 'empanadas de carne',
                     isSelected: true
                 });
                 result.push({
+                    id: '2',
                     type: 'vegetariano',
                     date: new Date(2018, 4, i),
                     description: 'empanadas vegetarianas de carne',
                     isSelected: false
                 });
                 result.push({
+                    id:'3',
                     type: 'Light',
                     date: new Date(2018, 4, i),
                     description: 'empanadas de carne con casancrem',
                     isSelected: false
                 });
                 result.push({
+                    id:'4',
                     type: 'Sanguche',
                     date: new Date(2018, 4, i),
                     description: 'baguette de empanadas de carne',
                     isSelected: false
                 });
                 result.push({
+                    id:'5',
                     type: 'postre',
                     date: new Date(2018, 4, i),
                     description: 'empanadas de carne dulce',
@@ -69,6 +74,7 @@ export class LunchService {
     private mapToLaunch(body: any): Lunch {
         let result: Lunch;
         result = {
+            id: body.id,
             description: body.description,
             type: body.type,
             date: body.date,

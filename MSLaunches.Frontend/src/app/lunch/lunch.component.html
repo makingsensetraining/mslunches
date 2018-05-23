@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div class="row" *ngFor="let lunch of dailyLunch.lunches">
-                    <app-lunch-tile [lunch]="lunch"></app-lunch-tile>
+                    <app-lunch-tile [lunch]="lunch" (lunchSelected)="setLunchSelected($event)"></app-lunch-tile>
                 </div>
             </div>
             <div class="col-md-1"></div>

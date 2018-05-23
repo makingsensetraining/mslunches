@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { finalize } from 'rxjs/operators';
+import { filter,finalize } from 'rxjs/operators';
 
 import { LunchService } from './lunch.service';
 import { Lunch, DailyTypedLunches, WeeklyLunches } from '@app/lunch/lunch.model';
@@ -16,13 +16,13 @@ export class LunchComponent implements OnInit {
   isLoading: boolean;
 
   constructor(private lunchService: LunchService) { }
-
+  
   ngOnInit() {
     this.isLoading = true;
     this.lunchService.getLaunches(new Date(2018, 1, 1), new Date(2018, 1, 0))
       .pipe(finalize(() => { this.isLoading = false; }))
       .subscribe(lunches => {
-        this.lunches = this.mapToWeekly(lunches);
+                this.lunches = this.mapToWeekly(lunches);
       });
   }
 
@@ -61,5 +61,20 @@ export class LunchComponent implements OnInit {
       return 1;
     }
     return 0;
+  }
+
+  setLunchSelected (lunch:Lunch){
+    let weeklyLunches: WeeklyLunches; 
+    let lunchesByDay: DailyTypedLunches; 
+    weeklyLunches = this.lunches.find(l=> l.date.getDate() === (this.firstDayOfTheWeek(lunch.date)).toDate().getDate());
+    lunchesByDay = weeklyLunches.lunches.find(l=> l.date.getDate() === lunch.date.getDate());
+    lunchesByDay.lunches.forEach(l => {
+      if(l.id !== lunch.id)
+        l.isSelected = false; 
+    });
+  }
+
+  firstDayOfTheWeek (date:Date): moment.Moment{
+    return moment(date, 'DD/MM/YYYY').startOf('isoWeek');
   }
 }
