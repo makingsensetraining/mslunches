@@ -1,7 +1,7 @@
 <app-loader [isLoading]="isLoading"></app-loader>
 <div [hidden]="isLoading">
-    <div class="container" *ngFor="let weeklylunch of lunches">
-        <div class="row">
+    <div class="container fill-father no-margin" *ngFor="let weeklylunch of lunches">
+        <div class="row fill-father">
             <div class="col-md-1"></div>
             <div class="col-md-2" *ngFor="let dailyLunch of weeklylunch.lunches">
                 <div class="row">
@@ -10,9 +10,14 @@
                         <span class="header-date">{{dailyLunch.date | date : 'yyyy-MM-dd'}}</span>
                     </div>
                 </div>
-                <div class="row" *ngFor="let lunch of dailyLunch.lunches">
-                    <app-lunch-tile [lunch]="lunch"></app-lunch-tile>
+                <div class="row" *ngIf="!dailyLunch.lunches || dailyLunch.lunches.length === 0; else elseBlock">
+                    <span class="col">NONE</span>
                 </div>
+                <ng-template #elseBlock>
+                    <div class="row" *ngFor="let lunch of dailyLunch.lunches">
+                        <app-lunch-tile [lunch]="lunch" class="fill-father"></app-lunch-tile>
+                    </div>
+                </ng-template>
             </div>
             <div class="col-md-1"></div>
         </div>

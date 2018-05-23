@@ -1,13 +1,16 @@
-<div class="row">
-    <span class="col-md-4 button" >
-        <button
-        [ngClass]="{
-            'button-green': lunch.isSelected,
-            'button-red': !lunch.isSelected
-        }" (click)="select()"></button>
-    </span>
-    <span class="col-md-8 description">
-        <p>{{lunch.description}}</p>
-        <p>{{lunch.type}}</p>
-    </span>
-</div> 
+<div class="col">
+    <div class="row">
+        <span class="col-md-4 button col-xs-6" >
+            <button
+            [disabled]="lunch.isSelectable"
+            [ngClass]="{
+                'button-green': lunch.isSelected,
+                'button-red': !lunch.isSelected
+            }" (click)="select()"></button>
+        </span>
+        <span class="col-md-8 description col-xs-6">
+            <p>{{lunch.description}}</p>
+            <p>{{lunch.type}}</p>
+        </span>
+    </div> 
+</div>
