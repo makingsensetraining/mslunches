@@ -40,7 +40,10 @@ namespace MSLunches.Domain.Services
 
         public async Task<List<Lunch>> GetAsync()
         {
-            return await _dbContext.Lunches.ToListAsync();
+            var contex = _dbContext.Lunches
+                .Include(a => a.Meal)
+                    .ThenInclude(a => a.MealType);
+            return await contex.ToListAsync();
         }
 
         public async Task<Lunch> CreateAsync(Lunch lunch)

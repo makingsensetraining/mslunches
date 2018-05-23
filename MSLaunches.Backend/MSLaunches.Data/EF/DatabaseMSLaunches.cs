@@ -20,6 +20,8 @@
             var id2 = Guid.NewGuid();
             var id3 = Guid.NewGuid();
             var id4 = Guid.NewGuid();
+            var id5 = Guid.NewGuid();
+            var id6 = Guid.NewGuid();
 
             if (!dbContext.Users.Any())
             {
@@ -49,8 +51,8 @@
             {
                 var meals = new[]
                 {
-                    new Meal {Id = id4, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Crepes de verdura y calabza", TypeId = 2},
-                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pechugas grilladas al limón con arroz al curry", TypeId = 2},
+                    new Meal { Id = id4, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Crepes de verdura y calabza", TypeId = 2},
+                    new Meal { Id = id5, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pechugas grilladas al limón con arroz al curry", TypeId = 2},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milhojas de vegetales con ensalada", TypeId = 2},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de pescado con puré de calabaza", TypeId = 2},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Triangulitos integrales con vegetales y ensalada", TypeId = 2},
@@ -63,7 +65,7 @@
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de lentejas con ensalada", TypeId = 3},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Tarta capresse con ensalada", TypeId = 3},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Budincitos de acelga y calabaza con ensalada", TypeId = 3},
-                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas veganas con calabazas en cubo", TypeId = 3},
+                    new Meal { Id = id6, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas veganas con calabazas en cubo", TypeId = 3},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Baguette de milanesa de carne con lechuga y tomate", TypeId = 4},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Postre de vainillas", TypeId = 5},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Alfajores de maizena", TypeId = 5},
@@ -79,11 +81,23 @@
             {
                 var lunches = new[]
                 {
-                    new Lunch {Id = id1,
-                        MealId =id4,
+                    new Lunch {
+                        Id = id1,
+                        MealId = id4,
                         Date = DateTime.Today,
                         CreatedBy = "System"
                     },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id6,
+                        Date = DateTime.Today,
+                        CreatedBy = "System"
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id5,
+                        Date = DateTime.Today.AddDays(7)
+                    }
                 };
                 dbContext.Lunches.AddRange(lunches);
             }
@@ -92,7 +106,8 @@
             {
                 var userLunches = new[]
                 {
-                    new UserLunch {Id = id3,
+                    new UserLunch {
+                        Id = id3,
                         UserId = id2,
                         LunchId = id1,
                         CreatedBy = "System"

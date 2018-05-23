@@ -48,6 +48,7 @@ namespace MSLunches.Api.Middleware
             if (exception is UnauthorizedException) code = HttpStatusCode.Unauthorized;
             // else if (exception is SomeOtherException) code = HttpStatusCode.RequestTimeout;
             // else if (exception is SomeOtherException2) code = HttpStatusCode.BadRequest;
+            context.Response.Clear();
 
             var result = JsonConvert.SerializeObject(new ErrorDto(exception.Message));
             context.Response.ContentType = "application/json";

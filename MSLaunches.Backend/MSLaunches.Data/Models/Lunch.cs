@@ -26,7 +26,14 @@
         [Required]
         public DateTime Date { get; set; }
 
+        /// <summary>
+        /// Meal
+        /// </summary>
         public virtual Meal Meal { get; set; }
+
+        /// <summary>
+        /// Lunches
+        /// </summary>
         public virtual ICollection<UserLunch> UserLunches { get; set; }
     }
 }

@@ -41,7 +41,10 @@ namespace MSLunches.Api
             services.AddDbContext<WebApiCoreLunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
 
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc()
+                .AddJsonOptions(
+                    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
 
             IAuthorizationPolicies authorizationPolicies = new AuthorizationPolicies();
             services.AddSingleton(authorizationPolicies);
@@ -60,6 +63,17 @@ namespace MSLunches.Api
                 option.Audience = Configuration["auth0:clientId"];
                 option.Authority = $"https://{Configuration["auth0:domain"]}/";
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+                });
 
             //Creates the swagger json based on the documented xml/attributes of the endpoints
             services.AddSwaggerGen(c =>
@@ -103,7 +117,8 @@ namespace MSLunches.Api
                 c.RoutePrefix = string.Empty;
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiCoreMSLunches V1");
             });
-            
+
+            app.UseCors("AllowAllOrigins");
             app.UseMvc();
             DatabaseMSLunches.Initialize(dbContext);
         }
