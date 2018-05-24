@@ -22,17 +22,24 @@ export class LunchComponent implements OnInit {
     this.lunchService.getLaunches(new Date(2018, 1, 1), new Date(2018, 1, 0))
       .pipe(finalize(() => { this.isLoading = false; }))
       .subscribe(lunches => {
-        this.lunches = this.mapToWeekly(lunches);
+        this.lunches = this.lunchService.mapToWeekly(lunches);
       });
   }
 
   setLunchSelected(lunch: Lunch) {
     let weeklyLunches: WeeklyLunches;
     let lunchesByDay: DailyTypedLunches;
-    weeklyLunches = this.lunches.find(l =>
-      l.date.getDate() === (this.firstDayOfTheWeek(lunch.date)).toDate().getDate());
+    const lunchDate: Date = new Date(lunch.date);
+    const startOfTheWeek: Date = this.firstDayOfTheWeek(lunch.date, 'YYYY-MM-DD').toDate();
 
-    lunchesByDay = weeklyLunches.lunches.find(l => l.date.getDate() === lunch.date.getDate());
+    weeklyLunches = this.lunches.find(l =>
+      l.date.getDate() === startOfTheWeek.getDate()
+    );
+
+    lunchesByDay = weeklyLunches.lunches.find(
+      l => l.date.getDate() === lunchDate.getDate()
+    );
+
     lunchesByDay.lunches.forEach(l => {
       if (l.id !== lunch.id) {
         l.isSelected = false;
@@ -40,66 +47,10 @@ export class LunchComponent implements OnInit {
     });
   }
 
-  private mapToWeekly(lunches: Array<Lunch>): Array<WeeklyLunches> {
-    lunches = lunches.sort(this.typeSorter);
-
-    const daily: Array<DailyTypedLunches> = _.map(
-      // Groups by date
-      _.groupBy(lunches, (result: Lunch) => result.date),
-      // Maps to entity
-      (value: Lunch[], key: string) => ({ date: new Date(key), lunches: value })
-    );
-
-    const weekly = _.map(
-      // Groups by week
-      _.groupBy(daily, (result: DailyTypedLunches) => moment(result.date, 'DD/MM/YYYY').startOf('isoWeek')),
-      // maps to entity
-      (value: DailyTypedLunches[], key: string) => ({ date: new Date(key), lunches: value })
-    );
-
-    weekly.forEach(dailyLunch => {
-      let startOfTheweek: moment.Moment;
-      if (!!dailyLunch.lunches && dailyLunch.lunches.length < 5) {
-        startOfTheweek = this.firstDayOfTheWeek(dailyLunch.date);
-        for (let i = 0; i < 5; i++) {
-          if (!dailyLunch.lunches.some(item =>
-            item.date.getDate() === startOfTheweek.toDate().getDate())
-          ) {
-            dailyLunch.lunches.push({
-              date: startOfTheweek.toDate(),
-              lunches: new Array<Lunch>()
-            });
-          }
-          startOfTheweek.add('days', 1);
-        }
-        dailyLunch.lunches = dailyLunch.lunches.sort(this.dateSorter);
-      }
-    });
-
-    return weekly;
-  }
-
-  private typeSorter(a: Lunch, b: Lunch): number {
-    if (a.type < b.type) {
-      return -1;
+  private firstDayOfTheWeek(date: Date, format?: moment.MomentFormatSpecification): moment.Moment {
+    if (!format) {
+      format = 'DD/MM/YYYY';
     }
-    if (b.type < a.type) {
-      return 1;
-    }
-    return 0;
-  }
-
-  private dateSorter(a: DailyTypedLunches, b: DailyTypedLunches): number {
-    if (a.date < b.date) {
-      return -1;
-    }
-    if (b.date < a.date) {
-      return 1;
-    }
-    return 0;
-  }
-
-  private firstDayOfTheWeek(date: Date): moment.Moment {
-    return moment(date, 'DD/MM/YYYY').startOf('isoWeek');
+    return moment(date, format).startOf('isoWeek');
   }
 }
