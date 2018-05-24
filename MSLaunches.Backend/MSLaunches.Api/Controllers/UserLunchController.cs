@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models;
 using MSLunches.Data.Models;
@@ -14,6 +15,7 @@ namespace MSLunches.Api.Controllers
     [Authorize]
     [Route("api/users/{userId}/lunches")]
     [Produces("Application/json")]
+    [Authorize]
     [ProducesResponseType(typeof(ErrorDto), 500)]
     public class UserLunchController : Controller
     {
@@ -33,6 +35,7 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(List<UserLunch>), 200)]
         public async Task<IActionResult> GetAll(string userId)
         {
+            var asd = User.Claims;
             return Ok(await _userLunchService.GetAsync(userId));
         }
 

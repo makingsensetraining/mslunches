@@ -7,6 +7,7 @@ export class MockAuthenticationService {
 
   hashHandled: Observable<boolean>;
   credentials: Credentials | null = {
+    userId: 'asd',
     username: 'test',
     idToken: '123',
     accessToken: 'asd',
@@ -18,6 +19,7 @@ export class MockAuthenticationService {
 
   login() {
     this.credentials = {
+      userId: '',
       accessToken: '',
       expiresAt: 1,
       idToken: '',

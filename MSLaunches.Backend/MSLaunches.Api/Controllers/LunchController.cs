@@ -13,6 +13,7 @@ namespace MSLunches.Api.Controllers
     [Authorize]
     [Route("api/lunches")]
     [Produces("Application/json")]
+    [Authorize]
     [ProducesResponseType(typeof(ErrorDto), 500)]
     public class LunchController : Controller
     {

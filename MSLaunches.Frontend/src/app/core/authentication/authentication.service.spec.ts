@@ -39,7 +39,7 @@ const aHash =
 
 describe('AuthenticationService', () => {
   let authenticationService: AuthenticationService;
-  
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [AuthenticationService]

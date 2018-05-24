@@ -12,9 +12,12 @@ export class AuthorizationInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const credentials = sessionStorage.getItem('credentials');
+    let clonedRequest = request;
     if (credentials) {
-      request.headers.append('Authorization', JSON.parse(credentials).accessToken);
+      clonedRequest = request.clone({
+        headers: request.headers.set('Authorization', 'bearer ' + JSON.parse(credentials).accessToken)
+      });
     }
-    return next.handle(request);
+    return next.handle(clonedRequest);
   }
 }

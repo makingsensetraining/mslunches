@@ -13,6 +13,7 @@ import { Subject } from 'rxjs/Subject';
 
 export interface Credentials {
   // Customize received credentials here
+  userId: String;
   username: string;
   image: string;
   accessToken: string;
@@ -134,6 +135,7 @@ export class AuthenticationService {
 
   private mapCredentials(auth0Result: auth0.Auth0DecodedHash): Credentials {
     const creds: Credentials = {
+      userId: auth0Result.idTokenPayload.sub,
       username: auth0Result.idTokenPayload.nickname,
       image: auth0Result.idTokenPayload.picture,
       idToken: auth0Result.idToken,

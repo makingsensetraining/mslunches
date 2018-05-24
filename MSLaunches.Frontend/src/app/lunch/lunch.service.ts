@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map, mapTo } from 'rxjs/operators';
+import { map, mapTo, mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { tryStatement } from 'babel-types';
@@ -13,11 +13,25 @@ export class LunchService {
     constructor(private httpClient: HttpClient) {
     }
 
-
-    getLaunches(startDate: Date, endDate: Date): Observable<Array<Lunch>> {
+    getLaunches(startDate?: Date, endDate?: Date): Observable<Array<Lunch>> {
         return this.httpClient
             .get('/lunches')
             .pipe(map(this.mapToArrayOfLaunch.bind(this)));
+    }
+
+    getUserLunches(): Observable<Array<Lunch>> {
+        const userId: string =
+            JSON.parse(sessionStorage.getItem('credentials')).userId;
+
+        return this.getLaunches()
+            .pipe(
+                mergeMap(menu => {
+                return this.httpClient.get(`user/${userId}/lunches`).pipe(
+                    map((value: any[]) =>
+                        this.mergeUserLunchs(this.mapToArrayOfLaunch(value), menu))
+                );
+            })
+        );
     }
 
     mapToWeekly(lunches: Array<Lunch>): Array<WeeklyLunches> {
@@ -37,6 +51,10 @@ export class LunchService {
         );
 
         return this.fillDates(weekly);
+      }
+
+      private mergeUserLunchs(userSelection: Array<Lunch>, menu: Array<Lunch>): Array<Lunch> {
+        return new Array<Lunch>();
       }
 
       private fillDates(weekly: Array<WeeklyLunches>): Array<WeeklyLunches> {
