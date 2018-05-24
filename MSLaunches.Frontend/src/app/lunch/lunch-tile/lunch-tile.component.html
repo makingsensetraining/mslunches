@@ -10,6 +10,7 @@
                 }" (click)="select()">
             </button>
         </span>
+
         <span [ngClass]="{
             'col-md-8 col-xs-6': canBeSelected,
             'col': !canBeSelected
@@ -17,5 +18,5 @@
             <span>{{lunch.description}}</span>
             <span class="badge badge-dark">{{lunch.type}}</span>
         </span>
-    </div> 
+    </div>
 </div>
