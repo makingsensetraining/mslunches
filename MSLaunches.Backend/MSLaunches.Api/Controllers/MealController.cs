@@ -6,9 +6,11 @@ using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MSLunches.Api.Controllers
 {
+    [Authorize]
     [Route("api/Meals")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]

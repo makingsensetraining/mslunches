@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models;
@@ -9,6 +10,7 @@ using MSLunches.Domain.Services.Interfaces;
 
 namespace MSLunches.Api.Controllers
 {
+    [Authorize]
     [Route("api/lunches")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]

@@ -61,7 +61,7 @@ namespace MSLunches.Domain.Services
             var userLunchToUpdate = await _dbContext.UserLunches.FindAsync(userLunch.Id);
 
             if (userLunchToUpdate == null) return null;
-           
+
             userLunchToUpdate.LunchId = userLunch.LunchId;
             userLunchToUpdate.UserId = userLunch.UserId;
             userLunchToUpdate.Approved = userLunch.Approved;
@@ -92,6 +92,12 @@ namespace MSLunches.Domain.Services
             return await _dbContext.UserLunches
                                    .Where(x => x.UserId == userId)
                                    .ToListAsync();
+        }
+
+        public Task<UserLunch> GetUserLunchByUserAndLunchIdAsync(string userId, Guid lunchId)
+        {
+            return _dbContext.UserLunches
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.LunchId == lunchId);
         }
 
         #endregion

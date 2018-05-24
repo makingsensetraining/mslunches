@@ -45,5 +45,8 @@ namespace MSLunches.Domain.Services.Interfaces
         Task<UserLunch> UpdateAsync(UserLunch userLunch);
 
         Task<List<UserLunch>> GetlLunchesByUserByWeekAsync(string userId);
+
+
+        Task<UserLunch> GetUserLunchByUserAndLunchIdAsync(string userId, Guid lunchId);
     }
 }
