@@ -12,11 +12,12 @@
         public Guid LunchId { get; set; }
 
         [Required]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         public bool Approved { get; set; }
 
         public virtual Lunch Lunch { get; set; }
+
         public virtual User User { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
 {
-    [Route("api/userlunches")]
+    [Route("api/users/{userId}/lunches")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]
     public class UserLunchController : Controller
@@ -28,9 +28,9 @@ namespace MSLunches.Api.Controllers
         /// <return>A list of UserLunch</return>
         [HttpGet()]
         [ProducesResponseType(typeof(List<UserLunch>), 200)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string userId)
         {
-            return Ok(await _userLunchService.GetAsync());
+            return Ok(await _userLunchService.GetAsync(userId));
         }
 
         /// <summary>
@@ -57,19 +57,22 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Creates a new meal selection for user.
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         /// <response code="204">UserLunch created</response>
         /// <response code="404">UserLunch could not be created</response>
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody]InputUserLunchDto userLunch)
+        public async Task<IActionResult> Create(
+            [FromRoute]string userId,
+            [FromBody]InputUserLunchDto userLunch)
         {
             if (userLunch == null) return BadRequest();
 
             var userLunchToCreate = new UserLunch
             {
                 LunchId = userLunch.LunchId,
-                UserId = userLunch.UserId,
+                UserId = userId,
                 Approved = userLunch.Approved,
                 CreatedBy = "Test" //TODO: Add user.-
             };
@@ -82,13 +85,17 @@ namespace MSLunches.Api.Controllers
         ///<summary>
         /// Updates a meal selection by user.
         ///</summary>
+        /// <param name="userId"></param>
         ///<param name="id" cref="Guid">Guid of the meal</param>
         ///<param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         ///<response code="204">UserLunch created</response>
         ///<response code="404">UserLunch not found / UserLunch could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]InputUserLunchDto userLunch)
+        public async Task<IActionResult> Update(
+            [FromRoute]string userId,
+            [FromRoute]Guid id,
+            [FromBody]InputUserLunchDto userLunch)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (userLunch == null) return BadRequest();
@@ -97,7 +104,7 @@ namespace MSLunches.Api.Controllers
             {
                 Id = id,
                 LunchId = userLunch.LunchId,
-                UserId = userLunch.UserId,
+                UserId = userId,
                 Approved = userLunch.Approved,
                 UpdatedBy = "Test" //TODO: Add user.
             };
@@ -130,40 +137,9 @@ namespace MSLunches.Api.Controllers
         /// <returns></returns>
         [HttpGet("LunchesByUserAndWeek")]
         [ProducesResponseType(typeof(List<UserLunch>), 200)]
-        public async Task<IActionResult> GetlLunchesByUserByWeek(Guid userId)
+        public async Task<IActionResult> GetlLunchesByUserByWeek(string userId)
         {
             return Ok(await _userLunchService.GetlLunchesByUserByWeekAsync(userId));
-        }
-
-        /// <summary>
-        /// Creates a new UserLunch
-        /// </summary>
-        /// <param name="userLunches" cref="UserLunchDto">UserLunch model</param>
-        /// <response code="204">UserLunch created</response>
-        /// <response code="404">UserLunch could not be created</response>
-        [HttpPost("CreateWeek")]
-        [ValidateModel]
-        public async Task<IActionResult> CreateUserLunches([FromBody]List<UserLunchDto> userLunches)
-        {
-            if (userLunches == null)
-            {
-                return BadRequest();
-            }
-            var userLunchList = new List<UserLunch>();
-            foreach (var userLunchDto in userLunches)
-            {
-                var userLunch = new UserLunch
-                {
-                    Id = Guid.NewGuid(),
-                    LunchId = userLunchDto.LunchId,
-                    UserId = userLunchDto.UserId,
-                    CreatedBy = "Test"
-                    // TODO: get createdBy from current meal
-                };
-                userLunchList.Add(userLunch);
-            }
-            var affectedRows = await _userLunchService.CreateUserLunchesAsync(userLunchList);
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
     }
 }

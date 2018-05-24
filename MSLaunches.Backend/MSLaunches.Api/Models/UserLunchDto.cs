@@ -1,6 +1,5 @@
 ﻿using MSLunches.Data.Models;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace MSLunches.Api.Models
 {
@@ -23,7 +22,7 @@ namespace MSLunches.Api.Models
         public DateTimeOffset UpdatedOn { get; set; }
 
         public Guid LunchId { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public bool Approved { get; set; }
     }
 }

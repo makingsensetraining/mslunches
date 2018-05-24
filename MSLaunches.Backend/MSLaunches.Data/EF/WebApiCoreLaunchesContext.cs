@@ -62,11 +62,6 @@ namespace MSLunches.Data.EF
                       .HasMany(e => e.UserLunches)
                       .WithOne(e => e.Lunch)
                       .HasForeignKey(e => e.LunchId);
-
-            modelBuilder.Entity<User>()
-                    .HasMany(e => e.UserLunches)
-                    .WithOne(e => e.User)
-                    .HasForeignKey(e => e.UserId);
         }
     }
 }

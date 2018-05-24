@@ -108,7 +108,7 @@
                 {
                     new UserLunch {
                         Id = id3,
-                        UserId = id2,
+                        UserId = "google-oauth2|100788380982430215896",
                         LunchId = id1,
                         CreatedBy = "System"
                     },

@@ -24,8 +24,6 @@ namespace MSLunches.Domain.Services.Interfaces
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<UserLunch> CreateAsync(UserLunch userLunch);
 
-        Task<int> CreateUserLunchesAsync(List<UserLunch> userLunches);
-
         /// <summary>
         /// Deletes a userLunch by Id
         /// </summary>
@@ -37,7 +35,7 @@ namespace MSLunches.Domain.Services.Interfaces
         /// Gets all the existing lunchs
         /// </summary>
         /// <returns>List with all the existing lunchs</returns>
-        Task<List<UserLunch>> GetAsync();
+        Task<List<UserLunch>> GetAsync(string userId);
 
         /// <summary>
         /// Updates a userLunch
@@ -46,6 +44,6 @@ namespace MSLunches.Domain.Services.Interfaces
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<UserLunch> UpdateAsync(UserLunch userLunch);
 
-        Task<List<UserLunch>> GetlLunchesByUserByWeekAsync(Guid userId);
+        Task<List<UserLunch>> GetlLunchesByUserByWeekAsync(string userId);
     }
 }

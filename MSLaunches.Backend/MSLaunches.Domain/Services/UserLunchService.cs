@@ -38,10 +38,11 @@ namespace MSLunches.Domain.Services
                                    .FindAsync(userLunchId);
         }
 
-        public async Task<List<UserLunch>> GetAsync()
+        public async Task<List<UserLunch>> GetAsync(string userId)
         {
             return await _dbContext.UserLunches
-                                   .ToListAsync();
+                .Where(a => a.UserId == userId)
+                .ToListAsync();
         }
 
         public async Task<UserLunch> CreateAsync(UserLunch userLunch)
@@ -72,17 +73,6 @@ namespace MSLunches.Domain.Services
             return userLunchToUpdate;
         }
 
-        public async Task<int> CreateUserLunchesAsync(List<UserLunch> userLunches)
-        {
-            foreach (var userLunch in userLunches)
-            {
-                userLunch.CreatedOn = DateTime.Now;
-                _dbContext.UserLunches
-                          .Add(userLunch);
-            }
-            return await _dbContext.SaveChangesAsync();
-        }
-
         public async Task<int> DeleteByIdAsync(Guid userLunchId)
         {
             var userLunch = await _dbContext.UserLunches
@@ -97,7 +87,7 @@ namespace MSLunches.Domain.Services
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<UserLunch>> GetlLunchesByUserByWeekAsync(Guid userId)
+        public async Task<List<UserLunch>> GetlLunchesByUserByWeekAsync(string userId)
         {
             return await _dbContext.UserLunches
                                    .Where(x => x.UserId == userId)
