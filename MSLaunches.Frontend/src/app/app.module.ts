@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { CoreModule } from '@app/core';
+import { CoreModule, AuthenticationService } from '@app/core';
 import { SharedModule } from '@app/shared';
 import { HomeModule } from './home/home.module';
 import { LunchModule } from './lunch/lunch.module';
@@ -21,7 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
     HttpClientModule,
     TranslateModule.forRoot(),
     NgbModule.forRoot(),
-    CoreModule,
+    CoreModule.forRoot(),
     SharedModule,
     HomeModule,
     LunchModule,

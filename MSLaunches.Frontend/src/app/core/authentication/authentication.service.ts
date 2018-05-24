@@ -1,11 +1,25 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { concat } from 'rxjs/observable/concat';
 import { of } from 'rxjs/observable/of';
+import { map, catchError, timeout, timeInterval } from 'rxjs/operators';
+import * as auth0 from 'auth0-js';
+
+import { auth0Config } from '@env/environment';
+import { Observer } from 'rxjs/Observer';
+import { merge } from 'rxjs/observable/merge';
+import { promise } from 'protractor';
+import { Subject } from 'rxjs/Subject';
 
 export interface Credentials {
   // Customize received credentials here
   username: string;
-  token: string;
+  image: string;
+  accessToken: string;
+  idToken: string;
+  expiresAt: Number;
+  tokenPayload: string;
+  scopes: string;
 }
 
 export interface LoginContext {
@@ -16,6 +30,10 @@ export interface LoginContext {
 
 const credentialsKey = 'credentials';
 
+const routes = {
+  login : '/users/token'
+};
+
 /**
  * Provides a base for authentication workflow.
  * The Credentials interface as well as login/logout methods should be replaced with proper implementation.
@@ -23,28 +41,24 @@ const credentialsKey = 'credentials';
 @Injectable()
 export class AuthenticationService {
 
-  private _credentials: Credentials | null;
-
+  private _hashHandled: Subject<boolean> = new Subject<boolean>();
+  private _timeout: NodeJS.Timer;
   constructor() {
-    const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey);
-    if (savedCredentials) {
-      this._credentials = JSON.parse(savedCredentials);
-    }
   }
 
   /**
    * Authenticates the user.
-   * @param {LoginContext} context The login parameters.
-   * @return {Observable<Credentials>} The user credentials.
    */
-  login(context: LoginContext): Observable<Credentials> {
-    // Replace by proper authentication call
-    const data = {
-      username: context.username,
-      token: '123456'
-    };
-    this.setCredentials(data, context.remember);
-    return of(data);
+  login() {
+    auth0Config.authorize();
+  }
+
+  /**
+   * Checks is the user is authenticated.
+   * @return {boolean} True if the user is authenticated.
+   */
+  isAuthenticated(): boolean {
+    return !!this.credentials;
   }
 
   /**
@@ -58,11 +72,28 @@ export class AuthenticationService {
   }
 
   /**
-   * Checks is the user is authenticated.
-   * @return {boolean} True if the user is authenticated.
+   * gets the auth0 hash, and saves it into a session storage
    */
-  isAuthenticated(): boolean {
-    return !!this.credentials;
+  handleHash() {
+    if (!this.isAuthenticated()) {
+      auth0Config.parseHash((err: auth0.Auth0Error, authResult: auth0.Auth0DecodedHash) => {
+        if (authResult && authResult.accessToken && authResult.idToken) {
+          window.location.hash = '';
+          this.setCredentials(this.mapCredentials(authResult));
+        }
+        this._hashHandled.next(true);
+      });
+    }
+  }
+
+  setUpTimeout() {
+    this._timeout = setTimeout(() => {
+      this._hashHandled.next(true);
+    }, 2000);
+  }
+
+  cleanTimeout() {
+    clearTimeout(this._timeout);
   }
 
   /**
@@ -70,7 +101,14 @@ export class AuthenticationService {
    * @return {Credentials} The user credentials or null if the user is not authenticated.
    */
   get credentials(): Credentials | null {
-    return this._credentials;
+    return JSON.parse(sessionStorage.getItem(credentialsKey));
+  }
+
+  /**
+   * returns an event representing whether the hash was handled or not
+   */
+  get hashHandled(): Subject<boolean> {
+    return this._hashHandled;
   }
 
   /**
@@ -80,16 +118,30 @@ export class AuthenticationService {
    * @param {Credentials=} credentials The user credentials.
    * @param {boolean=} remember True to remember credentials across sessions.
    */
-  private setCredentials(credentials?: Credentials, remember?: boolean) {
-    this._credentials = credentials || null;
-
+  private setCredentials(credentials?: Credentials): boolean {
     if (credentials) {
-      const storage = remember ? localStorage : sessionStorage;
+      const storage = sessionStorage;
       storage.setItem(credentialsKey, JSON.stringify(credentials));
+      this._hashHandled.next(true);
+      return true;
     } else {
       sessionStorage.removeItem(credentialsKey);
       localStorage.removeItem(credentialsKey);
+      this._hashHandled.next(true);
+      return false;
     }
   }
 
+  private mapCredentials(auth0Result: auth0.Auth0DecodedHash): Credentials {
+    const creds: Credentials = {
+      username: auth0Result.idTokenPayload.nickname,
+      image: auth0Result.idTokenPayload.picture,
+      idToken: auth0Result.idToken,
+      expiresAt: (auth0Result.expiresIn * 1000) + new Date().getTime(),
+      accessToken: auth0Result.accessToken,
+      tokenPayload: auth0Result.idTokenPayload,
+      scopes: auth0Result.scope
+    };
+    return creds;
+  }
 }

@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
+import { AuthenticationService } from '@app/core';
 
 @NgModule({
   imports: [
@@ -17,6 +18,9 @@ import { LoginComponent } from './login.component';
   ],
   declarations: [
     LoginComponent
+  ],
+  providers: [
+    AuthenticationService
   ]
 })
 export class LoginModule { }

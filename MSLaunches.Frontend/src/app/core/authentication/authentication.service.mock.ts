@@ -5,16 +5,27 @@ import { Credentials, LoginContext } from './authentication.service';
 
 export class MockAuthenticationService {
 
+  hashHandled: Observable<boolean>;
   credentials: Credentials | null = {
     username: 'test',
-    token: '123'
+    idToken: '123',
+    accessToken: 'asd',
+    expiresAt: 1000,
+    tokenPayload: '',
+    scopes: '',
+    image: ''
   };
 
-  login(context: LoginContext): Observable<Credentials> {
-    return of({
-      username: context.username,
-      token: '123456'
-    });
+  login() {
+    this.credentials = {
+      accessToken: '',
+      expiresAt: 1,
+      idToken: '',
+      image: '',
+      scopes: '',
+      tokenPayload: '',
+      username: '',
+    };
   }
 
   logout(): Observable<boolean> {
