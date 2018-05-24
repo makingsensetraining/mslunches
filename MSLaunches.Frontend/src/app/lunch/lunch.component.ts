@@ -19,7 +19,7 @@ export class LunchComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    this.lunchService.getLaunches(new Date(2018, 1, 1), new Date(2018, 1, 0))
+    this.lunchService.getUserLunches()
       .pipe(finalize(() => { this.isLoading = false; }))
       .subscribe(lunches => {
         this.lunches = this.lunchService.mapToWeekly(lunches);

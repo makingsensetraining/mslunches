@@ -4,7 +4,7 @@ import { map, mapTo, mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { tryStatement } from 'babel-types';
-import { Lunch, DailyTypedLunches, WeeklyLunches } from '@app/lunch/lunch.model';
+import { Lunch, DailyTypedLunches, WeeklyLunches, UserSelection } from '@app/lunch/lunch.model';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -26,9 +26,9 @@ export class LunchService {
         return this.getLaunches()
             .pipe(
                 mergeMap(menu => {
-                return this.httpClient.get(`user/${userId}/lunches`).pipe(
+                return this.httpClient.get(`/users/${userId}/lunches`).pipe(
                     map((value: any[]) =>
-                        this.mergeUserLunchs(this.mapToArrayOfLaunch(value), menu))
+                        this.mergeUserLunchs(this.mapToArrayOfUserSelection(value), menu))
                 );
             })
         );
@@ -53,8 +53,14 @@ export class LunchService {
         return this.fillDates(weekly);
       }
 
-      private mergeUserLunchs(userSelection: Array<Lunch>, menu: Array<Lunch>): Array<Lunch> {
-        return new Array<Lunch>();
+      private mergeUserLunchs(userSelection: Array<UserSelection>, menu: Array<Lunch>): Array<Lunch> {
+        menu.forEach(lunch => {
+            if (userSelection.some(a => a.lunchId === lunch.id)) {
+                lunch.isSelected = true;
+            }
+        });
+
+        return menu;
       }
 
       private fillDates(weekly: Array<WeeklyLunches>): Array<WeeklyLunches> {
@@ -100,23 +106,38 @@ export class LunchService {
         return 0;
     }
 
+    private mapToArrayOfUserSelection(body: Array<any>): Array<UserSelection> {
+        let result: Array<UserSelection> = new Array<UserSelection>();
+        result = body.map(this.mapToUserSelection);
+        return result;
+    }
+
     private mapToArrayOfLaunch(body: Array<any>): Array<Lunch> {
         let result: Array<Lunch> = new Array<Lunch>();
+        result = body.map(this.map);
+        return result;
+    }
 
-        result = body.map(this.mapToLaunch);
+    private mapToUserSelection(body: any): UserSelection {
+        let result: UserSelection;
+        result = {
+            lunchId: body.lunchId,
+            id: body.id,
+        };
 
         return result;
     }
 
-    private mapToLaunch(body: any): Lunch {
+    private map(body: any): Lunch {
         let result: Lunch;
         result = {
-            id: body.meal.id,
+            id: body.id,
+            userLunchId: null,
             description: body.meal.name,
             type: body.meal.mealType.description,
             date: body.date,
             isSelected: false,
-            isSelectable: false
+            isSelectable: true
         };
 
         return result;
