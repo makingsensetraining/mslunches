@@ -1,8 +1,8 @@
 {
-    "APP_NAME": "Making Sense Almuerzos",
+    "APP_NAME": "Almuerzos",
     "About": "Acerca de",
     "Hello world !": "Hola Mundo !",
-    "Home": "Home",
+    "Home": "Menú",
     "Logged in as": "Logueado como",
     "Login": "Login",
     "Logout": "Logout",
@@ -17,6 +17,7 @@
     "Tuesday": "Martes",
     "Wednesday": "Miercoles",
     "Thursday": "Jueves",
-    "Friday": "Viernes"
+    "Friday": "Viernes",
+    "Lunches": "Almuerzos"
 }
   

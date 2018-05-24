@@ -12,12 +12,13 @@
                                 <span class="header-date">{{dailyLunch.date | date : 'yyyy-MM-dd'}}</span>
                             </div>
                         </div>
-                        <div class="row" *ngIf="!dailyLunch.lunches || dailyLunch.lunches.length === 0; else elseBlock">
+                        <div class="row" 
+                            *ngIf="!dailyLunch.lunches || dailyLunch.lunches.length === 0; else elseBlock">
                             <span class="col">NONE</span>
                         </div>
                         <ng-template #elseBlock>
                             <div class="row" *ngFor="let lunch of dailyLunch.lunches">
-                                <app-lunch-tile [lunch]="lunch" class="fill-father" (lunchSelected)="setLunchSelected($event)" ></app-lunch-tile>
+                                <app-lunch-tile [canBeSelected]="canBeSelected" [lunch]="lunch" class="fill-father" (lunchSelected)="setLunchSelected($event)" ></app-lunch-tile>
                             </div>
                         </ng-template>
                     </div>

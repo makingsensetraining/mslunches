@@ -21,6 +21,10 @@ import { LunchTileComponent } from '@app/lunch/lunch-tile/lunch-tile.component';
     LunchComponent,
     LunchTileComponent
   ],
+  exports: [
+    LunchComponent,
+    LunchTileComponent
+  ],
   providers: [
     LunchService
   ]

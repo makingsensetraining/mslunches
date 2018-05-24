@@ -6,16 +6,13 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MSLunches.Api.Controllers
 {
     [Authorize]
     [Route("api/users/{userId}/lunches")]
     [Produces("Application/json")]
-    [Authorize]
     [ProducesResponseType(typeof(ErrorDto), 500)]
     public class UserLunchController : Controller
     {
@@ -66,7 +63,6 @@ namespace MSLunches.Api.Controllers
         /// <param name="userId"></param>
         /// <param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         /// <response code="204">UserLunch created</response>
-        /// <response code="400">UserLunch could not be created - Already exists</response>
         [HttpPost]
         [ValidateModel]
         public async Task<IActionResult> Create(

@@ -1,5 +1,5 @@
 {
-  "APP_NAME": "Making Sense Launches",
+  "APP_NAME": "Lunches",
   "About": "About",
   "Hello world !": "Hello world !",
   "Home": "Home",
@@ -17,5 +17,6 @@
   "Tuesday": "Tuesday",
   "Wednesday": "Wendsday",
   "Thursday": "Thursday",
-  "Friday": "Friday"
+  "Friday": "Friday",
+  "Lunches": "Lunches"
 }

@@ -1,16 +1,21 @@
 <div class="col">
     <div class="row">
-        <span class="col-md-4 button col-xs-6" >
+        <span [hidden]="!canBeSelected" class="col-md-4 button col-xs-6" >
             <button
-            [disabled]="lunch.isSelectable"
-            [ngClass]="{
-                'button-green': lunch.isSelected,
-                'button-red': !lunch.isSelected
-            }" (click)="select()"></button>
+                class="tile-button btn"
+                [disabled]="lunch.isSelectable"
+                [ngClass]="{
+                    'btn-success': lunch.isSelected,
+                    'btn-danger': !lunch.isSelected
+                }" (click)="select()">
+            </button>
         </span>
-        <span class="col-md-8 description col-xs-6">
-            <p>{{lunch.description}}</p>
-            <p>{{lunch.type}}</p>
+        <span [ngClass]="{
+            'col-md-8 col-xs-6': canBeSelected,
+            'col': !canBeSelected
+        }" class="description">
+            <span>{{lunch.description}}</span>
+            <span class="badge badge-dark">{{lunch.type}}</span>
         </span>
     </div> 
 </div>

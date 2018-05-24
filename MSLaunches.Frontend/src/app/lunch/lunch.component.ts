@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { filter, finalize } from 'rxjs/operators';
 
 import { LunchService } from './lunch.service';
@@ -7,15 +7,18 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-lunch',
   templateUrl: './lunch.component.html',
   styleUrls: ['./lunch.component.scss']
 })
 export class LunchComponent implements OnInit {
+  @Input() canBeSelected: boolean;
+
   lunches: Array<WeeklyLunches>;
   isLoading: boolean;
 
-  constructor(private lunchService: LunchService) { }
+  constructor(private lunchService: LunchService) {
+  }
 
   ngOnInit() {
     this.isLoading = true;
@@ -24,6 +27,10 @@ export class LunchComponent implements OnInit {
       .subscribe(lunches => {
         this.lunches = this.lunchService.mapToWeekly(lunches);
       });
+
+    if (this.canBeSelected === undefined) {
+      this.canBeSelected = true;
+    }
   }
 
   setLunchSelected(lunch: Lunch) {
