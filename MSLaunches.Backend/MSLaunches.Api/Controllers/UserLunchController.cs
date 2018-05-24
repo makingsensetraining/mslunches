@@ -32,7 +32,6 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(List<UserLunch>), 200)]
         public async Task<IActionResult> GetAll(string userId)
         {
-            var asd = User.Claims;
             return Ok(await _userLunchService.GetAsync(userId));
         }
 
