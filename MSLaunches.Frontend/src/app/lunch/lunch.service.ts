@@ -51,7 +51,7 @@ export class LunchService {
         );
 
         return this.fillDates(weekly);
-      }
+    }
 
       private mergeUserLunchs(userSelection: Array<UserSelection>, menu: Array<Lunch>): Array<Lunch> {
         menu.forEach(lunch => {
@@ -61,9 +61,9 @@ export class LunchService {
         });
 
         return menu;
-      }
+    }
 
-      private fillDates(weekly: Array<WeeklyLunches>): Array<WeeklyLunches> {
+    private fillDates(weekly: Array<WeeklyLunches>): Array<WeeklyLunches> {
         weekly.forEach(dailyLunch => {
             let startOfTheweek: moment.Moment;
             if (!!dailyLunch.lunches && dailyLunch.lunches.length < 5) {
