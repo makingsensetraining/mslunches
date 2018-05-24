@@ -22,16 +22,17 @@
             var id4 = Guid.NewGuid();
             var id5 = Guid.NewGuid();
             var id6 = Guid.NewGuid();
+            var id7 = Guid.NewGuid();
 
             if (!dbContext.MealTypes.Any())
             {
                 var mealTypes = new[]
                 {
-                    new MealType { Description = "Calórico"},
-                    new MealType { Description = "Light"},
-                    new MealType { Description = "Vegetariano"},
-                    new MealType { Description = "Sandwich"},
-                    new MealType { Description = "Postre"}
+                    new MealType { Description = "Calórico", IsSelectable = true},
+                    new MealType { Description = "Light", IsSelectable = true},
+                    new MealType { Description = "Vegetariano",IsSelectable = true},
+                    new MealType { Description = "Sandwich", IsSelectable = true},
+                    new MealType { Description = "Postre", IsSelectable = false}
                 };
 
                 dbContext.MealTypes.AddRange(mealTypes);
@@ -57,7 +58,7 @@
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Budincitos de acelga y calabaza con ensalada", TypeId = 3},
                     new Meal { Id = id6, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas veganas con calabazas en cubo", TypeId = 3},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Baguette de milanesa de carne con lechuga y tomate", TypeId = 4},
-                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Postre de vainillas", TypeId = 5},
+                    new Meal { Id=id7, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Postre de vainillas", TypeId = 5},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Alfajores de maizena", TypeId = 5},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Roll de dulce de leche", TypeId = 5},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Gelatina con frutas", TypeId = 5},
@@ -87,6 +88,11 @@
                         Id = Guid.NewGuid(),
                         MealId = id5,
                         Date = DateTime.Today.AddDays(7)
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id7,
+                        Date = DateTime.Today
                     }
                 };
                 dbContext.Lunches.AddRange(lunches);

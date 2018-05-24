@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MSLunches.Api.Controllers
 {
-    [Authorize]
     [Route("api/Meals")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]

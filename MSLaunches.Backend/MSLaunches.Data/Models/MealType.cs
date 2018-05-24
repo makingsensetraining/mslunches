@@ -26,6 +26,11 @@
         [MaxLength(100)]
         public string Description { get; set; }
 
+        /// <summary>
+        /// Set if the type of menue is selectable or not.-
+        /// </summary>
+        public bool IsSelectable { get; set; }
+
         public virtual ICollection<Meal> Meals { get; set; }
     }
 }
