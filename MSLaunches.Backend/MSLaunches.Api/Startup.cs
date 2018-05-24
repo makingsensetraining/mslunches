@@ -104,7 +104,6 @@ namespace MSLunches.Api
 
 
             // Register Services
-            services.AddTransient<IUserService>(sp => new UserService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
             services.AddTransient<IMealService>(sp => new MealService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
             services.AddTransient<IUserLunchService>(sp => new UserLunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
             services.AddTransient<ILunchService>(sp => new LunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));

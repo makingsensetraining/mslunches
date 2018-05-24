@@ -18,8 +18,6 @@ namespace MSLunches.Data.EF
         /// </summary>
         public WebApiCoreLunchesContext() : base() { }
 
-        /// <summary> All users registered on WebApiCoreMSLunches database</summary>
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Meal> Meals { get; set; }
         public virtual DbSet<MealType> MealTypes { get; set; }
         public virtual DbSet<Lunch> Lunches { get; set; }
@@ -27,12 +25,6 @@ namespace MSLunches.Data.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Table names should be singular but DbSet properties should be plural.
-            modelBuilder.Entity<User>()
-                        .ToTable("User")
-                        .HasIndex(x => x.UserName)
-                        .IsUnique();
-
             modelBuilder.Entity<Meal>()
                         .ToTable("Meal")
                         .HasIndex(x => x.Id)

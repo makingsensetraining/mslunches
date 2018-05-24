@@ -11,47 +11,45 @@ using Xunit;
 
 namespace MSLunches.Api.Tests.Controllers
 {
-    public class UserControllerTests
+    public class MealControllerTests
     {
-        private readonly Mock<IUserService> _userService;
+        private readonly Mock<IMealService> _mealService;
 
-        public UserControllerTests()
+        public MealControllerTests()
         {
-            _userService = new Mock<IUserService>();
+            _mealService = new Mock<IMealService>();
         }
 
         [Fact]
         public async void GetAll_ReturnsOk()
         {
             // Arrange
-            var controller = new UserController(_userService.Object);
-            var sampleUsers = new List<User>()
+            var controller = new MealController(_mealService.Object);
+            var sampleMeals = new List<Meal>()
             {
-                GetSampleUser(),
-                GetSampleUser(),
-                GetSampleUser()
+                GetSampleMeal(),
+                GetSampleMeal(),
+                GetSampleMeal()
             };
 
-            _userService.Setup(mock => mock.GetAsync()).ReturnsAsync(sampleUsers);
+            _mealService.Setup(mock => mock.GetAsync()).ReturnsAsync(sampleMeals);
 
             // Act
             var result = await controller.GetAll();
 
             // Assert
-            _userService.Verify(mock => mock.GetAsync(), Times.Once);
+            _mealService.Verify(mock => mock.GetAsync(), Times.Once);
 
             Assert.IsType<OkObjectResult>(result);
             var okObjectResult = result as OkObjectResult;
-            var users = okObjectResult.Value as List<UserDto>;
+            var meals = okObjectResult.Value as List<MealDto>;
 
-            Assert.Equal(sampleUsers.Count, users.Count);
-            foreach (var user in users)
+            Assert.Equal(sampleMeals.Count, meals.Count);
+            foreach (var meal in meals)
             {
-                var expected = sampleUsers.SingleOrDefault(u => u.Id == user.Id);
-                Assert.Equal(expected.FirstName, user.FirstName);
-                Assert.Equal(expected.LastName, user.LastName);
-                Assert.Equal(expected.UserName, user.UserName);
-                Assert.Equal(expected.Email, user.Email);
+                var expected = sampleMeals.SingleOrDefault(u => u.Id == meal.Id);
+                Assert.Equal(expected.Name, meal.Name);
+                Assert.Equal(expected.TypeId, meal.TypeId);
             }
         }
 
@@ -59,40 +57,37 @@ namespace MSLunches.Api.Tests.Controllers
         public async void Get_ReturnsOk()
         {
             // Arrange
-            var controller = new UserController(_userService.Object);
-            var sampleUser = GetSampleUser();
-            _userService.Setup(mock => mock.GetByIdAsync(sampleUser.Id)).ReturnsAsync(sampleUser);
+            var controller = new MealController(_mealService.Object);
+            var sampleMeal = GetSampleMeal();
+            _mealService.Setup(mock => mock.GetByIdAsync(sampleMeal.Id)).ReturnsAsync(sampleMeal);
 
             // Act
-            var result = await controller.Get(sampleUser.Id);
+            var result = await controller.Get(sampleMeal.Id);
 
             // Assert
-            _userService.Verify(mock => mock.GetByIdAsync(sampleUser.Id), Times.Once);
+            _mealService.Verify(mock => mock.GetByIdAsync(sampleMeal.Id), Times.Once);
 
             Assert.IsType<OkObjectResult>(result);
             var okObjectResult = result as OkObjectResult;
-            var user = okObjectResult.Value as UserDto;
+            var meal = okObjectResult.Value as MealDto;
 
-            Assert.Equal(sampleUser.Id, user.Id);
-            Assert.Equal(sampleUser.FirstName, user.FirstName);
-            Assert.Equal(sampleUser.LastName, user.LastName);
-            Assert.Equal(sampleUser.UserName, user.UserName);
-            Assert.Equal(sampleUser.Email, user.Email);
+            Assert.Equal(sampleMeal.Name, meal.Name);
+            Assert.Equal(sampleMeal.TypeId, meal.TypeId);
         }
 
         [Fact]
-        public async void Get_ReturnsNotFound_WhenUserNotExists()
+        public async void Get_ReturnsNotFound_WhenMealNotExists()
         {
             // Arrange
-            var controller = new UserController(_userService.Object);
-            var userId = Guid.NewGuid();
-            _userService.Setup(mock => mock.GetByIdAsync(userId)).ReturnsAsync((User)null);
+            var controller = new MealController(_mealService.Object);
+            var mealId = Guid.NewGuid();
+            _mealService.Setup(mock => mock.GetByIdAsync(mealId)).ReturnsAsync((Meal)null);
 
             // Act
-            var result = await controller.Get(userId);
+            var result = await controller.Get(mealId);
 
             // Assert
-            _userService.Verify(mock => mock.GetByIdAsync(userId), Times.Once);
+            _mealService.Verify(mock => mock.GetByIdAsync(mealId), Times.Once);
             Assert.IsType<NotFoundResult>(result);
         }
 
@@ -100,106 +95,66 @@ namespace MSLunches.Api.Tests.Controllers
         public async void Create_ReturnsCreated()
         {
             // Arrange
-            var controller = new UserController(_userService.Object);
-            var expected = GetSampleUser();
-            var sampleUser = new InputUserDto
+            var controller = new MealController(_mealService.Object);
+            var expected = GetSampleMeal();
+            var sampleMeal = new InputMealDto
             {
-                Email = expected.Email,
-                FirstName = expected.FirstName,
-                LastName = expected.LastName,
-                UserName = expected.UserName
+                Name = expected.Name,
+                TypeId = expected.TypeId
             };
 
-            _userService.Setup(mock => mock.CreateAsync(It.IsAny<User>())).ReturnsAsync(expected);
+            _mealService.Setup(mock => mock.CreateAsync(It.IsAny<Meal>())).ReturnsAsync(expected);
 
             // Act
-            var result = await controller.Create(sampleUser);
+            var result = await controller.Create(sampleMeal);
 
             // Assert
-            _userService.Verify(mock => mock.CreateAsync(It.IsAny<User>()), Times.Once);
+            _mealService.Verify(mock => mock.CreateAsync(It.IsAny<Meal>()), Times.Once);
 
             Assert.IsType<CreatedAtActionResult>(result);
             var createdResult = result as CreatedAtActionResult;
-            var user = createdResult.Value as UserDto;
+            var meal = createdResult.Value as MealDto;
 
-            Assert.Equal(expected.Id, user.Id);
-            Assert.Equal(expected.FirstName, user.FirstName);
-            Assert.Equal(expected.LastName, user.LastName);
-            Assert.Equal(expected.UserName, user.UserName);
-            Assert.Equal(expected.Email, user.Email);
-        }
-
-        [Fact(Skip = "Validation attribute is not working")]
-        public async void Create_ReturnsBadRequest_WhenInvalidInput()
-        {
-            // Arrange
-            var controller = new UserController(_userService.Object);
-            var user = new InputUserDto
-            {
-                Email = "invalid-address"
-            };
-
-            // Act
-            var result = await controller.Create(user);
-
-            // Assert
-            Assert.IsType<BadRequestResult>(result);
+            Assert.Equal(expected.Id, meal.Id);
+            Assert.Equal(expected.Name, meal.Name);
+            Assert.Equal(expected.TypeId, meal.TypeId);
         }
 
         [Fact]
         public async void Update_ReturnsNoContent()
         {
             // Arrange
-            var controller = new UserController(_userService.Object);
-            var expected = GetSampleUser();
-            var sampleUser = new InputUserDto
+            var controller = new MealController(_mealService.Object);
+            var expected = GetSampleMeal();
+            var sampleMeal = new InputMealDto
             {
-                Email = expected.Email,
-                FirstName = expected.FirstName,
-                LastName = expected.LastName,
-                UserName = expected.UserName
+                Name = expected.Name,
+                TypeId = expected.TypeId
             };
 
-            _userService.Setup(mock => mock.UpdateAsync(It.IsAny<User>())).ReturnsAsync(expected);
+            _mealService.Setup(mock => mock.UpdateAsync(It.IsAny<Meal>())).ReturnsAsync(expected);
 
             // Act
-            var result = await controller.Update(expected.Id, sampleUser);
+            var result = await controller.Update(expected.Id, sampleMeal);
 
             // Assert
-            _userService.Verify(mock => mock.UpdateAsync(It.IsAny<User>()), Times.Once);
+            _mealService.Verify(mock => mock.UpdateAsync(It.IsAny<Meal>()), Times.Once);
             Assert.IsType<NoContentResult>(result);
         }
 
-        [Fact(Skip = "Validation attribute is not working")]
-        public async void Update_ReturnsBadRequest()
-        {
-            // Arrange
-            var controller = new UserController(_userService.Object);
-            var user = new InputUserDto
-            {
-                Email = "invalid-address"
-            };
-
-            // Act
-            var result = await controller.Update(Guid.NewGuid(), user);
-
-            // Assert
-            Assert.IsType<BadRequestResult>(result);
-        }
-
         [Fact]
-        public async void Update_ReturnsNotFound_WhenUserNotExists()
+        public async void Update_ReturnsNotFound_WhenMealNotExists()
         {
             // Arrange
-            var controller = new UserController(_userService.Object);
-            var sampleUser = GetSampleInputUserDto();
-            _userService.Setup(mock => mock.UpdateAsync(It.IsAny<User>())).ReturnsAsync((User)null);
+            var controller = new MealController(_mealService.Object);
+            var sampleMeal = GetSampleInputMealDto();
+            _mealService.Setup(mock => mock.UpdateAsync(It.IsAny<Meal>())).ReturnsAsync((Meal)null);
 
             // Act
-            var result = await controller.Update(Guid.NewGuid(), sampleUser);
+            var result = await controller.Update(Guid.NewGuid(), sampleMeal);
 
             // Assert
-            _userService.Verify(mock => mock.UpdateAsync(It.IsAny<User>()), Times.Once);
+            _mealService.Verify(mock => mock.UpdateAsync(It.IsAny<Meal>()), Times.Once);
             Assert.IsType<NotFoundResult>(result);
         }
 
@@ -208,60 +163,56 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async void Delete_WhenIdExists_ShouldReturnNoContent()
         {
-            var userService = new Mock<IUserService>();
-            var classUnderTest = new UserController(userService.Object);
+            var mealService = new Mock<IMealService>();
+            var classUnderTest = new MealController(mealService.Object);
 
             var id = Guid.NewGuid();
 
-            userService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
+            mealService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
                 .ReturnsAsync(1);
 
             var result = await classUnderTest.Delete(id);
 
             Assert.IsType<NoContentResult>(result);
-            userService.VerifyAll();
+            mealService.VerifyAll();
         }
 
         [Fact]
         public async void Delete_WhenIdNotExists_ShouldReturnNotFound()
         {
-            var userService = new Mock<IUserService>();
-            var classUnderTest = new UserController(userService.Object);
+            var mealService = new Mock<IMealService>();
+            var classUnderTest = new MealController(mealService.Object);
 
             var id = Guid.NewGuid();
 
-            userService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
+            mealService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
                 .ReturnsAsync(0);
 
             var result = await classUnderTest.Delete(id);
 
             Assert.IsType<NotFoundResult>(result);
-            userService.VerifyAll();
+            mealService.VerifyAll();
         }
 
         #endregion
 
-        private User GetSampleUser(Guid? id = null)
+        private Meal GetSampleMeal(Guid? id = null)
         {
-            return new User
+            return new Meal
             {
                 Id = id ?? Guid.NewGuid(),
-                Email = "johndoe@gmail.com",
-                FirstName = "John",
-                LastName = "Doe",
-                UserName = "johndoe",
+                Name = "Milanesas",
+                TypeId = 2,
                 CreatedOn = DateTime.Now
             };
         }
 
-        private InputUserDto GetSampleInputUserDto()
+        private InputMealDto GetSampleInputMealDto()
         {
-            return new InputUserDto
+            return new InputMealDto
             {
-                Email = "johndoe@gmail.com",
-                FirstName = "John",
-                LastName = "Doe",
-                UserName = "johndoe"
+                Name = "Papas fritas",
+                TypeId = 1
             };
         }
     }

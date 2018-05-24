@@ -24,5 +24,12 @@ namespace MSLunches.Infrastructure.AuthZero
         /// </summary>
         /// <returns></returns>
         Task<Result<IList<User>, ErrorResult>> GetUsers();
+
+        /// <summary>
+        /// Returns an user by id
+        /// </summary>
+        /// <param name="id">the id of the user</param>
+        /// <returns></returns>
+        Task<Result<User, ErrorResult>> GetUserById(string id);
     }
 }

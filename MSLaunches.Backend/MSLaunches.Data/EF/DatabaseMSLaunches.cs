@@ -23,16 +23,6 @@
             var id5 = Guid.NewGuid();
             var id6 = Guid.NewGuid();
 
-            if (!dbContext.Users.Any())
-            {
-                var users = new[]
-                {
-                    new User { Id = id2, CreatedBy = "System", CreatedOn = DateTime.Now, Email = "noreply@makingsense.com", FirstName = "John", LastName = "Doe", UserName = "JohnDoe" },
-                };
-
-                dbContext.Users.AddRange(users);
-            }
-
             if (!dbContext.MealTypes.Any())
             {
                 var mealTypes = new[]

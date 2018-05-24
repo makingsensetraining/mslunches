@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MSLaunches.Data\MSLunches.Data.csproj" />
     <ProjectReference Include="..\MSLaunches.Domain\MSLunches.Domain.csproj" />
   </ItemGroup>
 

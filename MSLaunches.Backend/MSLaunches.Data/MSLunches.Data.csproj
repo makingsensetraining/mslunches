@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\User.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.2" />

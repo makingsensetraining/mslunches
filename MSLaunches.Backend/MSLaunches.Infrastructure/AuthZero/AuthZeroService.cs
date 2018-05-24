@@ -72,9 +72,30 @@ namespace MSLunches.Infrastructure.AuthZero
                 var users = await managementApiClient.Users.GetAllAsync();
                 return new Result<IList<User>, ErrorResult>(users.ToList());
             }
-            catch(ApiException e)
+            catch (ApiException e)
             {
                 return new Result<IList<User>, ErrorResult>(new ErrorResult(e.ApiError.ErrorCode, e.ApiError.Message));
+            }
+
+        }
+
+
+        public async Task<Result<User, ErrorResult>> GetUserById(string id)
+        {
+            var getClientResult = await _authZeroClient.GetManagementApiClient();
+            if (!getClientResult.IsSuccessResult)
+                return new Result<User, ErrorResult>(InfrastructureError.Auth0ManagementApiAuthenticationFailed);
+
+            var managementApiClient = getClientResult.SuccessValue;
+
+            try
+            {
+                var user = await managementApiClient.Users.GetAsync(id);
+                return new Result<User, ErrorResult>(user);
+            }
+            catch (ApiException e)
+            {
+                return new Result<User, ErrorResult>(new ErrorResult(e.ApiError.ErrorCode, e.ApiError.Message));
             }
 
         }
