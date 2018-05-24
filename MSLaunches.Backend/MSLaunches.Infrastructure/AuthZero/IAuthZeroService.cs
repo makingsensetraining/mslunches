@@ -1,5 +1,5 @@
 ﻿using Auth0.Core;
-using MSLaunches.Infrastructure.Result;
+using MSLunches.Infrastructure.Result;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

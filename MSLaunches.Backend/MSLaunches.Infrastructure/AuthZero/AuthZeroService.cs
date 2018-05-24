@@ -1,7 +1,7 @@
 ﻿using Auth0.Core;
 using Auth0.Core.Exceptions;
 using Auth0.ManagementApi.Models;
-using MSLaunches.Infrastructure.Result;
+using MSLunches.Infrastructure.Result;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
