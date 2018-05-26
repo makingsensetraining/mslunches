@@ -16,7 +16,13 @@
             'col': !canBeSelected
         }" class="description">
             <span>{{lunch.description}}</span>
-            <span class="badge badge-dark">{{lunch.type}}</span>
+            <span class="badge" [ngClass]="{
+                'badge-danger': lunch.type.toLowerCase() === 'calórico',
+                'badge-success' : lunch.type.toLowerCase() === 'vegetariano',
+                'badge-dark' : lunch.type.toLowerCase() === 'light',
+                'badge-warning' : lunch.type.toLowerCase() === 'postre',
+                'badge-secondary' : !['postre', 'light', 'vegetariano', 'calorico'].includes(lunch.type.toLowerCase())
+            }" translate>{{lunch.type}}</span>
         </span>
     </div>
 </div>

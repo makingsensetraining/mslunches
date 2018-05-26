@@ -22,6 +22,8 @@
             var id4 = Guid.NewGuid();
             var id5 = Guid.NewGuid();
             var id6 = Guid.NewGuid();
+            var id7 = Guid.NewGuid();
+            var id8 = Guid.NewGuid();
 
             if (!dbContext.MealTypes.Any())
             {
@@ -43,12 +45,12 @@
                 {
                     new Meal { Id = id4, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Crepes de verdura y calabza", TypeId = 2},
                     new Meal { Id = id5, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pechugas grilladas al limón con arroz al curry", TypeId = 2},
-                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milhojas de vegetales con ensalada", TypeId = 2},
+                    new Meal { Id = id7, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milhojas de vegetales con ensalada", TypeId = 2},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de pescado con puré de calabaza", TypeId = 2},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Triangulitos integrales con vegetales y ensalada", TypeId = 2},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Arrollado de pollo con ensalada de champignones y papas al horno", TypeId = 1},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Canelones de jamón y queso con salsa bolognesa", TypeId = 1},
-                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de pecero napilitana con arroz primavera", TypeId = 1},
+                    new Meal { Id = id8, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de pecero napilitana con arroz primavera", TypeId = 1},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Filet de merluza con puré", TypeId = 1},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas caseras completas con fritas", TypeId = 1},
                     new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de soja rellenas con ensalada", TypeId = 3},
@@ -85,8 +87,20 @@
                     },
                     new Lunch {
                         Id = Guid.NewGuid(),
+                        MealId = id8,
+                        Date = DateTime.Today.AddDays(-1),
+                        CreatedBy = "System"
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id7,
+                        Date = DateTime.Today.AddDays(-1),
+                        CreatedBy = "System"
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
                         MealId = id5,
-                        Date = DateTime.Today.AddDays(7)
+                        Date = DateTime.Today.AddDays(1)
                     }
                 };
                 dbContext.Lunches.AddRange(lunches);
