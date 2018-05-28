@@ -78,12 +78,15 @@ namespace MSLunches.Api.Controllers
                 CreatedBy = "Test" //TODO: Add user.-
             };
 
-            var existingUserLunch = _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
-            if (existingUserLunch != null) return StatusCode(422, "UserLumch already exists");
+            var existingUserLunch = await _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
+            if (existingUserLunch != null) return StatusCode(422, new ErrorDto("User Lunch already exists"));
 
             var result = await _userLunchService.CreateAsync(userLunchToCreate);
 
-            return CreatedAtAction(nameof(Get), new { userId = result.Id }, new UserLunchDto(result));
+            return CreatedAtAction(
+                nameof(Get), 
+                new { userId, id = result.Id }, 
+                new UserLunchDto(result));
         }
 
         ///<summary>

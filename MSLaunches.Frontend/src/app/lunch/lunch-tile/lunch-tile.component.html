@@ -5,8 +5,9 @@
                 class="tile-button btn"
                 [disabled]="!lunch.isSelectable"
                 [ngClass]="{
-                    'btn-success': lunch.isSelected,
-                    'btn-danger': !lunch.isSelected
+                    'btn-success': lunch.isSelected && lunch.isSelectable,
+                    'btn-danger': !lunch.isSelected && lunch.isSelectable,
+                    'btn-secondary' : !lunch.isSelectable
                 }" (click)="select()">
             </button>
         </span>

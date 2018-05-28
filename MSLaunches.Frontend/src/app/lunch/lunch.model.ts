@@ -1,8 +1,8 @@
 export interface Lunch {
-    id: String;
-    userLunchId: String;
-    description: String;
-    type: String;
+    id: string;
+    userLunchId: string;
+    description: string;
+    type: string;
     date: Date;
     isSelected: Boolean;
     isSelectable: Boolean;
@@ -19,6 +19,6 @@ export interface WeeklyLunches {
 }
 
 export interface UserSelection {
-    id: String;
-    lunchId: String;
+    id: string;
+    lunchId: string;
 }

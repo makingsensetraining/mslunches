@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map, mapTo, mergeMap } from 'rxjs/operators';
+import { map, mapTo, mergeMap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { tryStatement } from 'babel-types';
@@ -10,25 +10,36 @@ import * as _ from 'lodash';
 
 @Injectable()
 export class LunchService {
+    private credentialsKey = 'credentials';
+    private routes = {
+        getLunches: '/lunches',
+        getGeneric(userId: string): string {
+            return `/users/${userId}/lunches`;
+        },
+        getAccessor(userId: string, lunchId: string): string {
+            return this.getGeneric(userId) + `/${lunchId}`;
+        }
+    };
+
     constructor(private httpClient: HttpClient) {
     }
 
     //#region public methods
 
-    getLaunches(startDate?: Date, endDate?: Date): Observable<Array<Lunch>> {
+    getLunches(startDate?: Date, endDate?: Date): Observable<Array<Lunch>> {
         return this.httpClient
-            .get('/lunches')
+            .get(this.routes.getLunches)
             .pipe(map(this.mapToArrayOfLaunch.bind(this)));
     }
 
     getUserLunches(): Observable<Array<Lunch>> {
         const userId: string =
-            JSON.parse(sessionStorage.getItem('credentials')).userId;
+            JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
 
-        return this.getLaunches()
+        return this.getLunches()
             .pipe(
                 mergeMap(menu => {
-                    return this.httpClient.get(`/users/${userId}/lunches`).pipe(
+                    return this.httpClient.get(this.routes.getGeneric(userId)).pipe(
                         map((value: any[]) =>
                             this.mergeUserLunchs(this.mapToArrayOfUserSelection(value), menu))
                     );
@@ -55,18 +66,50 @@ export class LunchService {
         return this.fillDates(weekly);
     }
 
+    save(lunch: Lunch): Observable<string> {
+        const userId = JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
+        if (!lunch.userLunchId || lunch.userLunchId.length === 0) {
+            return this.httpClient.post(this.routes.getGeneric(userId), this.mapToBackEnd(lunch))
+                .pipe(
+                    map((a: any) => a.userLunchId)
+                );
+        } else {
+            return this.httpClient.put(this.routes.getAccessor(userId, lunch.userLunchId), this.mapToBackEnd(lunch))
+                .pipe(map((a: any) => lunch.userLunchId));
+        }
+    }
+
+    delete(lunch: Lunch): Observable<string> {
+        const userId = JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
+        return this.httpClient.delete(this.routes.getAccessor(userId, lunch.userLunchId))
+            .pipe(map(a => 'Deleted'));
+    }
+
     //#endregion
 
     //#region private methods
 
-    private mergeUserLunchs(userSelection: Array<UserSelection>, menu: Array<Lunch>): Array<Lunch> {
-        menu.forEach(lunch => {
-            if (userSelection.some(a => a.lunchId === lunch.id)) {
-                lunch.isSelected = true;
+    private mergeUserLunchs(userSelections: Array<UserSelection>, menu: Array<Lunch>): Array<Lunch> {
+        userSelections.forEach(userSelection => {
+            // Find the lunch
+            const matchingLunch: Lunch = menu.find(a => a.id === userSelection.lunchId);
+            if (matchingLunch) {
+                // Find all the daily lunchs
+                matchingLunch.isSelected = true;
+                menu.filter(a => new Date(a.date).getDate() === new Date(matchingLunch.date).getDate())
+                    .forEach(lunch => {
+                        lunch.userLunchId = userSelection.id;
+                    });
             }
         });
 
         return menu;
+    }
+
+    private mapToBackEnd(lunch: Lunch): any {
+        return {
+            LunchId: lunch.id
+        };
     }
 
     private fillDates(weekly: Array<WeeklyLunches>): Array<WeeklyLunches> {
