@@ -10,7 +10,6 @@ using MSLunches.Domain.Services.Interfaces;
 
 namespace MSLunches.Api.Controllers
 {
-    [Authorize]
     [Route("api/lunches")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]

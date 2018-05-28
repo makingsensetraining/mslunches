@@ -3,7 +3,7 @@
         <span [hidden]="!canBeSelected" class="col-md-4 button col-xs-6" >
             <button
                 class="tile-button btn"
-                [disabled]="lunch.isSelectable"
+                [disabled]="!lunch.isSelectable"
                 [ngClass]="{
                     'btn-success': lunch.isSelected,
                     'btn-danger': !lunch.isSelected

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
 {
-    [Authorize]
     [Route("api/users/{userId}/lunches")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]
@@ -62,6 +61,7 @@ namespace MSLunches.Api.Controllers
         /// <param name="userId"></param>
         /// <param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         /// <response code="204">UserLunch created</response>
+        /// <response code="422">UserLunch could not be created - Already exists</response>
         [HttpPost]
         [ValidateModel]
         public async Task<IActionResult> Create(
@@ -79,7 +79,7 @@ namespace MSLunches.Api.Controllers
             };
 
             var existingUserLunch = _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
-            if (existingUserLunch != null) return BadRequest();
+            if (existingUserLunch != null) return StatusCode(422, "UserLumch already exists");
 
             var result = await _userLunchService.CreateAsync(userLunchToCreate);
 

@@ -35,7 +35,7 @@ export class LunchService {
     }
 
     mapToWeekly(lunches: Array<Lunch>): Array<WeeklyLunches> {
-        lunches = lunches.sort(this.typeSorter);
+        lunches = lunches.sort(this.selectableSorter.bind(this));
         const daily: Array<DailyTypedLunches> = _.map(
             // Groups by date
             _.groupBy(lunches, (result: Lunch) => result.date),
@@ -96,6 +96,14 @@ export class LunchService {
         return 0;
     }
 
+    private selectableSorter(a: Lunch, b: Lunch): number {
+        if (a.isSelectable !== b.isSelectable) {
+            if(a.isSelectable) return -1;
+            if(b.isSelectable) return 1;
+        }
+        return this.typeSorter(a,b);
+    }
+
     private dateSorter(a: DailyTypedLunches, b: DailyTypedLunches): number {
         if (a.date < b.date) {
             return -1;
@@ -137,7 +145,7 @@ export class LunchService {
             type: body.meal.mealType.description,
             date: body.date,
             isSelected: false,
-            isSelectable: true
+            isSelectable: body.meal.mealType.isSelectable
         };
 
         return result;
