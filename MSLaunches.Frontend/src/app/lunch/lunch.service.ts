@@ -13,6 +13,8 @@ export class LunchService {
     constructor(private httpClient: HttpClient) {
     }
 
+    //#region public methods
+
     getLaunches(startDate?: Date, endDate?: Date): Observable<Array<Lunch>> {
         return this.httpClient
             .get('/lunches')
@@ -26,12 +28,12 @@ export class LunchService {
         return this.getLaunches()
             .pipe(
                 mergeMap(menu => {
-                return this.httpClient.get(`/users/${userId}/lunches`).pipe(
-                    map((value: any[]) =>
-                        this.mergeUserLunchs(this.mapToArrayOfUserSelection(value), menu))
-                );
-            })
-        );
+                    return this.httpClient.get(`/users/${userId}/lunches`).pipe(
+                        map((value: any[]) =>
+                            this.mergeUserLunchs(this.mapToArrayOfUserSelection(value), menu))
+                    );
+                })
+            );
     }
 
     mapToWeekly(lunches: Array<Lunch>): Array<WeeklyLunches> {
@@ -53,7 +55,11 @@ export class LunchService {
         return this.fillDates(weekly);
     }
 
-      private mergeUserLunchs(userSelection: Array<UserSelection>, menu: Array<Lunch>): Array<Lunch> {
+    //#endregion
+
+    //#region private methods
+
+    private mergeUserLunchs(userSelection: Array<UserSelection>, menu: Array<Lunch>): Array<Lunch> {
         menu.forEach(lunch => {
             if (userSelection.some(a => a.lunchId === lunch.id)) {
                 lunch.isSelected = true;
@@ -84,7 +90,7 @@ export class LunchService {
         });
 
         return weekly;
-      }
+    }
 
     private typeSorter(a: Lunch, b: Lunch): number {
         if (a.type < b.type) {
@@ -98,10 +104,14 @@ export class LunchService {
 
     private selectableSorter(a: Lunch, b: Lunch): number {
         if (a.isSelectable !== b.isSelectable) {
-            if(a.isSelectable) return -1;
-            if(b.isSelectable) return 1;
+            if (a.isSelectable) {
+                return -1;
+            }
+            if (b.isSelectable) {
+                return 1;
+            }
         }
-        return this.typeSorter(a,b);
+        return this.typeSorter(a, b);
     }
 
     private dateSorter(a: DailyTypedLunches, b: DailyTypedLunches): number {
@@ -150,4 +160,6 @@ export class LunchService {
 
         return result;
     }
+
+    //#endregion
 }
