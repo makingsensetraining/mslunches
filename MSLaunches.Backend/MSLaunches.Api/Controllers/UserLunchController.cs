@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MSLunches.Api.Controllers
 {

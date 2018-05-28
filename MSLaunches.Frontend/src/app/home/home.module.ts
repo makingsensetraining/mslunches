@@ -6,6 +6,8 @@ import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
+import { LunchModule } from '@app/lunch/lunch.module';
+import { LunchComponent } from '@app/lunch/lunch.component';
 
 @NgModule({
   imports: [
@@ -13,10 +15,11 @@ import { HomeComponent } from './home.component';
     TranslateModule,
     CoreModule,
     SharedModule,
-    HomeRoutingModule
+    HomeRoutingModule,
+    LunchModule
   ],
   declarations: [
-    HomeComponent
+    HomeComponent,
   ],
   providers: [
   ]

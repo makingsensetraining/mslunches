@@ -1,5 +1,6 @@
 export interface Lunch {
     id: String;
+    userLunchId: String;
     description: String;
     type: String;
     date: Date;
@@ -15,4 +16,9 @@ export interface DailyTypedLunches {
 export interface WeeklyLunches {
     date: Date;
     lunches: Array<DailyTypedLunches>;
+}
+
+export interface UserSelection {
+    id: String;
+    lunchId: String;
 }

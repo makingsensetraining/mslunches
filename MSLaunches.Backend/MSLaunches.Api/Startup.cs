@@ -91,18 +91,6 @@ namespace MSLunches.Api
             services.AddSingleton<IAuthZeroClient>(sp => new AuthZeroClient(sp.GetRequiredService<IRestClient>(), Configuration["auth0:NonInteractiveClientId"], Configuration["auth0:NonInteractiveClientSecret"], Configuration["auth0:domain"]));
             services.AddTransient<IAuthZeroService>(sp => new AuthZeroService(sp.GetRequiredService<IAuthZeroClient>()));
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAllOrigins",
-                builder =>
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
-
-
             // Register Services
             services.AddTransient<IMealService>(sp => new MealService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
             services.AddTransient<IUserLunchService>(sp => new UserLunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
