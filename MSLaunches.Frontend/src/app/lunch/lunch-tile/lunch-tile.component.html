@@ -7,7 +7,8 @@
                 [ngClass]="{
                     'btn-success': lunch.isSelected && lunch.isSelectable,
                     'btn-danger': !lunch.isSelected && lunch.isSelectable,
-                    'btn-secondary' : !lunch.isSelectable
+                    'btn-secondary' : !lunch.isSelected && !lunch.isSelectable,
+                    'btn-selected-disabled' : lunch.isSelected && !lunch.isSelectable
                 }" (click)="select()">
             </button>
         </span>

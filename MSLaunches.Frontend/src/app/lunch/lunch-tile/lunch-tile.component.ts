@@ -8,12 +8,19 @@ import { Lunch } from '@app/lunch/lunch.model';
     styleUrls: ['lunch-tile.component.scss']
 })
 
-export class LunchTileComponent {
+export class LunchTileComponent implements OnInit {
     @Input() lunch: Lunch;
     @Input() canBeSelected: Lunch;
     @Output() lunchSelected: EventEmitter<Lunch>;
     constructor() {
         this.lunchSelected = new EventEmitter<Lunch>();
+    }
+
+    ngOnInit() {
+        this.lunch.date = new Date(this.lunch.date);
+        this.lunch.date.setHours(10);
+        this.lunch.isSelectable =
+            this.lunch.isSelectable && this.lunch.date.getTime() > Date.now();
     }
 
     select() {
