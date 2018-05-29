@@ -67,8 +67,7 @@ namespace MSLunches.Domain.Services
             if (requestedLunch == null)
                 throw new NotFoundException($"Lunch with id {userLunch.LunchId} does not exist");
 
-            if(requestedLunch.Date < DateTime.Today.AddHours(10))
-                throw new ValidationException($"Lunch with id {userLunch.LunchId} has expired");
+            ValidateExpiration(requestedLunch);
 
             //Actual Action
             await _dbContext.UserLunches.AddAsync(userLunch);
@@ -88,6 +87,8 @@ namespace MSLunches.Domain.Services
             var requestedLunch = await _dbContext.Lunches.FirstOrDefaultAsync(a => a.Id == userLunch.LunchId);
             if (requestedLunch == null)
                 throw new NotFoundException($"Lunch with id {userLunch.LunchId} does not exist");
+
+            ValidateExpiration(requestedLunch);
 
             //Actual Action
             userLunchToUpdate.LunchId = userLunch.LunchId;
@@ -110,6 +111,16 @@ namespace MSLunches.Domain.Services
 
             _dbContext.UserLunches.Remove(userLunch);
             return await _dbContext.SaveChangesAsync();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private static void ValidateExpiration(Lunch requestedLunch)
+        {
+            if (requestedLunch.Date < DateTime.Today.AddHours(10))
+                throw new ValidationException($"Lunch with id {requestedLunch.Id} has expired");
         }
 
         #endregion
