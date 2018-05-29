@@ -52,6 +52,14 @@ export class LunchComponent implements OnInit {
         l.isSelected = false;
       }
     });
+
+    if (lunch.isSelected) {
+      this.lunchService.save(lunch).subscribe(
+        a => lunch.userLunchId = a,
+        (err: any) => lunch.isSelected = false);
+    } else {
+      this.lunchService.delete(lunch).subscribe({error: a => lunch.isSelected = true});
+    }
   }
 
   private firstDayOfTheWeek(date: Date, format?: moment.MomentFormatSpecification): moment.Moment {
