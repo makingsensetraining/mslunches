@@ -22,12 +22,14 @@ namespace MSLunches.Api.Controllers
             _userLunchService = userLunchService;
         }
 
+        #region Query endpoints
+
         /// <summary>
         /// Gets a list of lanches selections by users
         /// </summary>
         /// <response code="200">A list of lunches selected by user</response>
         /// <return>A list of UserLunch</return>
-        [HttpGet()]
+        [HttpGet]
         [ProducesResponseType(typeof(List<UserLunch>), 200)]
         public async Task<IActionResult> GetAll(string userId)
         {
@@ -55,6 +57,10 @@ namespace MSLunches.Api.Controllers
             return Ok(lunch);
         }
 
+        #endregion
+
+        #region Command endpoints
+
         /// <summary>
         /// Creates a new meal selection for user.
         /// </summary>
@@ -78,14 +84,11 @@ namespace MSLunches.Api.Controllers
                 CreatedBy = "Test" //TODO: Add user.-
             };
 
-            var existingUserLunch = await _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
-            if (existingUserLunch != null) return StatusCode(422, new ErrorDto("User Lunch already exists"));
-
             var result = await _userLunchService.CreateAsync(userLunchToCreate);
 
             return CreatedAtAction(
-                nameof(Get), 
-                new { userId, id = result.Id }, 
+                nameof(Get),
+                new { userId, id = result.Id },
                 new UserLunchDto(result));
         }
 
@@ -117,9 +120,6 @@ namespace MSLunches.Api.Controllers
             };
 
             var result = await _userLunchService.UpdateAsync(userLunchToUpdate);
-
-            if (result == null) return NotFound();
-
             return NoContent();
         }
 
@@ -134,19 +134,9 @@ namespace MSLunches.Api.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var affectedRows = await _userLunchService.DeleteByIdAsync(id);
-
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            return NoContent();
         }
 
-        /// <summary>
-        /// A list of available lunches by week
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("LunchesByUserAndWeek")]
-        [ProducesResponseType(typeof(List<UserLunch>), 200)]
-        public async Task<IActionResult> GetlLunchesByUserByWeek(string userId)
-        {
-            return Ok(await _userLunchService.GetlLunchesByUserByWeekAsync(userId));
-        }
+        #endregion
     }
 }

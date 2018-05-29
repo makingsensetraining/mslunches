@@ -33,8 +33,7 @@ namespace MSLunches.Domain.Services
 
         public async Task<Meal> GetByIdAsync(Guid mealId)
         {
-            return await _dbContext.Meals
-                                   .FindAsync(mealId);
+            return await _dbContext.Meals.FindAsync(mealId);
         }
 
         public async Task<List<Meal>> GetAsync()
@@ -45,8 +44,7 @@ namespace MSLunches.Domain.Services
         public async Task<Meal> CreateAsync(Meal meal)
         {
             meal.CreatedOn = DateTime.Now;
-            _dbContext.Meals
-                      .Add(meal);
+            _dbContext.Meals.Add(meal);
             await _dbContext.SaveChangesAsync();
             return meal;
         }
@@ -70,15 +68,13 @@ namespace MSLunches.Domain.Services
 
         public async Task<int> DeleteByIdAsync(Guid mealId)
         {
-            var meal = await _dbContext.Meals
-                                        .FindAsync(mealId);
+            var meal = await _dbContext.Meals.FindAsync(mealId);
             if (meal == null)
             {
                 return 0;
             }
 
-            _dbContext.Meals
-                      .Remove(meal);
+            _dbContext.Meals.Remove(meal);
             return await _dbContext.SaveChangesAsync();
         }
 
