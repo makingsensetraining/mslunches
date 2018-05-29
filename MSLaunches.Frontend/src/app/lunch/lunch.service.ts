@@ -4,7 +4,10 @@ import { map, mapTo, mergeMap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { tryStatement } from 'babel-types';
-import { Lunch, DailyTypedLunches, WeeklyLunches, UserSelection } from '@app/lunch/lunch.model';
+import { Lunch } from '../core/Models/lunch.model';
+import { DailyTypedLunches } from '../core/Models/daily-typed-lunches.model';
+import { WeeklyLunches } from '../core/Models/weekly-lunches.model';
+import { UserSelection } from '../core/Models/user-selection';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 

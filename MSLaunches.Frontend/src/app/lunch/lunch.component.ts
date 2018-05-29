@@ -2,7 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { filter, finalize } from 'rxjs/operators';
 
 import { LunchService } from './lunch.service';
-import { Lunch, DailyTypedLunches, WeeklyLunches } from '@app/lunch/lunch.model';
+import { Lunch } from '@app/core/Models/lunch.model';
+import { DailyTypedLunches } from '@app/core/Models/daily-typed-lunches.model';
+import { WeeklyLunches } from '@app/core/Models/weekly-lunches.model';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
