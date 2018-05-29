@@ -60,13 +60,15 @@ namespace MSLunches.Domain.Services
 
             //Pre Conditions
             var lastLunch = await _dbContext.UserLunches.FirstOrDefaultAsync(a => a.LunchId == userLunch.LunchId && a.UserId == userLunch.UserId);
-
             if (lastLunch != null)
                 throw new ValidationException("User Lunch already exists");
 
             var requestedLunch = await _dbContext.Lunches.FirstOrDefaultAsync(a => a.Id == userLunch.LunchId);
             if (requestedLunch == null)
                 throw new NotFoundException($"Lunch with id {userLunch.LunchId} does not exist");
+
+            if(requestedLunch.Date < DateTime.Today.AddHours(10))
+                throw new ValidationException($"Lunch with id {userLunch.LunchId} has expired");
 
             //Actual Action
             await _dbContext.UserLunches.AddAsync(userLunch);
