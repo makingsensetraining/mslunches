@@ -5,8 +5,8 @@ using MSLunches.Api.Models;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace MSLunches.Api.Tests.Controllers
@@ -19,6 +19,8 @@ namespace MSLunches.Api.Tests.Controllers
         {
             _mealService = new Mock<IMealService>();
         }
+
+        #region GetAll tests
 
         [Fact]
         public async void GetAll_ReturnsOk()
@@ -42,7 +44,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             Assert.IsType<OkObjectResult>(result);
             var okObjectResult = result as OkObjectResult;
-            var meals = okObjectResult.Value as List<MealDto>;
+            var meals = okObjectResult.Value as List<Meal>;
 
             Assert.Equal(sampleMeals.Count, meals.Count);
             foreach (var meal in meals)
@@ -52,6 +54,10 @@ namespace MSLunches.Api.Tests.Controllers
                 Assert.Equal(expected.TypeId, meal.TypeId);
             }
         }
+
+        #endregion
+
+        #region Get tests
 
         [Fact]
         public async void Get_ReturnsOk()
@@ -69,7 +75,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             Assert.IsType<OkObjectResult>(result);
             var okObjectResult = result as OkObjectResult;
-            var meal = okObjectResult.Value as MealDto;
+            var meal = okObjectResult.Value as Meal;
 
             Assert.Equal(sampleMeal.Name, meal.Name);
             Assert.Equal(sampleMeal.TypeId, meal.TypeId);
@@ -90,6 +96,11 @@ namespace MSLunches.Api.Tests.Controllers
             _mealService.Verify(mock => mock.GetByIdAsync(mealId), Times.Once);
             Assert.IsType<NotFoundResult>(result);
         }
+
+
+        #endregion
+
+        #region Create tests
 
         [Fact]
         public async void Create_ReturnsCreated()
@@ -119,6 +130,10 @@ namespace MSLunches.Api.Tests.Controllers
             Assert.Equal(expected.Name, meal.Name);
             Assert.Equal(expected.TypeId, meal.TypeId);
         }
+
+        #endregion
+
+        #region Update test
 
         [Fact]
         public async void Update_ReturnsNoContent()
@@ -158,6 +173,8 @@ namespace MSLunches.Api.Tests.Controllers
             Assert.IsType<NotFoundResult>(result);
         }
 
+        #endregion
+
         #region Delete Tests
 
         [Fact]
@@ -196,6 +213,8 @@ namespace MSLunches.Api.Tests.Controllers
 
         #endregion
 
+        #region Private Methods
+
         private Meal GetSampleMeal(Guid? id = null)
         {
             return new Meal
@@ -214,6 +233,8 @@ namespace MSLunches.Api.Tests.Controllers
                 Name = "Papas fritas",
                 TypeId = 1
             };
-        }
+        } 
+
+        #endregion
     }
 }

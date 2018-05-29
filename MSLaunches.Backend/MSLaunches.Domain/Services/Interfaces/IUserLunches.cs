@@ -11,6 +11,12 @@ namespace MSLunches.Domain.Services.Interfaces
     public interface IUserLunchService
     {
         /// <summary>
+        /// Gets all the existing lunchs
+        /// </summary>
+        /// <returns>List with all the existing lunchs</returns>
+        Task<List<UserLunch>> GetAsync(string userId);
+
+        /// <summary>
         /// Gets a userLunch by Id
         /// </summary>
         /// <param name="userLunchId">Id of the userLunch to be retrieved</param>
@@ -32,21 +38,11 @@ namespace MSLunches.Domain.Services.Interfaces
         Task<int> DeleteByIdAsync(Guid lunchId);
 
         /// <summary>
-        /// Gets all the existing lunchs
-        /// </summary>
-        /// <returns>List with all the existing lunchs</returns>
-        Task<List<UserLunch>> GetAsync(string userId);
-
-        /// <summary>
         /// Updates a userLunch
         /// </summary>
-        /// <param name="userLunch">userLunch to update</param>
+        /// <param name="userLunch">updated userLunch</param>
+        /// <exception cref="NotFoundException">When UserLunch or Lunch does not exist</exception>
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<UserLunch> UpdateAsync(UserLunch userLunch);
-
-        Task<List<UserLunch>> GetlLunchesByUserByWeekAsync(string userId);
-
-
-        Task<UserLunch> GetUserLunchByUserAndLunchIdAsync(string userId, Guid lunchId);
     }
 }

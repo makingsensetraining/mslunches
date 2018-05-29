@@ -46,9 +46,8 @@ namespace MSLunches.Api.Middleware
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
             if (exception is UnauthorizedException) code = HttpStatusCode.Unauthorized;
-            // else if (exception is SomeOtherException) code = HttpStatusCode.RequestTimeout;
-            // else if (exception is SomeOtherException2) code = HttpStatusCode.BadRequest;
-            context.Response.Clear();
+            else if (exception is ValidationException) code = (HttpStatusCode)422;
+            else if (exception is NotFoundException) code = HttpStatusCode.NotFound;
 
             var result = JsonConvert.SerializeObject(new ErrorDto(exception.Message));
             context.Response.ContentType = "application/json";
