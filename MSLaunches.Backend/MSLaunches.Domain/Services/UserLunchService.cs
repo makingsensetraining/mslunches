@@ -60,7 +60,6 @@ namespace MSLunches.Domain.Services
 
             //Pre Conditions
             var lastLunch = await _dbContext.UserLunches.FirstOrDefaultAsync(a => a.LunchId == userLunch.LunchId && a.UserId == userLunch.UserId);
-
             if (lastLunch != null)
                 throw new ValidationException("User Lunch already exists");
 
@@ -118,7 +117,7 @@ namespace MSLunches.Domain.Services
 
         #region Private Methods
 
-        private static void ValidateExpiration(Lunch requestedLunch)
+        private void ValidateExpiration(Lunch requestedLunch)
         {
             if (requestedLunch.Date < DateTime.Today.AddHours(10))
                 throw new ValidationException($"Lunch with id {requestedLunch.Id} has expired");

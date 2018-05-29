@@ -159,7 +159,7 @@ namespace MSLunches.Domain.Tests.Services
 
         #region Private Methods
 
-        private static Meal GetADefaultMeal(Guid? id = null)
+        private Meal GetADefaultMeal(Guid? id = null)
         {
             return new Meal
             {

@@ -128,7 +128,7 @@ namespace MSLunches.Api
         /// Returns swagger metadata
         /// </summary>
         /// <returns></returns>
-        private static Info GetSwaggerDoc()
+        private Info GetSwaggerDoc()
         {
             return new Info 
             { 
