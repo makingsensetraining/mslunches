@@ -76,7 +76,10 @@ namespace MSLunches.Api.Controllers
 
             var result = await _mealService.CreateAsync(mealToCreate);
 
-            return CreatedAtAction(nameof(Get), new { userId = result.Id }, new MealDto(result));
+            return CreatedAtAction(
+                nameof(Get), 
+                new { id = result.Id }, 
+                new MealDto(result));
         }
 
         ///<summary>

@@ -5,15 +5,15 @@
     using System.Linq;
 
     /// <summary>
-    /// Helper class to MSLunches sample data into a <see cref="WebApiCoreLunchesContext"/>
+    /// Helper class to MSLunches sample data into a <see cref="MSLunchesContext"/>
     /// </summary>
     public static class DatabaseMSLunches
     {
         /// <summary>
-        /// Initializes a <see cref="WebApiCoreLunchesContext"/> with sample Data
+        /// Initializes a <see cref="MSLunchesContext"/> with sample Data
         /// </summary>
         /// <param name="dbContext">Context to be initialized with sample data</param>
-        public static void Initialize(WebApiCoreLunchesContext dbContext)
+        public static void Initialize(MSLunchesContext dbContext)
         {
             dbContext.Database.EnsureCreated();
             var id1 = Guid.NewGuid();

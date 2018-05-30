@@ -1,165 +1,225 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Moq;
+using Microsoft.EntityFrameworkCore;
 using MSLunches.Data.EF;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MSLunches.Domain.Tests.Services
 {
     public class MealServiceTests
     {
-        #region Members
-
-        private readonly Mock<WebApiCoreLunchesContext> _context;
-
-        #endregion
-
-        #region Constructors
-
-        public MealServiceTests()
-        {
-            _context = new Mock<WebApiCoreLunchesContext>();
-        }
-
-        #endregion
-
-        #region GetById Tests
+        #region Get Tests
 
         [Fact]
-        public async Task GetByIdAsync_ShouldReturnMeal()
+        public async Task GetAsync_ReturnsMeals()
         {
-            // Arrange
-            var service = new MealService(_context.Object);
-            var meal = GetADefaultMeal();
-            _context.Setup(x => x.Meals.FindAsync(It.Is<Guid>(y => y == meal.Id)))
-                 .ReturnsAsync(meal)
-                 .Verifiable();
+            var meal1 = GetADefaultMeal(Guid.NewGuid());
+            var meal2 = GetADefaultMeal(Guid.NewGuid());
 
-            // Act
-            var retrievedMeal = await service.GetByIdAsync(meal.Id);
+            var dbOptions = GetDbOptions("GetAsync_ReturnsMeals");
 
-            // Assert
-            Assert.NotNull(retrievedMeal);
-            Assert.Equal(meal.Name, retrievedMeal.Name);
-            Assert.Equal(meal.TypeId, retrievedMeal.TypeId);
-            _context.Verify(c => c.Meals.FindAsync(meal.Id), Times.Once);
-        }
+            using (var context = new MSLunchesContext(dbOptions))
+            {
+                context.Meals.Add(meal1);
+                context.Meals.Add(meal2);
+                context.SaveChanges();
+            }
 
-        [Fact]
-        public async Task GetByIdAsync_ShouldReturnNull()
-        {
-            // Arrange 
-            var service = new MealService(_context.Object);
-            var id = Guid.NewGuid();
-            _context.Setup(x => x.Meals.FindAsync(It.Is<Guid>(y => y == id)))
-                 .ReturnsAsync((Meal)null)
-                 .Verifiable();
+            IEnumerable<Meal> result = null;
 
-            //Act
-            var retrievedMeal = await service.GetByIdAsync(id);
+            using (var context = new MSLunchesContext(dbOptions))
+            {
+                var classUnderTest = new MealService(context);
+                result = await classUnderTest.GetAsync();
+            }
 
-            // Assert
-            Assert.Null(retrievedMeal);
-            _context.Verify(c => c.Meals.FindAsync(id), Times.Once);
-        }
-
-        #endregion
-
-        #region Detele Tests
-
-        [Fact]
-        public async void Delete_ShouldDeleteMeal()
-        {
-            // Arrange
-            var service = new MealService(_context.Object);
-            var createdMeal = GetADefaultMeal();
-            _context.Setup(x => x.Meals.FindAsync(It.Is<Guid>(y => y == createdMeal.Id)))
-                 .ReturnsAsync(createdMeal)
-                 .Verifiable();
-            _context.Setup(x => x.Meals.Remove(It.Is<Meal>(y => y.Id == createdMeal.Id)))
-                 .Verifiable();
-            _context.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
-                   .ReturnsAsync(1);
-
-            // Act
-            var affectedRows = await service.DeleteByIdAsync(createdMeal.Id);
-
-            // Assert
-            Assert.True(affectedRows > 0);
-            _context.Verify(x => x.Meals.Remove(It.Is<Meal>(y => y.Id == createdMeal.Id)), Times.Once);
-        }
-
-        [Fact]
-        public async void Delete_MealNotFound()
-        {
-            // Arrange  
-            var service = new MealService(_context.Object);
-            var id = Guid.NewGuid();
-            _context.Setup(x => x.Meals.FindAsync(It.Is<Guid>(y => y == id)))
-                 .ReturnsAsync((Meal)null)
-                 .Verifiable();
-
-            //Act
-            var affectedRows = await service.DeleteByIdAsync(Guid.NewGuid());
-
-            // Assert
-            Assert.Equal(0, affectedRows);
-            _context.Verify(x => x.Meals.Remove(It.Is<Meal>(y => y.Id == id)), Times.Never);
-        }
-
-        #endregion
-
-        #region Update Tests
-
-        [Fact]
-        public async void Update_ShouldUpdateIfMealExists()
-        {
-            // Arrange
-            var service = new MealService(_context.Object);
-            var meal = GetADefaultMeal();
-            _context.Setup(x => x.Meals.FindAsync(It.Is<Guid>(y => y == meal.Id)))
-                 .ReturnsAsync(meal)
-                 .Verifiable();
-            _context.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
-                   .ReturnsAsync(1);
-
-            // Act
-            var result = await service.UpdateAsync(meal);
-
-            // Assert
             Assert.NotNull(result);
-            _context.Verify(x => x.Meals.FindAsync(It.Is<Guid>(y => y == meal.Id)), Times.Once);
-            _context.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            Assert.Contains(result, meal => Equals(meal, meal1));
+            Assert.Contains(result, meal => Equals(meal, meal2));
+        }
+
+        #endregion
+
+        #region GetById tests
+
+        [Fact]
+        public async Task GetByIdAsync_ReturnsMeal_WhenIdExist()
+        {
+            var meal = GetADefaultMeal(Guid.NewGuid());
+
+            var dbOptions = GetDbOptions("GetByIdAsync_ReturnsMeal_WhenIdExist");
+
+            using (var context = new MSLunchesContext(dbOptions))
+            {
+                context.Meals.Add(meal);
+                context.SaveChanges();
+            }
+
+            Meal result = null;
+
+            using (var context = new MSLunchesContext(dbOptions))
+            {
+                var classUnderTest = new MealService(context);
+                result = await classUnderTest.GetByIdAsync(meal.Id);
+            }
+
+            Assert.NotNull(result);
+            Assert.True(Equals(meal, result));            
         }
 
         [Fact]
-        public async void Update_ReturnsNull_WhenMealNotExists()
+        public async Task GetByIdAsync_ReturnsNull_WhenIdNotExist()
         {
-            // Arrange
-            var service = new MealService(_context.Object);
-            var createdMeal = GetADefaultMeal();
-            _context.Setup(a => a.Meals.FindAsync(It.Is<Guid>(g => g == createdMeal.Id)))
-                    .ReturnsAsync((Meal)null);
-            _context.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
-                    .ReturnsAsync(1);
+            var dbOptions = GetDbOptions("GetByIdAsync_ReturnsMeal_WhenIdExist");
 
-            // Act
-            var result = await service.UpdateAsync(createdMeal);
+            using (var context = new MSLunchesContext(dbOptions))
+            {
+                context.Meals.Add(GetADefaultMeal());
+                context.SaveChanges();
+            }
 
-            // Assert
+            Meal result = null;
+
+            using (var context = new MSLunchesContext(dbOptions))
+            {
+                var classUnderTest = new MealService(context);
+                result = await classUnderTest.GetByIdAsync(Guid.NewGuid());
+            }
+
             Assert.Null(result);
-            _context.Verify(x => x.Meals.FindAsync(It.Is<Guid>(y => y == createdMeal.Id)), Times.Once);
-            _context.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        #endregion
+
+        #region CreateAsync Tests
+
+        [Fact]
+        public async void CreateAsync_ReturnsCreatedMeal()
+        {
+            var meal = GetADefaultMeal();
+            Meal result = null;
+            using (var context = new MSLunchesContext(GetDbOptions("CreateAsync_ReturnsCreatedMeal")))
+            {
+                var classUnderTest = new MealService(context);
+                result = await classUnderTest.CreateAsync(meal);
+            }
+
+            Assert.NotNull(result);
+            Assert.NotEqual(Guid.Empty, result.Id);
+            Assert.NotEqual(default(DateTime), result.CreatedOn);
+            Assert.Equal(meal.TypeId, result.TypeId);
+            Assert.Equal(meal.Name, result.Name);
+        }
+
+        #endregion
+
+        #region UpdateAsync Tests
+
+        [Fact]
+        public async void UpdateAsync_ReturnsMealModified_WhenIdExist()
+        {
+            var meal = GetADefaultMeal();
+            var mealModified = new Meal
+            {
+                Id = meal.Id,
+                Name = "newName",
+                TypeId = meal.TypeId + 1,
+                UpdatedBy = "updater"
+            };
+
+            using (var context = new MSLunchesContext(GetDbOptions("UpdateAsync_ReturnsMealModified_WhenIdExist")))
+            {
+                await context.Meals.AddAsync(meal);
+                await context.SaveChangesAsync();
+            }
+
+            Meal result = null;
+
+            using (var context = new MSLunchesContext(GetDbOptions("UpdateAsync_ReturnsMealModified_WhenIdExist")))
+            {
+                var classUnderTest = new MealService(context);
+                result = await classUnderTest.UpdateAsync(mealModified);
+            }
+
+            Assert.NotNull(result);
+            Assert.Equal(mealModified.Id, result.Id);
+            Assert.NotEqual(mealModified.UpdatedOn, result.UpdatedOn);
+            Assert.Equal(mealModified.UpdatedBy, result.UpdatedBy);
+            Assert.Equal(mealModified.TypeId, result.TypeId);
+            Assert.Equal(mealModified.Name, result.Name);
+        }
+
+        [Fact]
+        public async void UpdateAsync_ReturnsNull_WhenIdNotExist()
+        {
+            var mealModified = GetADefaultMeal();
+
+            Meal result = null;
+
+            using (var context = new MSLunchesContext(GetDbOptions("UpdateAsync_ReturnsNull_WhenIdNotExist")))
+            {
+                var classUnderTest = new MealService(context);
+                result = await classUnderTest.UpdateAsync(mealModified);
+            }
+
+            Assert.Null(result);
+        }
+
+        #endregion
+
+        #region DeleteByIdAsync Tests
+
+        [Fact]
+        public async Task DeleteByIdAsync_ReturnsCountOfChanges_WhenIdExist()
+        {
+            var meal = GetADefaultMeal();
+
+            using (var context = new MSLunchesContext(GetDbOptions("DeleteByIdAsync_ReturnsCountOfChanges_WhenIdExist")))
+            {
+                await context.Meals.AddAsync(meal);
+                await context.SaveChangesAsync();
+            }
+
+            var result = 0;
+
+            using (var context = new MSLunchesContext(GetDbOptions("DeleteByIdAsync_ReturnsCountOfChanges_WhenIdExist")))
+            {
+                var classUnderTest = new MealService(context);
+                result = await classUnderTest.DeleteByIdAsync(meal.Id);
+            }
+
+            Assert.True(result > 0);
+        }
+
+        [Fact]
+        public async Task DeleteByIdAsync_ReturnsZero_WhenIdNotExist()
+        {
+            var result = 0;
+
+            using (var context = new MSLunchesContext(GetDbOptions("DeleteByIdAsync_ReturnsCountOfChanges_WhenIdExist")))
+            {
+                var classUnderTest = new MealService(context);
+                result = await classUnderTest.DeleteByIdAsync(Guid.NewGuid());
+            }
+
+            Assert.True(result == 0);
         }
 
         #endregion
 
         #region Private Methods
 
-        private static Meal GetADefaultMeal(Guid? id = null)
+        private DbContextOptions<MSLunchesContext> GetDbOptions(string context)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<MSLunchesContext>();
+            optionsBuilder.UseInMemoryDatabase("GetByIdAsync_ShouldReturnUser");
+            return optionsBuilder.Options;
+        }
+
+        private Meal GetADefaultMeal(Guid? id = null)
         {
             return new Meal
             {
@@ -167,6 +227,12 @@ namespace MSLunches.Domain.Tests.Services
                 TypeId = 1,
                 Name = "Test"
             };
+        }
+
+        private bool Equals(Meal meal1, Meal meal2) {
+            return meal1.Id == meal2.Id
+                && meal1.Name == meal2.Name
+                && meal1.TypeId == meal2.TypeId;
         }
 
         #endregion

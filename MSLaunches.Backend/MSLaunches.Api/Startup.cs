@@ -38,7 +38,7 @@ namespace MSLunches.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebApiCoreLunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
+            services.AddDbContext<MSLunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
 
             // Add framework services.
             services.AddMvc()
@@ -99,7 +99,7 @@ namespace MSLunches.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, WebApiCoreLunchesContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, MSLunchesContext dbContext)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
