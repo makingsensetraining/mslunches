@@ -74,7 +74,6 @@ namespace MSLunches.Api.Tests.Controllers
             // Assert
             _mealService.Verify(mock => mock.GetByIdAsync(sampleMeal.Id), Times.Once);
 
-            
             var okObjectResult = Assert.IsType<OkObjectResult>(result);
             var meal = Assert.IsType<MealDto>(okObjectResult.Value);
 
