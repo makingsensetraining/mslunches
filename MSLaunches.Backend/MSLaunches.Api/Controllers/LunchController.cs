@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
@@ -76,7 +77,32 @@ namespace MSLunches.Api.Controllers
 
             var result = await _lunchService.CreateAsync(lunchToCreate);
 
-            return CreatedAtAction(nameof(Get), new { userId = result.Id }, new LunchDto(result));
+            return CreatedAtAction(nameof(Get), new { id = result.Id }, new LunchDto(result));
+        }
+
+        [HttpPost]
+        [ValidateModel]
+        [ProducesResponseType(typeof(Lunch), 201)]
+        public async Task<IActionResult> BatchSave([FromBody]List<InputLunchDto> lunches)
+        {
+            // TODO: Fix validation attribute, it's not working as expected.
+            if (lunches == null) return BadRequest();
+
+            var listLunches = new List<Lunch>();
+            foreach (var lunch in lunches)
+            {
+                var lunchToCreate = new Lunch
+                {
+                    Date = lunch.Date,
+                    MealId = lunch.MealId
+
+                };
+                listLunches.Add(lunchToCreate);
+            }
+
+            var result = await _lunchService.CreateLunchesAsync(listLunches);
+
+            return Ok(result);
         }
 
         ///<summary>

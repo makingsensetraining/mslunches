@@ -39,7 +39,9 @@ namespace MSLunches.Domain.Services
 
         public async Task<List<MealType>> GetAsync()
         {
-            return await _dbContext.MealTypes.ToListAsync();
+            return await _dbContext.MealTypes
+                                   .Include(x => x.Meals)
+                                   .ToListAsync();
         }
 
 
