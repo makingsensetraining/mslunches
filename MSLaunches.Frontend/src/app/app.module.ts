@@ -13,6 +13,7 @@ import { AboutModule } from './about/about.module';
 import { LoginModule } from './login/login.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { MenuModule } from '@app/menu/menu.module';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { AppRoutingModule } from './app-routing.module';
     SharedModule,
     HomeModule,
     LunchModule,
+    MenuModule,
     AboutModule,
     LoginModule,
     AppRoutingModule

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SelectorContext } from '@angular/compiler';
-import { Lunch } from '@app/core/Models/lunch.model';
+import { UserLunch } from '@app/core/Models/user-lunch.model';
 
 
 @Component({
@@ -10,11 +10,11 @@ import { Lunch } from '@app/core/Models/lunch.model';
 })
 
 export class LunchTileComponent {
-    @Input() lunch: Lunch;
-    @Input() canBeSelected: Lunch;
-    @Output() lunchSelected: EventEmitter<Lunch>;
+    @Input() lunch: UserLunch;
+    @Input() canBeSelected: UserLunch;
+    @Output() lunchSelected: EventEmitter<UserLunch>;
     constructor() {
-        this.lunchSelected = new EventEmitter<Lunch>();
+        this.lunchSelected = new EventEmitter<UserLunch>();
     }
 
     select() {
