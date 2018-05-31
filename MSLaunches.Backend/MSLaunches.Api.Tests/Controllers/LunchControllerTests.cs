@@ -216,7 +216,7 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.Delete(id);
 
             Assert.IsType<NotFoundResult>(result);
-            _lunchService.Verify(s => s.DeleteByIdAsync(It.IsAny<Guid>()), Times.Never);
+            _lunchService.Verify(s => s.DeleteByIdAsync(It.IsAny<Guid>()), Times.Once);
         }
 
         #endregion

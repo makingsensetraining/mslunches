@@ -44,9 +44,12 @@ namespace MSLunches.Domain.Services.Interfaces
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<UserLunch> UpdateAsync(UserLunch userLunch);
 
-        Task<List<UserLunch>> GetlLunchesByUserByWeekAsync(string userId);
-
-
+        /// <summary>
+        /// returns a lunch of an user
+        /// </summary>
+        /// <param name="userId">user's identifier</param>
+        /// <param name="lunchId">lunch's identifier</param>
+        /// <returns>An user lunch</returns>
         Task<UserLunch> GetUserLunchByUserAndLunchIdAsync(string userId, Guid lunchId);
     }
 }

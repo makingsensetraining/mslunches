@@ -26,7 +26,7 @@ namespace MSLunches.Api.Controllers
         /// </summary>
         /// <response code="200">A list of lunches selected by user</response>
         /// <return>A list of UserLunch</return>
-        [HttpGet()]
+        [HttpGet]
         [ProducesResponseType(typeof(List<UserLunch>), 200)]
         public async Task<IActionResult> GetAll(string userId)
         {
@@ -136,17 +136,6 @@ namespace MSLunches.Api.Controllers
             var affectedRows = await _userLunchService.DeleteByIdAsync(id);
 
             return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
-        }
-
-        /// <summary>
-        /// A list of available lunches by week
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("LunchesByUserAndWeek")]
-        [ProducesResponseType(typeof(List<UserLunch>), 200)]
-        public async Task<IActionResult> GetlLunchesByUserByWeek(string userId)
-        {
-            return Ok(await _userLunchService.GetlLunchesByUserByWeekAsync(userId));
         }
     }
 }
