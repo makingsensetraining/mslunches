@@ -13,7 +13,7 @@ namespace MSLunches.Api.Controllers
 {
     [Route("api/lunches")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorDto), 500)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class LunchController : Controller
     {
         private readonly ILunchService _lunchService;
@@ -60,7 +60,7 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Creates a new Lunch
         /// </summary>
-        /// <param name="lunch" cref="InputLunchDto">User data</param>
+        /// <param name="lunch" cref="LunchRequest">User data</param>
         /// <response code="201">User created</response>
         [HttpPost]
         [ValidateModel]
@@ -110,12 +110,12 @@ namespace MSLunches.Api.Controllers
         /// Updates an meal given his id
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the meal</param>
-        ///<param name="lunchDto" cref="InputLunchDto">Lunch model</param>
+        ///<param name="lunchDto" cref="LunchRequest">Lunch model</param>
         ///<response code="204">Lunch created</response>
         ///<response code="404">Lunch not found / Lunch could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]InputLunchDto lunchDto)
+        public async Task<IActionResult> Update(Guid id, [FromBody]LunchRequest lunchDto)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunchDto == null) return BadRequest();

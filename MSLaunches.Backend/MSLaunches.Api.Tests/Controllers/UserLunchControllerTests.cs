@@ -92,7 +92,7 @@ namespace MSLunches.Api.Tests.Controllers
         {
             var userId = "userId1234";
             var userLunch = GetSampleUserLunch(userId: userId);
-            var userLunchDto = new InputUserLunchDto
+            var userLunchDto = new UserLunchRequest
             {
                 Approved = userLunch.Approved,
                 LunchId = userLunch.LunchId,
@@ -112,7 +112,7 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.Create(userId, userLunchDto);
 
             var okresult = Assert.IsType<CreatedAtActionResult>(result);
-            var createdLunch = Assert.IsType<UserLunchDto>(okresult.Value);
+            var createdLunch = Assert.IsType<UserLunchResponse>(okresult.Value);
             Assert.True(Equals(createdLunch, userLunchDto));
             _userLunchService.Verify(a => a.GetUserLunchByUserAndLunchIdAsync(
                 It.Is<string>(u => u == userId),
@@ -126,7 +126,7 @@ namespace MSLunches.Api.Tests.Controllers
         {
             var classUnderTest = new UserLunchController(_userLunchService.Object);
             var userId = "userid1234";
-            var userLunchDto = new InputUserLunchDto
+            var userLunchDto = new UserLunchRequest
             {
                 Approved = true,
                 LunchId = Guid.NewGuid(),
@@ -162,7 +162,7 @@ namespace MSLunches.Api.Tests.Controllers
             var id = Guid.NewGuid();
             var userId = "userId123";
             var lunch = GetSampleUserLunch(id: id, userId: userId);
-            var inputLunch = new InputUserLunchDto()
+            var inputLunch = new UserLunchRequest()
             {
                 Approved = lunch.Approved,
                 LunchId = lunch.LunchId,
@@ -186,7 +186,7 @@ namespace MSLunches.Api.Tests.Controllers
             var classUnderTest = new UserLunchController(_userLunchService.Object);
             var id = Guid.NewGuid();
             var userId = "userId123";
-            var inputLunch = new InputUserLunchDto
+            var inputLunch = new UserLunchRequest
             {
                 Approved = true,
                 LunchId = Guid.NewGuid(),
@@ -257,7 +257,7 @@ namespace MSLunches.Api.Tests.Controllers
             && us1.LunchId == us2.LunchId
             && us1.UserId == us2.UserId;
 
-        private bool Equals(UserLunch us1, InputUserLunchDto us2) =>
+        private bool Equals(UserLunch us1, UserLunchRequest us2) =>
             us1.Approved == us2.Approved
             && us1.LunchId == us2.LunchId
             && us1.UserId == us2.UserId;

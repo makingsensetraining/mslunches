@@ -13,7 +13,7 @@ namespace MSLunches.Api.Controllers
 {
     [Route("api/meals")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorDto), 500)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class MealController : Controller
     {
         private readonly IMealService _mealService;
@@ -60,12 +60,12 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Creates a new meal
         /// </summary>
-        /// <param name="meal" cref="InputMealDto">Meal model</param>
+        /// <param name="meal" cref="MealRequest">Meal model</param>
         /// <response code="204">Meal created</response>
         /// <response code="404">Meal could not be created</response>
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody]InputMealDto meal)
+        public async Task<IActionResult> Create([FromBody]MealRequest meal)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
@@ -81,19 +81,19 @@ namespace MSLunches.Api.Controllers
             return CreatedAtAction(
                 nameof(Get), 
                 new { id = result.Id }, 
-                new MealDto(result));
+                new MealResponse(result));
         }
 
         ///<summary>
         /// Updates an meal given his id
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the meal</param>
-        ///<param name="meal" cref="InputMealDto">Meal model</param>
+        ///<param name="meal" cref="MealRequest">Meal model</param>
         ///<response code="204">Meal created</response>
         ///<response code="404">Meal not found / Meal could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]InputMealDto meal)
+        public async Task<IActionResult> Update(Guid id, [FromBody]MealRequest meal)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
