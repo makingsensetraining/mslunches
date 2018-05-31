@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models;
 using MSLunches.Data.Models;
@@ -79,13 +78,14 @@ namespace MSLunches.Api.Controllers
             };
 
             var existingUserLunch = await _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
-            if (existingUserLunch != null) return StatusCode(422, new ErrorDto("User Lunch already exists"));
+            if (existingUserLunch != null)
+                return StatusCode(422, new ErrorDto("User Lunch already exists"));
 
             var result = await _userLunchService.CreateAsync(userLunchToCreate);
 
             return CreatedAtAction(
-                nameof(Get), 
-                new { userId, id = result.Id }, 
+                nameof(Get),
+                new { userId, id = result.Id },
                 new UserLunchDto(result));
         }
 

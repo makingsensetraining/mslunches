@@ -28,7 +28,7 @@ namespace MSLunches.Api.Controllers
         /// </summary>
         /// <response code="200">A list of lunchs</response>
         /// <return>A list of lunchs</return>
-        [HttpGet()]
+        [HttpGet]
         [ProducesResponseType(typeof(List<Lunch>), 200)]
         public async Task<IActionResult> GetAll()
         {

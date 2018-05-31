@@ -131,12 +131,25 @@ namespace MSLunches.Api.Tests.Controllers
             Assert.Equal(expected.TypeId, meal.TypeId);
         }
 
+        [Fact]
+        public async Task Create_ReturnsBadRequest_WhenMealIsNull()
+        {
+            // Arrange
+            var classUnderTest = new MealController(_mealService.Object);
+
+            // Act
+            var res = await classUnderTest.Create(null);
+
+            // Assert
+            Assert.IsType<BadRequestResult>(res);
+        }
+
         #endregion
 
         #region Update Test
 
         [Fact]
-        public async void Update_ReturnsNoContent()
+        public async Task Update_ReturnsNoContent()
         {
             // Arrange
             var controller = new MealController(_mealService.Object);
@@ -158,7 +171,20 @@ namespace MSLunches.Api.Tests.Controllers
         }
 
         [Fact]
-        public async void Update_ReturnsNotFound_WhenMealNotExists()
+        public async Task Update_ReturnsBadrequest_WhenMealIsNull()
+        {
+            // Arrange
+            var classUnderTest = new MealController(_mealService.Object);
+
+            // Act
+            var res = await classUnderTest.Update(Guid.NewGuid(), null);
+
+            // Assert
+            Assert.IsType<BadRequestResult>(res);
+        }
+
+        [Fact]
+        public async Task Update_ReturnsNotFound_WhenMealNotExists()
         {
             // Arrange
             var controller = new MealController(_mealService.Object);
