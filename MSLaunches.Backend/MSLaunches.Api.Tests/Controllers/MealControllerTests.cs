@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MSLunches.Api.Controllers;
-using MSLunches.Api.Models;
+using MSLunches.Api.Models.Request;
+using MSLunches.Api.Models.Response;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
@@ -43,11 +44,10 @@ namespace MSLunches.Api.Tests.Controllers
             // Assert
             _mealService.Verify(mock => mock.GetAsync(), Times.Once);
 
-            Assert.IsType<OkObjectResult>(result);
-            var okObjectResult = result as OkObjectResult;
-            var meals = okObjectResult.Value as List<Meal>;
+            var okObjectResult = Assert.IsType<OkObjectResult>(result); ;
+            var meals = Assert.IsAssignableFrom<IEnumerable<MealResponse>>(okObjectResult.Value);
 
-            Assert.Equal(sampleMeals.Count, meals.Count);
+            Assert.Equal(sampleMeals.Count, meals.Count());
             foreach (var meal in meals)
             {
                 var expected = sampleMeals.SingleOrDefault(u => u.Id == meal.Id);
@@ -74,9 +74,9 @@ namespace MSLunches.Api.Tests.Controllers
             // Assert
             _mealService.Verify(mock => mock.GetByIdAsync(sampleMeal.Id), Times.Once);
 
-            Assert.IsType<OkObjectResult>(result);
-            var okObjectResult = result as OkObjectResult;
-            var meal = okObjectResult.Value as Meal;
+            
+            var okObjectResult = Assert.IsType<OkObjectResult>(result);
+            var meal = Assert.IsType<MealResponse>(okObjectResult.Value);
 
             Assert.Equal(sampleMeal.Name, meal.Name);
             Assert.Equal(sampleMeal.TypeId, meal.TypeId);
@@ -108,7 +108,7 @@ namespace MSLunches.Api.Tests.Controllers
             // Arrange
             var controller = new MealController(_mealService.Object);
             var expected = GetSampleMeal();
-            var sampleMeal = new InputMealDto
+            var sampleMeal = new MealRequest
             {
                 Name = expected.Name,
                 TypeId = expected.TypeId
@@ -124,7 +124,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             Assert.IsType<CreatedAtActionResult>(result);
             var createdResult = result as CreatedAtActionResult;
-            var meal = createdResult.Value as MealDto;
+            var meal = createdResult.Value as MealResponse;
 
             Assert.Equal(expected.Id, meal.Id);
             Assert.Equal(expected.Name, meal.Name);
@@ -158,7 +158,7 @@ namespace MSLunches.Api.Tests.Controllers
             // Arrange
             var controller = new MealController(_mealService.Object);
             var expected = GetSampleMeal();
-            var sampleMeal = new InputMealDto
+            var sampleMeal = new MealRequest
             {
                 Name = expected.Name,
                 TypeId = expected.TypeId
@@ -256,9 +256,9 @@ namespace MSLunches.Api.Tests.Controllers
             };
         }
 
-        private InputMealDto GetSampleInputMealDto()
+        private MealRequest GetSampleInputMealDto()
         {
-            return new InputMealDto
+            return new MealRequest
             {
                 Name = "Papas fritas",
                 TypeId = 1

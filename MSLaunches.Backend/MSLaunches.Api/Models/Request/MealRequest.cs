@@ -1,9 +1,8 @@
-﻿using MSLunches.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MSLunches.Api.Models
+namespace MSLunches.Api.Models.Request
 {
-    public class InputMealDto
+    public class MealRequest
     {
         /// <summary>
         /// Name of the meal.

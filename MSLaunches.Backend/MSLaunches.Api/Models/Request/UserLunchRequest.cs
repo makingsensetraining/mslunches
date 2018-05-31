@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MSLunches.Api.Models
+namespace MSLunches.Api.Models.Request
 {
-    public class InputUserLunchDto
+    public class UserLunchRequest
     {
         [Required]
         public Guid LunchId { get; set; }

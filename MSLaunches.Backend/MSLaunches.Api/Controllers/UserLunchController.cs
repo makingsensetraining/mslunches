@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
-using MSLunches.Api.Models;
+using MSLunches.Api.Models.Request;
+using MSLunches.Api.Models.Response;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
 {
     [Route("api/users/{userId}/lunches")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorDto), 500)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class UserLunchController : Controller
     {
         private readonly IUserLunchService _userLunchService;
@@ -27,10 +29,11 @@ namespace MSLunches.Api.Controllers
         /// <response code="200">A list of lunches selected by user</response>
         /// <return>A list of UserLunch</return>
         [HttpGet]
-        [ProducesResponseType(typeof(List<UserLunch>), 200)]
+        [ProducesResponseType(typeof(List<UserLunchResponse>), 200)]
         public async Task<IActionResult> GetAll(string userId)
         {
-            return Ok(await _userLunchService.GetAsync(userId));
+            return Ok((await _userLunchService.GetAsync(userId))
+                .Select(userLunch => new UserLunchResponse(userLunch)));
         }
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace MSLunches.Api.Controllers
         /// <return>A lunchs</return>
         [HttpGet("{id}")]
         [ValidateModel]
-        [ProducesResponseType(typeof(UserLunch), 200)]
+        [ProducesResponseType(typeof(UserLunchResponse), 200)]
         public async Task<IActionResult> Get(Guid id)
         {
             var lunch = await _userLunchService.GetByIdAsync(id);
@@ -51,21 +54,22 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(lunch);
+            return Ok(new UserLunchResponse(lunch));
         }
 
         /// <summary>
         /// Creates a new meal selection for user.
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
+        /// <param name="userLunch" cref="UserLunchRequest">UserLunch model</param>
         /// <response code="204">UserLunch created</response>
         /// <response code="422">UserLunch could not be created - Already exists</response>
         [HttpPost]
         [ValidateModel]
+        [ProducesResponseType(typeof(UserLunchResponse), 204)]
         public async Task<IActionResult> Create(
             [FromRoute]string userId,
-            [FromBody]InputUserLunchDto userLunch)
+            [FromBody]UserLunchRequest userLunch)
         {
             if (userLunch == null) return BadRequest();
 
@@ -79,14 +83,14 @@ namespace MSLunches.Api.Controllers
 
             var existingUserLunch = await _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
             if (existingUserLunch != null)
-                return StatusCode(422, new ErrorDto("User Lunch already exists"));
+                return StatusCode(422, new ErrorResponse("User Lunch already exists"));
 
             var result = await _userLunchService.CreateAsync(userLunchToCreate);
 
             return CreatedAtAction(
                 nameof(Get),
                 new { userId, id = result.Id },
-                new UserLunchDto(result));
+                new UserLunchResponse(result));
         }
 
         ///<summary>
@@ -94,7 +98,7 @@ namespace MSLunches.Api.Controllers
         ///</summary>
         /// <param name="userId"></param>
         ///<param name="id" cref="Guid">Guid of the meal</param>
-        ///<param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
+        ///<param name="userLunch" cref="UserLunchRequest">UserLunch model</param>
         ///<response code="204">UserLunch created</response>
         ///<response code="404">UserLunch not found / UserLunch could not be updated</response>
         [HttpPut("{id}")]
@@ -102,7 +106,7 @@ namespace MSLunches.Api.Controllers
         public async Task<IActionResult> Update(
             [FromRoute]string userId,
             [FromRoute]Guid id,
-            [FromBody]InputUserLunchDto userLunch)
+            [FromBody]UserLunchRequest userLunch)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (userLunch == null) return BadRequest();

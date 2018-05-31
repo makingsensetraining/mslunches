@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
-using MSLunches.Api.Models;
+using MSLunches.Api.Models.Request;
+using MSLunches.Api.Models.Response;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MSLunches.Api.Controllers
 {
     [Route("api/meals")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorDto), 500)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class MealController : Controller
     {
         private readonly IMealService _mealService;
@@ -28,10 +29,11 @@ namespace MSLunches.Api.Controllers
         /// <response code="200">A list of meals</response>
         /// <return>A list of meals</return>
         [HttpGet]
-        [ProducesResponseType(typeof(List<Meal>), 200)]
+        [ProducesResponseType(typeof(List<MealResponse>), 200)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _mealService.GetAsync());
+            return Ok((await _mealService.GetAsync())
+                .Select(meal => new MealResponse(meal)));
         }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace MSLunches.Api.Controllers
         /// <return>A meals</return>
         [HttpGet("{id}")]
         [ValidateModel]
-        [ProducesResponseType(typeof(Meal), 200)]
+        [ProducesResponseType(typeof(MealResponse), 200)]
         public async Task<IActionResult> Get(Guid id)
         {
             var meal = await _mealService.GetByIdAsync(id);
@@ -52,18 +54,18 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(meal);
+            return Ok(new MealResponse(meal));
         }
 
         /// <summary>
         /// Creates a new meal
         /// </summary>
-        /// <param name="meal" cref="InputMealDto">Meal model</param>
+        /// <param name="meal" cref="MealRequest">Meal model</param>
         /// <response code="204">Meal created</response>
         /// <response code="404">Meal could not be created</response>
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody]InputMealDto meal)
+        public async Task<IActionResult> Create([FromBody]MealRequest meal)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
@@ -79,19 +81,19 @@ namespace MSLunches.Api.Controllers
             return CreatedAtAction(
                 nameof(Get), 
                 new { id = result.Id }, 
-                new MealDto(result));
+                new MealResponse(result));
         }
 
         ///<summary>
         /// Updates an meal given his id
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the meal</param>
-        ///<param name="meal" cref="InputMealDto">Meal model</param>
+        ///<param name="meal" cref="MealRequest">Meal model</param>
         ///<response code="204">Meal created</response>
         ///<response code="404">Meal not found / Meal could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]InputMealDto meal)
+        public async Task<IActionResult> Update(Guid id, [FromBody]MealRequest meal)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();

@@ -1,12 +1,11 @@
 ﻿using MSLunches.Data.Models;
 using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace MSLunches.Api.Models
+namespace MSLunches.Api.Models.Response
 {
-    public class LunchDto
+    public class LunchResponse
     {
-        public LunchDto(Lunch lunch)
+        public LunchResponse(Lunch lunch)
         {
             Id = lunch.Id;
             CreatedOn = lunch.CreatedOn;

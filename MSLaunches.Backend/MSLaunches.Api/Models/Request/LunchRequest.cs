@@ -1,10 +1,9 @@
-﻿using MSLunches.Data.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MSLunches.Api.Models
+namespace MSLunches.Api.Models.Request
 {
-    public class InputLunchDto
+    public class LunchRequest
     {
         [Required]
         public Guid MealId { get; set; }

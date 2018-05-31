@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MSLunches.Api.Controllers;
-using MSLunches.Api.Models;
+using MSLunches.Api.Models.Request;
+using MSLunches.Api.Models.Response;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
@@ -42,7 +43,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var resultList = Assert.IsType<List<Lunch>>(okResult.Value);
+            var resultList = Assert.IsAssignableFrom<IEnumerable<LunchResponse>>(okResult.Value);
 
             foreach (var lunch in listOfLunches)
             {
@@ -72,7 +73,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var lunchResult = Assert.IsType<Lunch>(okResult.Value);
+            var lunchResult = Assert.IsType<LunchResponse>(okResult.Value);
             Assert.True(Equals(lunchResult, lunch));
 
             _lunchService.Verify(a => a.GetByIdAsync(It.Is<Guid>(g => g == id)), Times.Once);
@@ -106,7 +107,7 @@ namespace MSLunches.Api.Tests.Controllers
             var classUnderTest = new LunchController(_lunchService.Object);
             var lunch = GetSampleLunch();
 
-            var lunchDto = new InputLunchDto
+            var lunchDto = new LunchRequest
             {
                 Date = lunch.Date,
                 MealId = lunch.MealId
@@ -119,7 +120,7 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.Create(lunchDto);
 
             var createdResponse = Assert.IsType<CreatedAtActionResult>(result);
-            var resultLunch = Assert.IsType<LunchDto>(createdResponse.Value);
+            var resultLunch = Assert.IsType<LunchResponse>(createdResponse.Value);
 
             Assert.Equal(lunch.MealId, resultLunch.MealId);
             Assert.Equal(lunch.Date, resultLunch.Date);
@@ -150,7 +151,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             var id = Guid.NewGuid();
             var lunch = GetSampleLunch(id);
-            var lunchDto = new InputLunchDto
+            var lunchDto = new LunchRequest
             {
                 Date = lunch.Date,
                 MealId = lunch.MealId
@@ -231,6 +232,13 @@ namespace MSLunches.Api.Tests.Controllers
                 Id = id ?? Guid.NewGuid(),
                 MealId = Guid.NewGuid()
             };
+        }
+
+        private bool Equals(LunchResponse lunch1, Lunch lunch2)
+        {
+            return lunch1.Id == lunch2.Id
+                && lunch1.MealId == lunch2.MealId
+                && lunch1.Date == lunch2.Date;
         }
 
         private bool Equals(Lunch lunch1, Lunch lunch2)
