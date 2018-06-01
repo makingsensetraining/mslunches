@@ -3,24 +3,28 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 
 import { ErrorHandlerInterceptor } from './error-handler.interceptor';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthenticationService, MockAuthenticationService } from '@app/core';
+import { catchError } from 'rxjs/operators';
 
 describe('ErrorHandlerInterceptor', () => {
-  let errorHandlerInterceptor: ErrorHandlerInterceptor;
   let http: HttpClient;
   let httpMock: HttpTestingController;
 
-  function createInterceptor() {
-    errorHandlerInterceptor = new ErrorHandlerInterceptor();
-    return errorHandlerInterceptor;
-  }
-
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule
+      ],
       providers: [{
         provide: HTTP_INTERCEPTORS,
-        useFactory: createInterceptor,
+        useClass: ErrorHandlerInterceptor,
         multi: true
+      },
+      {
+        provide: AuthenticationService,
+        useClass: MockAuthenticationService
       }]
     });
   });
@@ -29,11 +33,11 @@ describe('ErrorHandlerInterceptor', () => {
     HttpClient,
     HttpTestingController
   ], (_http: HttpClient,
-      _httpMock: HttpTestingController) => {
+    _httpMock: HttpTestingController) => {
 
-    http = _http;
-    httpMock = _httpMock;
-  }));
+      http = _http;
+      httpMock = _httpMock;
+    }));
 
   afterEach(() => {
     httpMock.verify();
@@ -44,16 +48,14 @@ describe('ErrorHandlerInterceptor', () => {
     // Note: here we spy on private method since target is customization here,
     // but you should replace it by actual behavior in your app
     spyOn(ErrorHandlerInterceptor.prototype as any, 'errorHandler');
-
     // Act
-    http.get('/toto').subscribe(() => {}, () => {
-      // Assert
-      expect(ErrorHandlerInterceptor.prototype['errorHandler']).toHaveBeenCalled();
-    });
+    http.get('/toto').subscribe(
+      () => { },
+      // Assert|
+      () => expect(ErrorHandlerInterceptor.prototype['errorHandler']).toHaveBeenCalled()
+    );
+    const req = httpMock.expectOne({});
+    req.error(null, { status: 404 });
 
-    httpMock.expectOne({}).flush(null, {
-      status: 404,
-      statusText: 'error'
-    });
   });
 });
