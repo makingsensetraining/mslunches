@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MSLunches.Api.Controllers;
 using MSLunches.Api.Models.Request;
 using MSLunches.Api.Models.Response;
+using MSLunches.Api.Tests.Controllers.MapperConfig;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
@@ -16,10 +18,13 @@ namespace MSLunches.Api.Tests.Controllers
     public class MealControllerTests
     {
         private readonly Mock<IMealService> _mealService;
+        private readonly IMapper _mapper;
 
         public MealControllerTests()
         {
             _mealService = new Mock<IMealService>();
+            _mapper = new TestMapperConfiguration()
+                .CreateMapper();
         }
 
         #region GetAll Test
@@ -28,7 +33,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async void GetAll_ReturnsOk()
         {
             // Arrange
-            var controller = new MealController(_mealService.Object);
+            var controller = new MealController(_mealService.Object, _mapper);
             var sampleMeals = new List<Meal>()
             {
                 GetSampleMeal(),
@@ -64,7 +69,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async Task Get_ReturnsOk()
         {
             // Arrange
-            var controller = new MealController(_mealService.Object);
+            var controller = new MealController(_mealService.Object, _mapper);
             var sampleMeal = GetSampleMeal();
             _mealService.Setup(mock => mock.GetByIdAsync(sampleMeal.Id)).ReturnsAsync(sampleMeal);
 
@@ -85,7 +90,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async void Get_ReturnsNotFound_WhenMealNotExists()
         {
             // Arrange
-            var controller = new MealController(_mealService.Object);
+            var controller = new MealController(_mealService.Object, _mapper);
             var mealId = Guid.NewGuid();
             _mealService.Setup(mock => mock.GetByIdAsync(mealId)).ReturnsAsync((Meal)null);
 
@@ -105,7 +110,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async void Create_ReturnsCreated()
         {
             // Arrange
-            var controller = new MealController(_mealService.Object);
+            var controller = new MealController(_mealService.Object, _mapper);
             var expected = GetSampleMeal();
             var sampleMeal = new MealRequest
             {
@@ -138,7 +143,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async Task Create_ReturnsBadRequest_WhenMealIsNull()
         {
             // Arrange
-            var classUnderTest = new MealController(_mealService.Object);
+            var classUnderTest = new MealController(_mealService.Object, _mapper);
 
             // Act
             var res = await classUnderTest.Create(null);
@@ -155,7 +160,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async Task Update_ReturnsNoContent()
         {
             // Arrange
-            var controller = new MealController(_mealService.Object);
+            var controller = new MealController(_mealService.Object, _mapper);
             var expected = GetSampleMeal();
             var sampleMeal = new MealRequest
             {
@@ -177,7 +182,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async Task Update_ReturnsBadrequest_WhenMealIsNull()
         {
             // Arrange
-            var classUnderTest = new MealController(_mealService.Object);
+            var classUnderTest = new MealController(_mealService.Object, _mapper);
 
             // Act
             var res = await classUnderTest.Update(Guid.NewGuid(), null);
@@ -190,7 +195,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async Task Update_ReturnsNotFound_WhenMealNotExists()
         {
             // Arrange
-            var controller = new MealController(_mealService.Object);
+            var controller = new MealController(_mealService.Object, _mapper);
             var sampleMeal = GetSampleInputMealDto();
             _mealService.Setup(mock => mock.UpdateAsync(It.IsAny<Meal>())).ReturnsAsync((Meal)null);
 
@@ -210,7 +215,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async void Delete_WhenIdExists_ShouldReturnNoContent()
         {
             var mealService = new Mock<IMealService>();
-            var classUnderTest = new MealController(mealService.Object);
+            var classUnderTest = new MealController(mealService.Object, _mapper);
 
             var id = Guid.NewGuid();
 
@@ -227,7 +232,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async void Delete_WhenIdNotExists_ShouldReturnNotFound()
         {
             var mealService = new Mock<IMealService>();
-            var classUnderTest = new MealController(mealService.Object);
+            var classUnderTest = new MealController(mealService.Object, _mapper);
 
             var id = Guid.NewGuid();
 

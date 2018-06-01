@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MSLunches.Api.Controllers;
 using MSLunches.Api.Models.Request;
 using MSLunches.Api.Models.Response;
+using MSLunches.Api.Tests.Controllers.MapperConfig;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
@@ -15,10 +17,12 @@ namespace MSLunches.Api.Tests.Controllers
     public class LunchControllerTests
     {
         private Mock<ILunchService> _lunchService;
+        private IMapper _mapper;
 
         public LunchControllerTests()
         {
             _lunchService = new Mock<ILunchService>();
+            _mapper = new TestMapperConfiguration().CreateMapper();
         }
 
         #region GetAll Tests
@@ -27,7 +31,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async Task GetAll_ReturnsLunches()
         {
             // Arrange
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var listOfLunches = new List<Lunch>()
             {
@@ -37,7 +41,6 @@ namespace MSLunches.Api.Tests.Controllers
             };
 
             _lunchService.Setup(a => a.GetAsync()).ReturnsAsync(listOfLunches);
-
             // Act
             var result = await classUnderTest.GetAll();
 
@@ -64,7 +67,7 @@ namespace MSLunches.Api.Tests.Controllers
             var id = Guid.NewGuid();
             var lunch = GetSampleLunch(id);
 
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             _lunchService.Setup(a => a.GetByIdAsync(It.Is<Guid>(g => g == id)))
                 .ReturnsAsync(lunch);
 
@@ -84,7 +87,7 @@ namespace MSLunches.Api.Tests.Controllers
         {
             // Arrange
             var id = Guid.NewGuid();
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             _lunchService.Setup(a => a.GetByIdAsync(It.Is<Guid>(g => g == id)))
                 .ReturnsAsync(null as Lunch);
 
@@ -104,7 +107,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Create_ReturnsCreated()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             var lunch = GetSampleLunch();
 
             var lunchDto = new LunchRequest
@@ -132,7 +135,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Create_ReturnsBadRequest_WhenInputIsNull()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var result = await classUnderTest.Create(null);
 
@@ -147,7 +150,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Update_ReturnsNoContent()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var id = Guid.NewGuid();
             var lunch = GetSampleLunch(id);
@@ -178,7 +181,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Update_ReturnsBadRequest_WhenDtoIsNull()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var result = await classUnderTest.Update(Guid.NewGuid(), null);
 
@@ -193,7 +196,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Delete_ReturnsNoContent()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             var id = Guid.NewGuid();
             _lunchService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
                 .ReturnsAsync(1);
@@ -208,7 +211,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Delete_ReturnsNotFound_WhenIdNotExist()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var id = Guid.NewGuid();
             _lunchService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))

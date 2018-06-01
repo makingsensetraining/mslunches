@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models.Request;
 using MSLunches.Api.Models.Response;
@@ -6,7 +7,6 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
@@ -17,10 +17,14 @@ namespace MSLunches.Api.Controllers
     public class MealController : Controller
     {
         private readonly IMealService _mealService;
+        private readonly IMapper _mapper;
 
-        public MealController(IMealService mealService)
+        public MealController(
+            IMealService mealService,
+            IMapper mapper)
         {
             _mealService = mealService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -70,18 +74,13 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
 
-            var mealToCreate = new Meal
-            {
-                Name = meal.Name,
-                TypeId = meal.TypeId
-            };
-
-            var result = await _mealService.CreateAsync(mealToCreate);
+            var result = await _mealService.CreateAsync(
+                _mapper.Map<Meal>(meal));
 
             return CreatedAtAction(
-                nameof(Get), 
-                new { id = result.Id }, 
-                new MealResponse(result));
+                nameof(Get),
+                new { id = result.Id },
+                _mapper.Map<MealResponse>(result));
         }
 
         ///<summary>
@@ -98,15 +97,8 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
 
-            var mealToUpdate = new Meal
-            {
-                Id = id,
-                Name = meal.Name,
-                TypeId = meal.TypeId,
-                UpdatedBy = "Test" //TODO: Add user.
-            };
-
-            var result = await _mealService.UpdateAsync(mealToUpdate);
+            var result = await _mealService.UpdateAsync(
+                _mapper.Map<Meal>(meal));
 
             if (result == null) return NotFound();
 

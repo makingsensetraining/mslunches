@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models.Request;
@@ -17,10 +18,14 @@ namespace MSLunches.Api.Controllers
     public class LunchController : Controller
     {
         private readonly ILunchService _lunchService;
+        private readonly IMapper _mapper;
 
-        public LunchController(ILunchService lunchService)
+        public LunchController(
+            ILunchService lunchService,
+            IMapper mapper)
         {
             _lunchService = lunchService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -70,13 +75,8 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunch == null) return BadRequest();
 
-            var lunchToCreate = new Lunch
-            {
-                Date = lunch.Date,
-                MealId = lunch.MealId
-            };
-
-            var result = await _lunchService.CreateAsync(lunchToCreate);
+            var result = await _lunchService.CreateAsync(
+                _mapper.Map<Lunch>(lunch));
 
             return CreatedAtAction(nameof(Get), new { id = result.Id }, new LunchDto(result));
         }
@@ -158,8 +158,8 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(List<LunchDto>), 200)]
         public async Task<IActionResult> LunchesAvailables()
         {
-            return Ok((await _lunchService.GetAllLunchesAvailableInWeek())
-                .Select(a => new LunchDto(a)));
+            return Ok(_mapper.Map<LunchDto>(
+                await _lunchService.GetAllLunchesAvailableInWeek()));
         }
 
 
