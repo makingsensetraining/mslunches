@@ -60,7 +60,7 @@ namespace MSLunches.Domain.Services
         /// </summary>
         /// <param name="lunches"></param>
         /// <returns></returns>
-        public async Task<int> UpdateLunchesAsync(List<Lunch> lunches)
+        public async Task<int> BatchSaveAsync(List<Lunch> lunches)
         {
             var dateFrom = lunches.Min(x => x.Date).Date;
             var dateTo = lunches.Max(x => x.Date);

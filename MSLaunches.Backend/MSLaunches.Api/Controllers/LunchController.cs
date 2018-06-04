@@ -117,7 +117,7 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunches == null) return BadRequest();
 
-            var result = await _lunchService.UpdateLunchesAsync(
+            var result = await _lunchService.BatchSaveAsync(
                 _mapper.Map<List<Lunch>>(lunches));
 
             return Ok(_mapper.Map<List<LunchDto>>(result));
