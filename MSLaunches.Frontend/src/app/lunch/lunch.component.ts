@@ -2,7 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { filter, finalize } from 'rxjs/operators';
 
 import { LunchService } from './lunch.service';
-import { Lunch, DailyTypedLunches, WeeklyLunches } from '@app/lunch/lunch.model';
+import { UserLunch } from '@app/core/Models/user-lunch.model';
+import { DailyTypedLunches } from '@app/core/Models/daily-typed-lunches.model';
+import { WeeklyLunches } from '@app/core/Models/weekly-lunches.model';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -33,7 +35,7 @@ export class LunchComponent implements OnInit {
     }
   }
 
-  setLunchSelected(lunch: Lunch) {
+  setLunchSelected(lunch: UserLunch) {
     let weeklyLunches: WeeklyLunches;
     let lunchesByDay: DailyTypedLunches;
     const lunchDate: Date = new Date(lunch.date);

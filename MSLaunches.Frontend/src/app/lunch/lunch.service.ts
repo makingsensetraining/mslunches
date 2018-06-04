@@ -4,7 +4,10 @@ import { map, mapTo, mergeMap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { tryStatement } from 'babel-types';
-import { Lunch, DailyTypedLunches, WeeklyLunches, UserSelection } from '@app/lunch/lunch.model';
+import { UserLunch } from '../core/Models/user-lunch.model';
+import { DailyTypedLunches } from '../core/Models/daily-typed-lunches.model';
+import { WeeklyLunches } from '../core/Models/weekly-lunches.model';
+import { UserSelection } from '../core/Models/user-selection';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -26,13 +29,13 @@ export class LunchService {
 
     //#region public methods
 
-    getLunches(startDate?: Date, endDate?: Date): Observable<Array<Lunch>> {
+    getLunches(startDate?: Date, endDate?: Date): Observable<Array<UserLunch>> {
         return this.httpClient
             .get(this.routes.getLunches)
             .pipe(map(this.mapToArrayOfLaunch.bind(this)));
     }
 
-    getUserLunches(): Observable<Array<Lunch>> {
+    getUserLunches(): Observable<Array<UserLunch>> {
         const userId: string =
             JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
 
@@ -47,13 +50,13 @@ export class LunchService {
             );
     }
 
-    mapToWeekly(lunches: Array<Lunch>): Array<WeeklyLunches> {
+    mapToWeekly(lunches: Array<UserLunch>): Array<WeeklyLunches> {
         lunches = lunches.sort(this.selectableSorter.bind(this));
         const daily: Array<DailyTypedLunches> = _.map(
             // Groups by date
-            _.groupBy(lunches, (result: Lunch) => result.date),
+            _.groupBy(lunches, (result: UserLunch) => result.date),
             // Maps to entity
-            (value: Lunch[], key: string) => ({ date: new Date(key), lunches: value })
+            (value: UserLunch[], key: string) => ({ date: new Date(key), lunches: value })
         );
 
         const weekly = _.map(
@@ -66,7 +69,7 @@ export class LunchService {
         return this.fillDates(weekly);
     }
 
-    save(lunch: Lunch): Observable<string> {
+    save(lunch: UserLunch): Observable<string> {
         const userId = JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
         if (!lunch.userLunchId || lunch.userLunchId.length === 0) {
             return this.httpClient.post(this.routes.getGeneric(userId), this.mapToBackEnd(lunch))
@@ -79,7 +82,7 @@ export class LunchService {
         }
     }
 
-    delete(lunch: Lunch): Observable<string> {
+    delete(lunch: UserLunch): Observable<string> {
         const userId = JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
         return this.httpClient.delete(this.routes.getAccessor(userId, lunch.userLunchId))
             .pipe(map(a => 'Deleted'));
@@ -89,10 +92,10 @@ export class LunchService {
 
     //#region private methods
 
-    private mergeUserLunchs(userSelections: Array<UserSelection>, menu: Array<Lunch>): Array<Lunch> {
+    private mergeUserLunchs(userSelections: Array<UserSelection>, menu: Array<UserLunch>): Array<UserLunch> {
         userSelections.forEach(userSelection => {
             // Find the lunch
-            const matchingLunch: Lunch = menu.find(a => a.id === userSelection.lunchId);
+            const matchingLunch: UserLunch = menu.find(a => a.id === userSelection.lunchId);
             if (matchingLunch) {
                 // Find all the daily lunchs
                 matchingLunch.isSelected = true;
@@ -106,7 +109,7 @@ export class LunchService {
         return menu;
     }
 
-    private mapToBackEnd(lunch: Lunch): any {
+    private mapToBackEnd(lunch: UserLunch): any {
         return {
             LunchId: lunch.id
         };
@@ -123,7 +126,7 @@ export class LunchService {
                     ) {
                         dailyLunch.lunches.push({
                             date: startOfTheweek.toDate(),
-                            lunches: new Array<Lunch>()
+                            lunches: new Array<UserLunch>()
                         });
                     }
                     startOfTheweek.add(1, 'days');
@@ -135,7 +138,7 @@ export class LunchService {
         return weekly;
     }
 
-    private typeSorter(a: Lunch, b: Lunch): number {
+    private typeSorter(a: UserLunch, b: UserLunch): number {
         if (a.type < b.type) {
             return -1;
         }
@@ -145,7 +148,7 @@ export class LunchService {
         return 0;
     }
 
-    private selectableSorter(a: Lunch, b: Lunch): number {
+    private selectableSorter(a: UserLunch, b: UserLunch): number {
         if (a.isSelectable !== b.isSelectable) {
             if (a.isSelectable) {
                 return -1;
@@ -173,8 +176,8 @@ export class LunchService {
         return result;
     }
 
-    private mapToArrayOfLaunch(body: Array<any>): Array<Lunch> {
-        let result: Array<Lunch> = new Array<Lunch>();
+    private mapToArrayOfLaunch(body: Array<any>): Array<UserLunch> {
+        let result: Array<UserLunch> = new Array<UserLunch>();
         result = body.map(this.map);
         return result;
     }
@@ -189,8 +192,8 @@ export class LunchService {
         return result;
     }
 
-    private map(body: any): Lunch {
-        let result: Lunch;
+    private map(body: any): UserLunch {
+        let result: UserLunch;
         result = {
             id: body.id,
             userLunchId: null,

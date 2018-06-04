@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="jumbotron text-center">
+    <app-loader [isLoading]="isLoading"></app-loader>
+    <div [hidden]="isLoading">
+      <table class="table table-s">
+        <thead class="thead-dark">
+          <tr>
+            <td></td>
+            <td *ngFor="let date of dates">
+              {{ date | date:'MM/dd/yyyy' }}
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mealType of mealTypes">
+            <td>
+              {{ mealType.name }}
+            </td>
+            <td *ngFor="let date of dates">
+              <app-menu-tile [date]="date" [meals]="mealType.meals"></app-menu-tile>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
