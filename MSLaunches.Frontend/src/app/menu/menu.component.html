@@ -1,27 +1,30 @@
 <div class="container-fluid">
-  <div class="jumbotron text-center">
-    <app-loader [isLoading]="isLoading"></app-loader>
-    <div [hidden]="isLoading">
-      <table class="table table-s">
-        <thead class="thead-dark">
-          <tr>
-            <td></td>
-            <td *ngFor="let date of dates">
-              {{ date | date:'MM/dd/yyyy' }}
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let mealType of mealTypes">
-            <td>
-              {{ mealType.name }}
-            </td>
-            <td *ngFor="let date of dates">
-              <app-menu-tile [date]="date" [meals]="mealType.meals"></app-menu-tile>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <app-loader [isLoading]="isLoading"></app-loader>
+  <div [hidden]="isLoading">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <td></td>
+          <td *ngFor="let date of dates">
+            {{ date | date:'MM/dd/yyyy' }}
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let mealType of mealTypes">
+          <td>
+            {{ mealType.name }}
+          </td>
+          <td *ngFor="let date of dates">
+            <div *ngIf="lunchesLoaded | async">
+              <app-menu-tile [meals]="mealType.meals" [lunch]="getLunchByDateAndType(date,mealType)"></app-menu-tile>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <button type="button" class="btn btn-primary" (click)="Save()">Save</button>
     </div>
   </div>
 </div>

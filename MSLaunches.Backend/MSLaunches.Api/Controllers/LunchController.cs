@@ -51,6 +51,18 @@ namespace MSLunches.Api.Controllers
         }
 
         /// <summary>
+        /// Gets a list of lunchs
+        /// </summary>
+        /// <response code="200">A list of lunchs</response>
+        /// <return>A list of lunchs</return>
+        [HttpGet("BetweenDates/{dateFrom}/{DateTo}/")]
+        [ProducesResponseType(typeof(List<Lunch>), 200)]
+        public async Task<IActionResult> GetLunchesBetweenDates(DateTime dateFrom, DateTime dateTo)
+        {
+            return Ok(await _lunchService.GetLunchesBetweenDatesAsync(dateFrom, dateTo));
+        }
+
+        /// <summary>
         /// Gets a meal based on his id
         /// </summary>
         /// <param name="id" cref="Guid">Guid of the meal</param>
@@ -97,7 +109,7 @@ namespace MSLunches.Api.Controllers
                 _mapper.Map<LunchDto>(result));
         }
 
-        [HttpPost]
+        [HttpPost("batchsave")]
         [ValidateModel]
         [ProducesResponseType(typeof(List<LunchDto>), 200)]
         public async Task<IActionResult> BatchSave([FromBody]List<InputLunchDto> lunches)
@@ -105,7 +117,7 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunches == null) return BadRequest();
 
-            var result = await _lunchService.CreateLunchesAsync(
+            var result = await _lunchService.UpdateLunchesAsync(
                 _mapper.Map<List<Lunch>>(lunches));
 
             return Ok(_mapper.Map<List<LunchDto>>(result));
