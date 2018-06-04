@@ -60,7 +60,8 @@ export class LunchComponent implements OnInit {
         a => lunch.userLunchId = a,
         (err: any) => lunch.isSelected = false);
     } else {
-      this.lunchService.delete(lunch).subscribe({error: a => lunch.isSelected = true});
+      this.lunchService.delete(lunch)
+                       .subscribe({error: a => lunch.isSelected = true});
     }
   }
 

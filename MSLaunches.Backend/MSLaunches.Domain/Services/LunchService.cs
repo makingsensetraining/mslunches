@@ -55,14 +55,19 @@ namespace MSLunches.Domain.Services
             return lunch;
         }
 
-        public async Task<int> CreateLunchesAsync(List<Lunch> lunches)
+        /// <summary>
+        /// Delete the existing lunches in the week, to create the new ones.-
+        /// </summary>
+        /// <param name="lunches"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateLunchesAsync(List<Lunch> lunches)
         {
-            foreach (var lunch in lunches)
-            {
-                lunch.CreatedOn = DateTime.Now;
-                _dbContext.Lunches
-                          .Add(lunch);
-            }
+            var dateFrom = lunches.Min(x => x.Date).Date;
+            var dateTo = lunches.Max(x => x.Date);
+            var lunchesToRemove = _dbContext.Lunches.Where(x => x.Date >= dateFrom && x.Date <= dateTo);
+            _dbContext.Lunches.RemoveRange(lunchesToRemove);
+
+            await _dbContext.Lunches.AddRangeAsync(lunches);
             return await _dbContext.SaveChangesAsync();
         }
 
@@ -102,6 +107,15 @@ namespace MSLunches.Domain.Services
             return await _dbContext.Lunches
                                    .Where(x => daysInWeek.Contains(x.Date))
                                    .ToListAsync();
+        }
+
+        public async Task<List<Lunch>> GetLunchesBetweenDatesAsync(DateTime dateFrom, DateTime dateTo)
+        {
+            var contex = _dbContext.Lunches
+                .Where(x => x.Date >= dateFrom && x.Date <= dateTo)
+                .Include(a => a.Meal)
+                .ThenInclude(a => a.MealType);
+            return await contex.ToListAsync();
         }
 
         #endregion

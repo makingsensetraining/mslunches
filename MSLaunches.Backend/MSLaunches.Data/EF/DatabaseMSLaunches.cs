@@ -107,7 +107,8 @@
                     new Lunch {
                         Id = Guid.NewGuid(),
                         MealId = id5,
-                        Date = DateTime.Today.AddDays(1)
+                        Date = DateTime.Today.AddDays(1),
+                        CreatedBy = "System"
                     }
                 };
                 dbContext.Lunches.AddRange(lunches);

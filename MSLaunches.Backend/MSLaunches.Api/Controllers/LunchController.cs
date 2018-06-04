@@ -36,6 +36,18 @@ namespace MSLunches.Api.Controllers
         }
 
         /// <summary>
+        /// Gets a list of lunchs
+        /// </summary>
+        /// <response code="200">A list of lunchs</response>
+        /// <return>A list of lunchs</return>
+        [HttpGet("BetweenDates/{dateFrom}/{DateTo}/")]
+        [ProducesResponseType(typeof(List<Lunch>), 200)]
+        public async Task<IActionResult> GetLunchesBetweenDates(DateTime dateFrom, DateTime dateTo)
+        {
+            return Ok(await _lunchService.GetLunchesBetweenDatesAsync(dateFrom, dateTo));
+        }
+
+        /// <summary>
         /// Gets a meal based on his id
         /// </summary>
         /// <param name="id" cref="Guid">Guid of the meal</param>
@@ -80,7 +92,7 @@ namespace MSLunches.Api.Controllers
             return CreatedAtAction(nameof(Get), new { id = result.Id }, new LunchDto(result));
         }
 
-        [HttpPost]
+        [HttpPost("batchsave")]
         [ValidateModel]
         [ProducesResponseType(typeof(Lunch), 201)]
         public async Task<IActionResult> BatchSave([FromBody]List<InputLunchDto> lunches)
@@ -94,13 +106,13 @@ namespace MSLunches.Api.Controllers
                 var lunchToCreate = new Lunch
                 {
                     Date = lunch.Date,
-                    MealId = lunch.MealId
-
+                    MealId = lunch.MealId,
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = "Test" //TODO: Add user.
                 };
                 listLunches.Add(lunchToCreate);
             }
-
-            var result = await _lunchService.CreateLunchesAsync(listLunches);
+            var result = await _lunchService.UpdateLunchesAsync(listLunches);
 
             return Ok(result);
         }
@@ -158,38 +170,6 @@ namespace MSLunches.Api.Controllers
         public async Task<IActionResult> LunchesAvailables()
         {
             return Ok(await _lunchService.GetAllLunchesAvailableInWeek());
-        }
-
-
-        /// <summary>
-        /// Creates a new UserLunch
-        /// </summary>
-        /// <param name="lunches" cref="LunchDto">Lunch model</param>
-        /// <response code="204">Lunch created</response>
-        /// <response code="404">Lunch could not be created</response>
-        [HttpPost("LunchSelection")]
-        [ValidateModel]
-        public async Task<IActionResult> LunchSelection([FromBody]List<LunchDto> lunches)
-        {
-            if (lunches == null)
-            {
-                return BadRequest();
-            }
-            var lunchList = new List<Lunch>();
-            foreach (var lunchDto in lunches)
-            {
-                var lunch = new Lunch
-                {
-                    Id = Guid.NewGuid(),
-                    MealId = lunchDto.MealId,
-                    Date = lunchDto.Date,
-                    CreatedBy = "Test"
-                    // TODO: get createdBy from current meal
-                };
-                lunchList.Add(lunch);
-            }
-            var affectedRows = await _lunchService.CreateLunchesAsync(lunchList);
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
     }
 }

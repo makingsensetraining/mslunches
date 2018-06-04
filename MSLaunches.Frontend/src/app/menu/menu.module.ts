@@ -8,6 +8,7 @@ import { MenuRoutingModule } from './menu-routing.module';
 import { MenuComponent } from './menu.component';
 import { MenuService } from './menu.service';
 import { MenuTileComponent } from './menu-tile/menu-tile.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { MenuTileComponent } from './menu-tile/menu-tile.component';
     TranslateModule,
     CoreModule,
     SharedModule,
-    MenuRoutingModule
+    MenuRoutingModule,
+    FormsModule
   ],
   declarations: [
     MenuComponent,
