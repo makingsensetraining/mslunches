@@ -7,8 +7,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
-  quote: string;
   isLoading: boolean;
 
   constructor() { }

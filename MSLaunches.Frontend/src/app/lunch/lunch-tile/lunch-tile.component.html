@@ -3,11 +3,11 @@
         <span [hidden]="!canBeSelected" class="col-md-4 button col-xs-6" >
             <button
                 class="tile-button btn"
-                [disabled]="!lunch.isSelectable"
+                [disabled]="!lunch?.isSelectable"
                 [ngClass]="{
-                    'btn-success': lunch.isSelected && lunch.isSelectable,
-                    'btn-danger': !lunch.isSelected && lunch.isSelectable,
-                    'btn-secondary' : !lunch.isSelectable
+                    'btn-success': lunch?.isSelected && lunch?.isSelectable,
+                    'btn-danger': !lunch?.isSelected && lunch?.isSelectable,
+                    'btn-secondary' : !lunch?.isSelectable
                 }" (click)="select()">
             </button>
         </span>
@@ -16,14 +16,14 @@
             'col-md-8 col-xs-6': canBeSelected,
             'col': !canBeSelected
         }" class="description">
-            <span>{{lunch.description}}</span>
+            <span>{{lunch?.description}}</span>
             <span class="badge" [ngClass]="{
-                'badge-danger': lunch.type.toLowerCase() === 'calórico',
-                'badge-success' : lunch.type.toLowerCase() === 'vegetariano',
-                'badge-dark' : lunch.type.toLowerCase() === 'light',
-                'badge-warning' : lunch.type.toLowerCase() === 'postre',
-                'badge-secondary' : !['postre', 'light', 'vegetariano', 'calorico'].includes(lunch.type.toLowerCase())
-            }" translate>{{lunch.type}}</span>
+                'badge-danger': lunch?.type.toLowerCase() === 'calórico',
+                'badge-success' : lunch?.type.toLowerCase() === 'vegetariano',
+                'badge-dark' : lunch?.type.toLowerCase() === 'light',
+                'badge-warning' : lunch?.type.toLowerCase() === 'postre',
+                'badge-secondary' : !['postre', 'light', 'vegetariano', 'calorico'].includes(lunch?.type.toLowerCase())
+            }" translate>{{lunch?.type}}</span>
         </span>
     </div>
 </div>
