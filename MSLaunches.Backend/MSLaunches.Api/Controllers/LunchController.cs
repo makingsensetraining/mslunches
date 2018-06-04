@@ -112,7 +112,7 @@ namespace MSLunches.Api.Controllers
                 };
                 listLunches.Add(lunchToCreate);
             }
-            var result = await _lunchService.UpdateLunchesAsync(listLunches);
+            var result = await _lunchService.BatchSaveAsync(listLunches);
 
             return Ok(result);
         }
