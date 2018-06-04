@@ -1,5 +1,5 @@
-import { Meal } from "@app/core/Models/meal.model";
-import { MealType } from "@app/core/Models/meal-type.model";
+import { Meal } from '@app/core/Models/meal.model';
+import { MealType } from '@app/core/Models/meal-type.model';
 
 export interface MealGrouped {
     mealType: MealType;

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map, mapTo, mergeMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
-import { tryStatement } from 'babel-types';
 import { Meal } from '../core/Models/meal.model';
 import { MealType } from '../core/Models/meal-type.model';
 import * as moment from 'moment';
-import * as _ from 'lodash';
 import { Lunch } from '@app/core/Models/lunch.model';
 
 @Injectable()

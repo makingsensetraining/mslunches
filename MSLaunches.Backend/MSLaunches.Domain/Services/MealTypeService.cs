@@ -31,6 +31,11 @@ namespace MSLunches.Domain.Services
 
         #region Public Methods
 
+        /// <summary>
+        /// Gets a mealType by Id
+        /// </summary>
+        /// <param name="mealTypeId">Id of the mealType to be retrieved</param>
+        /// <returns>A <see cref="MealType"/> object if the mealType is found, otherwise null</returns>
         public async Task<MealType> GetByIdAsync(Guid mealTypeId)
         {
             return await _dbContext.MealTypes
