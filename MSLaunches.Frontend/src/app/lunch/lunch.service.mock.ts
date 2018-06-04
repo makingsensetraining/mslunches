@@ -1,8 +1,8 @@
-import { Lunch, WeeklyLunches } from '@app/lunch/lunch.model';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { WeekDay } from '@angular/common';
-import * as moment from 'moment';
+
+import { Lunch } from '@app/core/Models/lunch.model';
+import { WeeklyLunches } from '@app/core/Models/weekly-lunches.model';
 
 export class MockLunchService {
     private mockedLunches: Array<Lunch> = this.getMockedLunches(this.defaultDate());
@@ -53,7 +53,8 @@ export class MockLunchService {
                 isSelectable: true,
                 isSelected: true,
                 type: 'someType',
-                userLunchId: 'userid'
+                userLunchId: 'userid',
+                mealId: 'someMealId'
             },
             {
                 date: new Date(Date.now()),
@@ -62,7 +63,8 @@ export class MockLunchService {
                 isSelectable: false,
                 isSelected: false,
                 type: 'someType1',
-                userLunchId: 'userid'
+                userLunchId: 'userid',
+                mealId: 'someMealId'
             },
         ];
     }

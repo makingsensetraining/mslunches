@@ -1,10 +1,11 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, async } from '@angular/core/testing';
-import { LunchComponent } from '@app/lunch/lunch.component';
-import { LunchTileComponent } from '@app/lunch/lunch-tile/lunch-tile.component';
-import { MockLunchService } from '@app/lunch/lunch.service.mock';
-import { LunchService } from '@app/lunch/lunch.service';
-import { SharedModule } from '@app/shared';
+import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { of } from 'rxjs/observable/of';
+
+import { LunchTileComponent } from '@app/lunch/lunch-tile/lunch-tile.component';
+import { LunchComponent } from '@app/lunch/lunch.component';
+import { LunchService } from '@app/lunch/lunch.service';
+import { MockLunchService } from '@app/lunch/lunch.service.mock';
+import { SharedModule } from '@app/shared';
 
 describe('LunchComponent', () => {
     let fixture: ComponentFixture<LunchComponent>;

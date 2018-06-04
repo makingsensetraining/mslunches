@@ -1,19 +1,20 @@
-import { LunchTileComponent } from '@app/lunch/lunch-tile/lunch-tile.component';
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { CoreModule, AuthenticationService, MockAuthenticationService } from '@app/core';
-import { Lunch } from '@app/lunch/lunch.model';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-const mockedLunch: Lunch = {
+import { CoreModule } from '@app/core';
+import { UserLunch } from '@app/core/Models/user-lunch.model';
+import { LunchTileComponent } from '@app/lunch/lunch-tile/lunch-tile.component';
+
+const mockedLunch: UserLunch = {
     date: new Date(Date.now()),
-    description: 'desc',
     id: 'id',
     isSelectable: true,
     isSelected: false,
     type: 'sometype',
-    userLunchId: 'userid'
-}
+    userLunchId: 'userid',
+    description: 'desc'
+};
 
 describe('LunchTileComponent', () => {
     let component: LunchTileComponent;

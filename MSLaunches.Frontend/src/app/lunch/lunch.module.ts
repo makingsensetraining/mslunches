@@ -1,13 +1,16 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CoreModule } from '@app/core';
-import { SharedModule } from '@app/shared';
-import { LunchRoutingModule } from './lunch-routing.module';
-import { LunchComponent } from './lunch.component';
-import { LunchService } from './lunch.service';
+import { LunchRoutingModule } from '@app/lunch/lunch-routing.module';
 import { LunchTileComponent } from '@app/lunch/lunch-tile/lunch-tile.component';
+import { LunchComponent } from '@app/lunch/lunch.component';
+import { LunchService } from '@app/lunch/lunch.service';
+import { SharedModule } from '@app/shared';
+
+
+
 
 @NgModule({
   imports: [
