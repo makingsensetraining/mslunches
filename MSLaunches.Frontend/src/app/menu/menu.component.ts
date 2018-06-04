@@ -1,14 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { filter, finalize } from 'rxjs/operators';
-
 import { MenuService } from './menu.service';
-
-
 import { MealGrouped } from '@app/core/Models/meal-grouped.model';
 import { MealType } from '@app/core/Models/meal-type.model';
 import { Meal } from '@app/core/Models/meal.model';
-import * as moment from 'moment';
-import * as _ from 'lodash';
 
 @Component({
   selector: 'app-menu',
