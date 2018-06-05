@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MSLunches.Api.Controllers;
-using MSLunches.Api.Models;
+using MSLunches.Api.Models.Request;
+using MSLunches.Api.Models.Response;
+using MSLunches.Api.Tests.Controllers.MapperConfig;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
@@ -14,10 +17,12 @@ namespace MSLunches.Api.Tests.Controllers
     public class LunchControllerTests
     {
         private Mock<ILunchService> _lunchService;
+        private IMapper _mapper;
 
         public LunchControllerTests()
         {
             _lunchService = new Mock<ILunchService>();
+            _mapper = new TestMapperConfiguration().CreateMapper();
         }
 
         #region GetAll Tests
@@ -26,7 +31,7 @@ namespace MSLunches.Api.Tests.Controllers
         public async Task GetAll_ReturnsLunches()
         {
             // Arrange
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var listOfLunches = new List<Lunch>()
             {
@@ -36,13 +41,12 @@ namespace MSLunches.Api.Tests.Controllers
             };
 
             _lunchService.Setup(a => a.GetAsync()).ReturnsAsync(listOfLunches);
-
             // Act
             var result = await classUnderTest.GetAll();
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var resultList = Assert.IsType<List<Lunch>>(okResult.Value);
+            var resultList = Assert.IsAssignableFrom<IEnumerable<LunchDto>>(okResult.Value);
 
             foreach (var lunch in listOfLunches)
             {
@@ -63,7 +67,7 @@ namespace MSLunches.Api.Tests.Controllers
             var id = Guid.NewGuid();
             var lunch = GetSampleLunch(id);
 
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             _lunchService.Setup(a => a.GetByIdAsync(It.Is<Guid>(g => g == id)))
                 .ReturnsAsync(lunch);
 
@@ -72,7 +76,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var lunchResult = Assert.IsType<Lunch>(okResult.Value);
+            var lunchResult = Assert.IsType<LunchDto>(okResult.Value);
             Assert.True(Equals(lunchResult, lunch));
 
             _lunchService.Verify(a => a.GetByIdAsync(It.Is<Guid>(g => g == id)), Times.Once);
@@ -83,7 +87,7 @@ namespace MSLunches.Api.Tests.Controllers
         {
             // Arrange
             var id = Guid.NewGuid();
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             _lunchService.Setup(a => a.GetByIdAsync(It.Is<Guid>(g => g == id)))
                 .ReturnsAsync(null as Lunch);
 
@@ -103,7 +107,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Create_ReturnsCreated()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             var lunch = GetSampleLunch();
 
             var lunchDto = new InputLunchDto
@@ -131,7 +135,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Create_ReturnsBadRequest_WhenInputIsNull()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var result = await classUnderTest.Create(null);
 
@@ -146,7 +150,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Update_ReturnsNoContent()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var id = Guid.NewGuid();
             var lunch = GetSampleLunch(id);
@@ -158,7 +162,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             _lunchService.Setup(a => a.UpdateAsync(
                 It.Is<Lunch>(l =>
-                        l.MealId == lunchDto.MealId
+                    l.MealId == lunchDto.MealId
                     && l.Date == lunchDto.Date
                     && l.Id == id)))
                 .ReturnsAsync(lunch);
@@ -177,7 +181,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Update_ReturnsBadRequest_WhenDtoIsNull()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var result = await classUnderTest.Update(Guid.NewGuid(), null);
 
@@ -192,7 +196,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Delete_ReturnsNoContent()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             var id = Guid.NewGuid();
             _lunchService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
                 .ReturnsAsync(1);
@@ -207,7 +211,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Delete_ReturnsNotFound_WhenIdNotExist()
         {
-            var classUnderTest = new LunchController(_lunchService.Object);
+            var classUnderTest = new LunchController(_lunchService.Object, _mapper);
 
             var id = Guid.NewGuid();
             _lunchService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
@@ -231,6 +235,13 @@ namespace MSLunches.Api.Tests.Controllers
                 Id = id ?? Guid.NewGuid(),
                 MealId = Guid.NewGuid()
             };
+        }
+
+        private bool Equals(LunchDto lunch1, Lunch lunch2)
+        {
+            return lunch1.Id == lunch2.Id
+                && lunch1.MealId == lunch2.MealId
+                && lunch1.Date == lunch2.Date;
         }
 
         private bool Equals(Lunch lunch1, Lunch lunch2)

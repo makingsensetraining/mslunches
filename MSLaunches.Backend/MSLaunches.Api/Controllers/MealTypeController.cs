@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
-using MSLunches.Api.Models;
-using MSLunches.Data.Models;
+using MSLunches.Api.Models.Response;
 using MSLunches.Domain.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MSLunches.Api.Controllers
 {
@@ -16,10 +14,14 @@ namespace MSLunches.Api.Controllers
     public class MealTypeController : Controller
     {
         private readonly IMealTypeService _mealTypeService;
+        private readonly IMapper _mapper;
 
-        public MealTypeController(IMealTypeService mealTypeService)
+        public MealTypeController(
+            IMealTypeService mealTypeService,
+            IMapper mapper)
         {
             _mealTypeService = mealTypeService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -28,10 +30,11 @@ namespace MSLunches.Api.Controllers
         /// <response code="200">A list of mealTypes</response>
         /// <return>A list of mealTypes</return>
         [HttpGet]
-        [ProducesResponseType(typeof(List<MealType>), 200)]
+        [ProducesResponseType(typeof(List<MealTypeDto>), 200)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _mealTypeService.GetAsync());
+            return Ok(_mapper.Map<List<MealTypeDto>>(
+                await _mealTypeService.GetAsync()));
         }
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace MSLunches.Api.Controllers
         /// <return>A mealTypes</return>
         [HttpGet("{id}")]
         [ValidateModel]
-        [ProducesResponseType(typeof(MealType), 200)]
+        [ProducesResponseType(typeof(MealTypeDto), 200)]
         public async Task<IActionResult> Get(int id)
         {
             var mealType = await _mealTypeService.GetByIdAsync(id);
@@ -52,7 +55,7 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(mealType);
+            return Ok(_mapper.Map<MealTypeDto>(mealType));
         }
     }
 }

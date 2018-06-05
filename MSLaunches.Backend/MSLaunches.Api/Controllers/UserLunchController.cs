@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
-using MSLunches.Api.Models;
+using MSLunches.Api.Models.Request;
+using MSLunches.Api.Models.Response;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
@@ -11,14 +13,18 @@ namespace MSLunches.Api.Controllers
 {
     [Route("api/users/{userId}/lunches")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorDto), 500)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class UserLunchController : Controller
     {
         private readonly IUserLunchService _userLunchService;
+        private readonly IMapper _mapper;
 
-        public UserLunchController(IUserLunchService userLunchService)
+        public UserLunchController(
+            IUserLunchService userLunchService,
+            IMapper mapper)
         {
             _userLunchService = userLunchService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -27,10 +33,11 @@ namespace MSLunches.Api.Controllers
         /// <response code="200">A list of lunches selected by user</response>
         /// <return>A list of UserLunch</return>
         [HttpGet]
-        [ProducesResponseType(typeof(List<UserLunch>), 200)]
+        [ProducesResponseType(typeof(List<UserLunchDto>), 200)]
         public async Task<IActionResult> GetAll(string userId)
         {
-            return Ok(await _userLunchService.GetAsync(userId));
+            return Ok(_mapper.Map<List<UserLunchDto>>(
+                await _userLunchService.GetAsync(userId)));
         }
 
         /// <summary>
@@ -42,7 +49,7 @@ namespace MSLunches.Api.Controllers
         /// <return>A lunchs</return>
         [HttpGet("{id}")]
         [ValidateModel]
-        [ProducesResponseType(typeof(UserLunch), 200)]
+        [ProducesResponseType(typeof(UserLunchDto), 200)]
         public async Task<IActionResult> Get(Guid id)
         {
             var lunch = await _userLunchService.GetByIdAsync(id);
@@ -51,7 +58,7 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(lunch);
+            return Ok(_mapper.Map<UserLunchDto>(lunch));
         }
 
         /// <summary>
@@ -63,30 +70,24 @@ namespace MSLunches.Api.Controllers
         /// <response code="422">UserLunch could not be created - Already exists</response>
         [HttpPost]
         [ValidateModel]
+        [ProducesResponseType(typeof(UserLunchDto), 204)]
         public async Task<IActionResult> Create(
             [FromRoute]string userId,
             [FromBody]InputUserLunchDto userLunch)
         {
             if (userLunch == null) return BadRequest();
 
-            var userLunchToCreate = new UserLunch
-            {
-                LunchId = userLunch.LunchId,
-                UserId = userId,
-                Approved = userLunch.Approved,
-                CreatedBy = "Test" //TODO: Add user.-
-            };
-
             var existingUserLunch = await _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
             if (existingUserLunch != null)
-                return StatusCode(422, new ErrorDto("User Lunch already exists"));
+                return StatusCode(422, new ErrorResponse("User Lunch already exists"));
 
-            var result = await _userLunchService.CreateAsync(userLunchToCreate);
+            var result = await _userLunchService.CreateAsync(
+                _mapper.Map<UserLunch>(userLunch));
 
             return CreatedAtAction(
                 nameof(Get),
                 new { userId, id = result.Id },
-                new UserLunchDto(result));
+                _mapper.Map<UserLunchDto>(result));
         }
 
         ///<summary>
@@ -107,16 +108,8 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (userLunch == null) return BadRequest();
 
-            var userLunchToUpdate = new UserLunch
-            {
-                Id = id,
-                LunchId = userLunch.LunchId,
-                UserId = userId,
-                Approved = userLunch.Approved,
-                UpdatedBy = "Test" //TODO: Add user.
-            };
-
-            var result = await _userLunchService.UpdateAsync(userLunchToUpdate);
+            var result = await _userLunchService.UpdateAsync(
+                _mapper.Map<UserLunch>(userLunch));
 
             if (result == null) return NotFound();
 

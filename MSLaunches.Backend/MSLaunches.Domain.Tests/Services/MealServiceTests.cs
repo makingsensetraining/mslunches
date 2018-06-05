@@ -153,6 +153,10 @@ namespace MSLunches.Domain.Tests.Services
             Assert.Equal(mealModified.Name, result.Name);
         }
 
+        #endregion
+
+        #region UpdateAsync Tests
+
         [Fact]
         public async void UpdateAsync_ReturnsNull_WhenIdNotExist()
         {
