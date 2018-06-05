@@ -129,7 +129,9 @@ namespace MSLunches.Api.Controllers
             lunch.Id = id;
 
             var result = await _lunchService.UpdateAsync(lunch);
-            
+
+            if (result == null) return NotFound();
+
             return NoContent();
         }
 
@@ -144,7 +146,7 @@ namespace MSLunches.Api.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var affectedRows = await _lunchService.DeleteByIdAsync(id);
-            return NoContent();
+            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
 
         #endregion

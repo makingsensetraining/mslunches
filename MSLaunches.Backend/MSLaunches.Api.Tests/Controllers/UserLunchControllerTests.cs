@@ -189,21 +189,6 @@ namespace MSLunches.Api.Tests.Controllers
             _userLunchService.Verify(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)), Times.Once);
         }
 
-        [Fact]
-        public async Task Delete_ReturnsNotFound_WhenIdNotExist()
-        {
-            var id = Guid.NewGuid();
-            var classUnderTest = new UserLunchController(_userLunchService.Object, _mapper);
-
-            _userLunchService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
-                .ReturnsAsync(0);
-
-            var result = await classUnderTest.Delete(id);
-
-            Assert.IsType<NotFoundResult>(result);
-            _userLunchService.Verify(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)), Times.Once);
-        }
-
         #endregion
 
         #region Private methods

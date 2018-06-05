@@ -107,7 +107,7 @@ namespace MSLunches.Domain.Services
         {
             var userLunch = await _dbContext.UserLunches.FindAsync(userLunchId);
             if (userLunch == null)
-                throw new NotFoundException($"User Lunch with id {userLunch.Id} does not exist");
+                throw new NotFoundException($"User Lunch with id {userLunchId} does not exist");
 
             _dbContext.UserLunches.Remove(userLunch);
             return await _dbContext.SaveChangesAsync();

@@ -134,10 +134,6 @@ namespace MSLunches.Api.Tests.Controllers
             Assert.Equal(expected.TypeId, meal.TypeId);
         }
 
-        #endregion
-
-        #region Update Test
-
         [Fact]
         public async Task Create_ReturnsBadRequest_WhenMealIsNull()
         {
@@ -150,6 +146,11 @@ namespace MSLunches.Api.Tests.Controllers
             // Assert
             Assert.IsType<BadRequestResult>(res);
         }
+
+
+        #endregion
+
+        #region Update Test
 
         [Fact]
         public async Task Update_ReturnsNoContent()
