@@ -1,18 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
-using MSLunches.Api.Models;
+using MSLunches.Api.Models.Response;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MSLunches.Api.Controllers
 {
     [Route("api/mealtypes")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorDto), 500)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class MealTypeController : Controller
     {
         private readonly IMealTypeService _mealTypeService;

@@ -43,6 +43,7 @@ namespace MSLunches.Domain.Tests.Services
 
         #region GetById Tests
 
+        [Fact]
         public async Task GetById_RetunsAMealType()
         {
             var mealType = GetSampleMealType(1);
