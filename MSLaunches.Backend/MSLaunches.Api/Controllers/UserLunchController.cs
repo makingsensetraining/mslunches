@@ -27,6 +27,8 @@ namespace MSLunches.Api.Controllers
             _mapper = mapper;
         }
 
+        #region Query endpoints
+
         /// <summary>
         /// Gets a list of lanches selections by users
         /// </summary>
@@ -61,6 +63,10 @@ namespace MSLunches.Api.Controllers
             return Ok(_mapper.Map<UserLunchDto>(lunch));
         }
 
+        #endregion
+
+        #region Command endpoints
+
         /// <summary>
         /// Creates a new meal selection for user.
         /// </summary>
@@ -76,10 +82,6 @@ namespace MSLunches.Api.Controllers
             [FromBody]InputUserLunchDto userLunch)
         {
             if (userLunch == null) return BadRequest();
-
-            var existingUserLunch = await _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
-            if (existingUserLunch != null)
-                return StatusCode(422, new ErrorResponse("User Lunch already exists"));
 
             var result = await _userLunchService.CreateAsync(
                 _mapper.Map<UserLunch>(userLunch));
@@ -108,8 +110,11 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (userLunch == null) return BadRequest();
 
-            var result = await _userLunchService.UpdateAsync(
-                _mapper.Map<UserLunch>(userLunch));
+            var lunch = _mapper.Map<UserLunch>(userLunch);
+            lunch.Id = id;
+            lunch.UserId = userId;
+
+            var result = await _userLunchService.UpdateAsync(lunch);
 
             if (result == null) return NotFound();
 
@@ -127,8 +132,9 @@ namespace MSLunches.Api.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var affectedRows = await _userLunchService.DeleteByIdAsync(id);
-
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
+            return NoContent();
         }
+        
+        #endregion
     }
 }

@@ -78,7 +78,7 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Creates a new Lunch
         /// </summary>
-        /// <param name="lunch" cref="LunchRequest">User data</param>
+        /// <param name="lunch" cref="InputLunchDto">User data</param>
         /// <response code="201">User created</response>
         [HttpPost]
         [ValidateModel]
@@ -146,7 +146,6 @@ namespace MSLunches.Api.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var affectedRows = await _lunchService.DeleteByIdAsync(id);
-
             return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
 

@@ -63,7 +63,7 @@ namespace MSLunches.Api.Tests.Controllers
 
         #endregion
 
-        #region Get Tests
+        #region Get tests
 
         [Fact]
         public async Task Get_ReturnsOk()
@@ -87,7 +87,7 @@ namespace MSLunches.Api.Tests.Controllers
         }
 
         [Fact]
-        public async void Get_ReturnsNotFound_WhenMealNotExists()
+        public async Task Get_ReturnsNotFound_WhenMealNotExists()
         {
             // Arrange
             var controller = new MealController(_mealService.Object, _mapper);
@@ -134,10 +134,6 @@ namespace MSLunches.Api.Tests.Controllers
             Assert.Equal(expected.TypeId, meal.TypeId);
         }
 
-        #endregion
-
-        #region Update Test
-
         [Fact]
         public async Task Create_ReturnsBadRequest_WhenMealIsNull()
         {
@@ -150,6 +146,7 @@ namespace MSLunches.Api.Tests.Controllers
             // Assert
             Assert.IsType<BadRequestResult>(res);
         }
+
 
         #endregion
 

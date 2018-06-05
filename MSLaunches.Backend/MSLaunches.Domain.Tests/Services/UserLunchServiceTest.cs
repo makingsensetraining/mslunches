@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSLunches.Data.EF;
 using MSLunches.Data.Models;
+using MSLunches.Domain.Exceptions;
 using MSLunches.Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -103,7 +104,15 @@ namespace MSLunches.Domain.Tests.Services
         [Fact]
         public async void CreateAsync_ReturnsCreatedLunch()
         {
-            var lunch = GetUserLunch();
+            var lunchId = Guid.NewGuid();
+
+            using (var context = new MSLunchesContext(GetDbOptions("CreateAsync_ReturnsCreatedLunch")))
+            {
+                context.Lunches.Add(GetLunch(lunchId));
+                context.SaveChanges();
+            }
+
+            var lunch = GetUserLunch(lunchId: lunchId);
             UserLunch result = null;
             using (var context = new MSLunchesContext(GetDbOptions("CreateAsync_ReturnsCreatedLunch")))
             {
@@ -126,18 +135,20 @@ namespace MSLunches.Domain.Tests.Services
         [Fact]
         public async void UpdateAsync_ReturnsLunchModified_WhenIdExist()
         {
+            var lunchId = Guid.NewGuid();
             var userLunch = GetUserLunch();
             var userLunchModified = new UserLunch
             {
                 Id = userLunch.Id,
                 Approved = !userLunch.Approved,
-                LunchId = Guid.NewGuid(),
+                LunchId = lunchId,
                 UserId = "newUserId1",
                 UpdatedBy = "updater"
             };
 
             using (var context = new MSLunchesContext(GetDbOptions("UpdateAsync_ReturnsLunchModified_WhenIdExist")))
             {
+                await context.Lunches.AddAsync(GetLunch(lunchId));
                 await context.UserLunches.AddAsync(userLunch);
                 await context.SaveChangesAsync();
             }
@@ -163,16 +174,23 @@ namespace MSLunches.Domain.Tests.Services
         public async void UpdateAsync_ReturnsNull_WhenIdNotExist()
         {
             var lunchModified = GetUserLunch();
-
-            UserLunch result = null;
+            Exception exception = null;
 
             using (var context = new MSLunchesContext(GetDbOptions("UpdateAsync_ReturnsNull_WhenIdNotExist")))
             {
                 var classUnderTest = new UserLunchService(context);
-                result = await classUnderTest.UpdateAsync(lunchModified);
+                try
+                {
+                    await classUnderTest.UpdateAsync(lunchModified);
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
             }
 
-            Assert.Null(result);
+            var notFoundException = Assert.IsType<NotFoundException>(exception);
+            Assert.False(string.IsNullOrEmpty(notFoundException.Message));
         }
 
         #endregion
@@ -202,17 +220,25 @@ namespace MSLunches.Domain.Tests.Services
         }
 
         [Fact]
-        public async Task DeleteByIdAsync_ReturnsZero_WhenIdNotExist()
+        public async Task DeleteByIdAsync_ThrowsNotFoundException_WhenIdNotExist()
         {
-            var result = 0;
+            Exception exception = null;
 
-            using (var context = new MSLunchesContext(GetDbOptions("DeleteByIdAsync_ReturnsCountOfChanges_WhenIdExist")))
+            using (var context = new MSLunchesContext(GetDbOptions("DeleteByIdAsync_ThrowsNotFoundException_WhenIdNotExist")))
             {
                 var classUnderTest = new UserLunchService(context);
-                result = await classUnderTest.DeleteByIdAsync(Guid.NewGuid());
+                try
+                {
+                    await classUnderTest.DeleteByIdAsync(Guid.NewGuid());
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
             }
 
-            Assert.True(result == 0);
+            var result = Assert.IsType<NotFoundException>(exception);
+            Assert.False(string.IsNullOrEmpty(result.Message));
         }
 
         #endregion
@@ -234,6 +260,18 @@ namespace MSLunches.Domain.Tests.Services
                 Id = id ?? Guid.NewGuid(),
                 LunchId = lunchId ?? Guid.NewGuid(),
                 UserId = string.IsNullOrEmpty(userId) ? "someUser" : userId,
+            };
+        }
+
+        private Lunch GetLunch(Guid? id = null)
+        {
+            return new Lunch
+            {
+                CreatedBy = "createor",
+                CreatedOn = DateTime.Now,
+                Date = DateTime.Today.AddDays(1),
+                Id = id ?? Guid.NewGuid(),
+                MealId = Guid.NewGuid()
             };
         }
 

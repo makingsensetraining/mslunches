@@ -105,11 +105,6 @@ namespace MSLunches.Api.Tests.Controllers
 
             var classUnderTest = new UserLunchController(_userLunchService.Object, _mapper);
 
-            _userLunchService.Setup(a => a.GetUserLunchByUserAndLunchIdAsync(
-                It.Is<string>(u => u == userId),
-                It.Is<Guid>(g => g == userLunch.LunchId)))
-                .ReturnsAsync(null as UserLunch);
-
             _userLunchService.Setup(a => a.CreateAsync(It.Is<UserLunch>(u => Equals(u, userLunchDto))))
                 .ReturnsAsync(userLunch);
 
@@ -118,41 +113,8 @@ namespace MSLunches.Api.Tests.Controllers
             var okresult = Assert.IsType<CreatedAtActionResult>(result);
             var createdLunch = Assert.IsType<UserLunchDto>(okresult.Value);
             Assert.True(Equals(createdLunch, userLunchDto));
-            _userLunchService.Verify(a => a.GetUserLunchByUserAndLunchIdAsync(
-                It.Is<string>(u => u == userId),
-                It.Is<Guid>(g => g == userLunch.LunchId)), Times.Once);
 
             _userLunchService.Verify(a => a.CreateAsync(It.Is<UserLunch>(u => Equals(u, userLunchDto))), Times.Once);
-        }
-
-        [Fact]
-        public async Task Get_Returns422_WhenUserLunchExist()
-        {
-            var classUnderTest = new UserLunchController(_userLunchService.Object, _mapper);
-            var userId = "userid1234";
-            var userLunchDto = new InputUserLunchDto
-            {
-                Approved = true,
-                LunchId = Guid.NewGuid(),
-                UserId = userId
-            };
-            var userLunch = GetSampleUserLunch(lunchId: userLunchDto.LunchId, userId: userId);
-
-            _userLunchService.Setup(a => a.GetUserLunchByUserAndLunchIdAsync(
-                It.Is<string>(u => u == userId),
-                It.Is<Guid>(g => g == userLunch.LunchId)))
-                .ReturnsAsync(userLunch);
-
-            var result = await classUnderTest.Create(userId, userLunchDto);
-
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            Assert.Equal(422, objectResult.StatusCode);
-
-            _userLunchService.Verify(a => a.GetUserLunchByUserAndLunchIdAsync(
-                It.Is<string>(u => u == userId),
-                It.Is<Guid>(g => g == userLunchDto.LunchId)), Times.Once);
-
-            _userLunchService.Verify(a => a.CreateAsync(It.IsAny<UserLunch>()), Times.Never);
         }
 
         #endregion
@@ -224,21 +186,6 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.Delete(id);
 
             Assert.IsType<NoContentResult>(result);
-            _userLunchService.Verify(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)), Times.Once);
-        }
-
-        [Fact]
-        public async Task Delete_ReturnsNotFound_WhenIdNotExist()
-        {
-            var id = Guid.NewGuid();
-            var classUnderTest = new UserLunchController(_userLunchService.Object, _mapper);
-
-            _userLunchService.Setup(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)))
-                .ReturnsAsync(0);
-
-            var result = await classUnderTest.Delete(id);
-
-            Assert.IsType<NotFoundResult>(result);
             _userLunchService.Verify(a => a.DeleteByIdAsync(It.Is<Guid>(g => g == id)), Times.Once);
         }
 

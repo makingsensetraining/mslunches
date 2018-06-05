@@ -41,13 +41,13 @@ namespace MSLunches.Api.Middleware
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
             if (exception is UnauthorizedException) code = HttpStatusCode.Unauthorized;
-            // else if (exception is SomeOtherException) code = HttpStatusCode.RequestTimeout;
-            // else if (exception is SomeOtherException2) code = HttpStatusCode.BadRequest;
+            else if (exception is ValidationException) code = (HttpStatusCode)422;
+            else if (exception is NotFoundException) code = HttpStatusCode.NotFound;
 
             var result = JsonConvert.SerializeObject(new ErrorResponse(exception.Message));
             context.Response.ContentType = "application/json";
