@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.authenticationService);
     this.authenticationService.setUpTimeout();
     this.authenticationService.hashHandled.subscribe(() => {
       if (this.authenticationService.isAuthenticated()) {

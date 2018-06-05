@@ -1,12 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { filter, finalize } from 'rxjs/operators';
+import { Component, Input, OnInit } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 
-import { LunchService } from './lunch.service';
-import { UserLunch } from '@app/core/Models/user-lunch.model';
-import { DailyTypedLunches } from '@app/core/Models/daily-typed-lunches.model';
-import { WeeklyLunches } from '@app/core/Models/weekly-lunches.model';
 import * as moment from 'moment';
-import * as _ from 'lodash';
+
+import { DailyTypedLunches } from '@app/core/Models/daily-typed-lunches.model';
+import { UserLunch } from '@app/core/Models/user-lunch.model';
+import { WeeklyLunches } from '@app/core/Models/weekly-lunches.model';
+import { LunchService } from '@app/lunch/lunch.service';
 
 @Component({
   selector: 'app-lunch',

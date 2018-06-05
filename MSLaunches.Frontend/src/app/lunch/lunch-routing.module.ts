@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { Route, extract } from '@app/core';
-import { LunchComponent } from './lunch.component';
+import { LunchComponent } from '@app/lunch/lunch.component';
+
 
 const routes: Routes = [
   Route.withShell([

@@ -1,15 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map, mapTo, mergeMap, catchError } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs/observable/of';
-import { tryStatement } from 'babel-types';
-import { UserLunch } from '../core/Models/user-lunch.model';
-import { DailyTypedLunches } from '../core/Models/daily-typed-lunches.model';
-import { WeeklyLunches } from '../core/Models/weekly-lunches.model';
-import { UserSelection } from '../core/Models/user-selection';
-import * as moment from 'moment';
+import { map, mergeMap } from 'rxjs/operators';
 import * as _ from 'lodash';
+import * as moment from 'moment';
+
+import { DailyTypedLunches } from '@app/core/Models/daily-typed-lunches.model';
+import { UserLunch } from '@app/core/Models/user-lunch.model';
+import { UserSelection } from '@app/core/Models/user-selection.model';
+import { WeeklyLunches } from '@app/core/Models/weekly-lunches.model';
+
 
 @Injectable()
 export class LunchService {

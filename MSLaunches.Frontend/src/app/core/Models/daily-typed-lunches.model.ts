@@ -1,4 +1,4 @@
-import { UserLunch } from "@app/core/Models/user-lunch.model";
+import { UserLunch } from '@app/core/Models/user-lunch.model';
 
 export interface DailyTypedLunches {
     date: Date;

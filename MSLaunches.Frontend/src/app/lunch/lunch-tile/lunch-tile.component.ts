@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SelectorContext } from '@angular/compiler';
-import { UserLunch } from '@app/core/Models/user-lunch.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+import { UserLunch } from '@app/core/Models/user-lunch.model';
 
 @Component({
     selector: 'app-lunch-tile',
