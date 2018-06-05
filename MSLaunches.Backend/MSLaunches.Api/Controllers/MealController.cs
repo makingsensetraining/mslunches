@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models.Request;
 using MSLunches.Api.Models.Response;
@@ -6,21 +7,24 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
 {
     [Route("api/meals")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorDto), 500)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class MealController : Controller
     {
         private readonly IMealService _mealService;
+        private readonly IMapper _mapper;
 
-        public MealController(IMealService mealService)
+        public MealController(
+            IMealService mealService,
+            IMapper mapper)
         {
             _mealService = mealService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -32,8 +36,7 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(List<MealDto>), 200)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok((await _mealService.GetAsync())
-                .Select(meal => new MealDto(meal)));
+            return Ok(_mapper.Map<List<MealDto>>(await _mealService.GetAsync()));
         }
 
         /// <summary>
@@ -54,7 +57,7 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(new MealDto(meal));
+            return Ok(_mapper.Map<MealDto>(meal));
         }
 
         /// <summary>
@@ -70,18 +73,13 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
 
-            var mealToCreate = new Meal
-            {
-                Name = meal.Name,
-                TypeId = meal.TypeId
-            };
-
-            var result = await _mealService.CreateAsync(mealToCreate);
+            var result = await _mealService.CreateAsync(
+                _mapper.Map<Meal>(meal));
 
             return CreatedAtAction(
-                nameof(Get), 
-                new { id = result.Id }, 
-                new MealDto(result));
+                nameof(Get),
+                new { id = result.Id },
+                _mapper.Map<MealDto>(result));
         }
 
         ///<summary>
@@ -98,15 +96,8 @@ namespace MSLunches.Api.Controllers
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
 
-            var mealToUpdate = new Meal
-            {
-                Id = id,
-                Name = meal.Name,
-                TypeId = meal.TypeId,
-                UpdatedBy = "Test" //TODO: Add user.
-            };
-
-            var result = await _mealService.UpdateAsync(mealToUpdate);
+            var result = await _mealService.UpdateAsync(
+                _mapper.Map<Meal>(meal));
 
             if (result == null) return NotFound();
 

@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models.Response;
-using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
@@ -15,10 +14,14 @@ namespace MSLunches.Api.Controllers
     public class MealTypeController : Controller
     {
         private readonly IMealTypeService _mealTypeService;
+        private readonly IMapper _mapper;
 
-        public MealTypeController(IMealTypeService mealTypeService)
+        public MealTypeController(
+            IMealTypeService mealTypeService,
+            IMapper mapper)
         {
             _mealTypeService = mealTypeService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -30,7 +33,8 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(List<MealTypeDto>), 200)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok((await _mealTypeService.GetAsync()).Select(a => new MealTypeDto(a)));
+            return Ok(_mapper.Map<List<MealTypeDto>>(
+                await _mealTypeService.GetAsync()));
         }
 
         /// <summary>
@@ -51,7 +55,7 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(new MealTypeDto(mealType));
+            return Ok(_mapper.Map<MealTypeDto>(mealType));
         }
     }
 }

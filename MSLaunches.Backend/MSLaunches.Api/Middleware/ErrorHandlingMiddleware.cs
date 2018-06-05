@@ -49,7 +49,7 @@ namespace MSLunches.Api.Middleware
             // else if (exception is SomeOtherException) code = HttpStatusCode.RequestTimeout;
             // else if (exception is SomeOtherException2) code = HttpStatusCode.BadRequest;
 
-            var result = JsonConvert.SerializeObject(new ErrorDto(exception.Message));
+            var result = JsonConvert.SerializeObject(new ErrorResponse(exception.Message));
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

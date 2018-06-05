@@ -1,22 +1,9 @@
-﻿using MSLunches.Data.Models;
-using System;
+﻿using System;
 
 namespace MSLunches.Api.Models.Response
 {
     public class UserLunchDto
     {
-        public UserLunchDto() { }
-
-        public UserLunchDto(UserLunch userLunch)
-        {
-            Id = userLunch.Id;
-            CreatedOn = userLunch.CreatedOn;
-            UpdatedOn = userLunch.UpdatedOn;
-            LunchId = userLunch.LunchId;
-            UserId = userLunch.UserId;
-            Approved = userLunch.Approved;
-        }
-
         /// <summary>
         /// User Lunch Identifier
         /// </summary>

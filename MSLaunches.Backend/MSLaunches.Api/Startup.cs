@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MSLunches.Api.Authorization;
 using MSLunches.Api.Filters;
+using MSLunches.Api.Mapper;
 using MSLunches.Api.Middleware;
 using MSLunches.Data.EF;
 using MSLunches.Domain.Services;
@@ -41,10 +43,9 @@ namespace MSLunches.Api
             services.AddDbContext<MSLunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
 
             // Add framework services.
-            services.AddMvc()
-                .AddJsonOptions(
-                    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                );
+            services.AddMvc().AddJsonOptions(
+                options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             IAuthorizationPolicies authorizationPolicies = new AuthorizationPolicies();
             services.AddSingleton(authorizationPolicies);
@@ -73,7 +74,7 @@ namespace MSLunches.Api
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
-                });
+            });
 
             //Creates the swagger json based on the documented xml/attributes of the endpoints
             services.AddSwaggerGen(c =>
@@ -96,6 +97,14 @@ namespace MSLunches.Api
             services.AddTransient<IUserLunchService>(sp => new UserLunchService(sp.GetRequiredService<MSLunchesContext>()));
             services.AddTransient<ILunchService>(sp => new LunchService(sp.GetRequiredService<MSLunchesContext>()));
             services.AddTransient<IMealTypeService>(sp => new MealTypeService(sp.GetRequiredService<MSLunchesContext>()));
+
+            // Add automapper
+            services.AddAutoMapper(new[] {
+                typeof(LunchProfile),
+                typeof(MealProfile),
+                typeof(UserLunchProfile),
+                typeof(MealTypeProfile)
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,7 +118,7 @@ namespace MSLunches.Api
 
             //Enable swagger midleware
             app.UseSwagger();
-            
+
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
@@ -117,7 +126,7 @@ namespace MSLunches.Api
                 c.RoutePrefix = string.Empty;
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiCoreMSLunches V1");
             });
-            
+
             //TODO : Add a list of supported origins on a config
             app.UseCors("AllowAllOrigins");
             app.UseAuthentication();
@@ -131,9 +140,9 @@ namespace MSLunches.Api
         /// <returns></returns>
         private static Info GetSwaggerDoc()
         {
-            return new Info 
-            { 
-                Title = "WebApiCoreMSLunches", 
+            return new Info
+            {
+                Title = "WebApiCoreMSLunches",
                 Version = "v1",
                 Description = "Web Api MSLunches for MS",
                 TermsOfService = "https://github.com/MakingSense/WebApiCore-MSLunches",

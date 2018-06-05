@@ -1,21 +1,9 @@
-﻿using MSLunches.Data.Models;
-using System;
+﻿using System;
 
 namespace MSLunches.Api.Models.Response
 {
     public class MealDto
     {
-        public MealDto() { }
-
-        public MealDto(Meal meal)
-        {
-            Id = meal.Id;
-            CreatedOn = meal.CreatedOn;
-            UpdatedOn = meal.UpdatedOn;
-            Name = meal.Name;
-            TypeId = meal.TypeId;
-        }
-
         /// <summary>
         /// Meal Identifier
         /// </summary>
