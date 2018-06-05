@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MSLunches.Api.Controllers;
+using MSLunches.Api.Models.Response;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.GetAll();
 
             var okresult = Assert.IsType<OkObjectResult>(result);
-            var resultList = Assert.IsAssignableFrom<IEnumerable<MealType>>(okresult.Value);
+            var resultList = Assert.IsAssignableFrom<IEnumerable<MealTypeDto>>(okresult.Value);
 
             foreach (var mealType in resultList)
             {
@@ -60,7 +61,7 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.Get(mealType.Id);
 
             var okresult = Assert.IsType<OkObjectResult>(result);
-            var resultEntity = Assert.IsType<MealType>(okresult.Value);
+            var resultEntity = Assert.IsType<MealTypeDto>(okresult.Value);
 
             Assert.Equal(mealType.Id, resultEntity.Id);
 
