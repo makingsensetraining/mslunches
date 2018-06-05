@@ -63,6 +63,18 @@ namespace MSLunches.Api.Controllers
         }
 
         /// <summary>
+        /// Gets a list of lunchs
+        /// </summary>
+        /// <response code="200">A list of lunchs</response>
+        /// <return>A list of lunchs</return>
+        [HttpGet("BetweenDates/{dateFrom}/{DateTo}/")]
+        [ProducesResponseType(typeof(List<Lunch>), 200)]
+        public async Task<IActionResult> GetLunchesBetweenDates(DateTime dateFrom, DateTime dateTo)
+        {
+            return Ok(await _lunchService.GetLunchesBetweenDatesAsync(dateFrom, dateTo));
+        }
+
+        /// <summary>
         /// Gets a meal based on his id
         /// </summary>
         /// <param name="id" cref="Guid">Guid of the meal</param>
@@ -161,6 +173,19 @@ namespace MSLunches.Api.Controllers
             return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
 
+<<<<<<< HEAD
         #endregion
+=======
+        /// <summary>
+        /// A list of available lunches by week
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("LunchesAvailables")]
+        [ProducesResponseType(typeof(List<Lunch>), 200)]
+        public async Task<IActionResult> LunchesAvailables()
+        {
+            return Ok(await _lunchService.GetAllLunchesAvailableInWeek());
+        }
+>>>>>>> 01735b5b3fa17d603a74c9195c8827641f4b0bc3
     }
 }

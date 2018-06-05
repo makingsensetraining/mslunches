@@ -1,9 +1,17 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { filter, finalize } from 'rxjs/operators';
+import { filter, finalize, mergeMap } from 'rxjs/operators';
+
 import { MenuService } from './menu.service';
+
 import { MealGrouped } from '@app/core/Models/meal-grouped.model';
 import { MealType } from '@app/core/Models/meal-type.model';
 import { Meal } from '@app/core/Models/meal.model';
+import * as moment from 'moment';
+import * as _ from 'lodash';
+import { Lunch } from '@app/core/Models/lunch.model';
+import { LunchComponent } from '@app/lunch/lunch.component';
+import { LunchService } from '@app/lunch/lunch.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-menu',
