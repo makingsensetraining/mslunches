@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SelectorContext } from '@angular/compiler';
-import { Lunch } from '@app/lunch/lunch.model';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+
+import { UserLunch } from '@app/core/Models/user-lunch.model';
 
 @Component({
     selector: 'app-lunch-tile',
@@ -9,11 +9,11 @@ import { Lunch } from '@app/lunch/lunch.model';
 })
 
 export class LunchTileComponent implements OnInit {
-    @Input() lunch: Lunch;
-    @Input() canBeSelected: Lunch;
-    @Output() lunchSelected: EventEmitter<Lunch>;
+    @Input() lunch: UserLunch;
+    @Input() canBeSelected: UserLunch;
+    @Output() lunchSelected: EventEmitter<UserLunch>;
     constructor() {
-        this.lunchSelected = new EventEmitter<Lunch>();
+        this.lunchSelected = new EventEmitter<UserLunch>();
     }
 
     ngOnInit() {

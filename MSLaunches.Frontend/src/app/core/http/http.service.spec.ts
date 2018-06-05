@@ -4,6 +4,8 @@ import { HttpClient, HttpInterceptor } from '@angular/common/http';
 
 import { HttpService } from './http.service';
 import { ErrorHandlerInterceptor } from './error-handler.interceptor';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthenticationService, MockAuthenticationService } from '@app/core';
 
 describe('HttpService', () => {
   let http: HttpClient;
@@ -11,13 +13,20 @@ describe('HttpService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule
+      ],
       providers: [
         ErrorHandlerInterceptor,
         {
           provide: HttpClient,
           useClass: HttpService
         },
+        {
+          provide: AuthenticationService,
+          useClass: MockAuthenticationService
+        }
       ]
     });
   });
@@ -26,11 +35,11 @@ describe('HttpService', () => {
     HttpClient,
     HttpTestingController,
   ], (_http: HttpClient,
-      _httpMock: HttpTestingController) => {
+    _httpMock: HttpTestingController) => {
 
-    http = _http;
-    httpMock = _httpMock;
-  }));
+      http = _http;
+      httpMock = _httpMock;
+    }));
 
   afterEach(() => {
     httpMock.verify();
@@ -40,7 +49,7 @@ describe('HttpService', () => {
     // Arrange
     let interceptors: HttpInterceptor[];
     const realRequest = http.request;
-    spyOn(HttpService.prototype, 'request').and.callFake(function(this: any) {
+    spyOn(HttpService.prototype, 'request').and.callFake(function (this: any) {
       interceptors = this.interceptors;
       return realRequest.apply(this, arguments);
     });
@@ -61,7 +70,7 @@ describe('HttpService', () => {
     let interceptors: HttpInterceptor[];
     const realRequest = http.request;
     http = http.skipErrorHandler();
-    spyOn(HttpService.prototype, 'request').and.callFake(function(this: any) {
+    spyOn(HttpService.prototype, 'request').and.callFake(function (this: any) {
       interceptors = this.interceptors;
       return realRequest.apply(this, arguments);
     });

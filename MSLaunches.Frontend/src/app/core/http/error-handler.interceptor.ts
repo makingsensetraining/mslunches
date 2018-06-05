@@ -5,7 +5,6 @@ import { catchError } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
 import { Logger } from '../logger.service';
-import { AuthenticationService } from '@app/core';
 import { Router } from '@angular/router';
 
 const log = new Logger('ErrorHandlerInterceptor');
@@ -16,12 +15,12 @@ const log = new Logger('ErrorHandlerInterceptor');
 @Injectable()
 export class ErrorHandlerInterceptor implements HttpInterceptor {
   private router: Router;
-  private authenticationService: AuthenticationService;
+  private credentialsKey = 'credentials';
 
-  // circular dependency fix
-  constructor(injector: Injector) {
-    this.router = injector.get(Router);
-    this.authenticationService = injector.get(AuthenticationService);
+  constructor(
+    router: Router,
+  ) {
+    this.router = router;
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -36,8 +35,9 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
     }
 
     if (response instanceof HttpErrorResponse && response.status === 401) {
-        this.authenticationService.logout();
-        this.router.navigate(['/login'], {replaceUrl: true });
+      sessionStorage.removeItem(this.credentialsKey);
+      localStorage.removeItem(this.credentialsKey);
+      this.router.navigate(['/login'], { replaceUrl: true });
     }
 
     throw response;

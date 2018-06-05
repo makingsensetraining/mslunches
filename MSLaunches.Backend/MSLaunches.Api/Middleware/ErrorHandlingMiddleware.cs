@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using MSLunches.Api.Models;
+using MSLunches.Api.Models.Response;
 using MSLunches.Domain.Exceptions;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ namespace MSLunches.Api.Middleware
             else if (exception is ValidationException) code = (HttpStatusCode)422;
             else if (exception is NotFoundException) code = HttpStatusCode.NotFound;
 
-            var result = JsonConvert.SerializeObject(new ErrorDto(exception.Message));
+            var result = JsonConvert.SerializeObject(new ErrorResponse(exception.Message));
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

@@ -4,7 +4,7 @@ import { of } from 'rxjs/observable/of';
 import { Credentials, LoginContext } from './authentication.service';
 
 export class MockAuthenticationService {
-
+  timeoutActivated: boolean;
   hashHandled: Observable<boolean>;
   credentials: Credentials | null = {
     userId: 'asd',
@@ -39,4 +39,11 @@ export class MockAuthenticationService {
     return !!this.credentials;
   }
 
+  setUpTimeout() {
+    this.timeoutActivated = true;
+  }
+
+  cleanTimeout() {
+    this.timeoutActivated = false;
+  }
 }

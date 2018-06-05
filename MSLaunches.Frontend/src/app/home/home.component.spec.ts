@@ -4,6 +4,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
 import { HomeComponent } from './home.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MockedLunchModule } from '@app/lunch/lunch.component.mock';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -14,9 +16,13 @@ describe('HomeComponent', () => {
         imports: [
           CoreModule,
           SharedModule,
-          HttpClientTestingModule
+          HttpClientTestingModule,
+          RouterTestingModule,
+          MockedLunchModule
         ],
-        declarations: [HomeComponent],
+        declarations: [
+          HomeComponent,
+        ],
         providers: []
       })
       .compileComponents();
@@ -25,10 +31,15 @@ describe('HomeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    component.isLoading = false;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have loader disabled', () => {
+    expect(component.isLoading).toBeFalsy();
   });
 });

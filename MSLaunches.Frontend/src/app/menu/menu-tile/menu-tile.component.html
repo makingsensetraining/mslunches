@@ -1,0 +1,6 @@
+<select name="meal" class="form-control" ngModel>
+  <option value="" disabled>Choose a meal</option>
+  <option *ngFor="let meal of meals" [value]="meal.id">
+    {{ meal.name }}
+  </option>
+</select>

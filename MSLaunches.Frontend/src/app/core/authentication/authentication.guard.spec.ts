@@ -29,11 +29,11 @@ describe('AuthenticationGuard', () => {
     AuthenticationGuard,
     AuthenticationService
   ], (_authenticationGuard: AuthenticationGuard,
-      _authenticationService: MockAuthenticationService) => {
+    _authenticationService: MockAuthenticationService) => {
 
-    authenticationGuard = _authenticationGuard;
-    authenticationService = _authenticationService;
-  }));
+      authenticationGuard = _authenticationGuard;
+      authenticationService = _authenticationService;
+    }));
 
   it('should have a canActivate method', () => {
     expect(typeof authenticationGuard.canActivate).toBe('function');
@@ -48,13 +48,14 @@ describe('AuthenticationGuard', () => {
 
   it('should return false and redirect to login if user is not authenticated', () => {
     // Arrange
-    authenticationService.hashHandled = Observable.create((obs: Observer<boolean>) => obs.next(true));
+    authenticationService.hashHandled = Observable.create((obs: Observer<boolean>) =>
+      obs.next(true));
     authenticationService.credentials = null;
 
     // Act
     authenticationGuard.canActivate().subscribe(result => {
       // Assert
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {replaceUrl: true});
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], { replaceUrl: true });
       expect(result).toBe(false);
     });
   });

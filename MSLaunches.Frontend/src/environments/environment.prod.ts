@@ -5,7 +5,7 @@ import { WebAuth } from 'auth0-js';
 export const environment = {
   production: true,
   version: env.npm_package_version,
-  serverUrl: 'https://api.chucknorris.io',
+  serverUrl: 'https://mslunchesapi.azurewebsites.net/api',
   defaultLanguage: 'en-US',
   supportedLanguages: [
     'en-US',
@@ -19,6 +19,6 @@ export const auth0Config = new WebAuth({
   domain: 'mslaunches.auth0.com',
   responseType: 'token id_token',
   audience: environment.serverUrl,
-  redirectUri: 'http://localhost:4200/',
+  redirectUri: 'http://mslunches.azurewebsites.net/',
   scope: 'openid profile'
 });

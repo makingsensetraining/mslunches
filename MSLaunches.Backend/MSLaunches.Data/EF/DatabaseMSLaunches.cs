@@ -2,22 +2,29 @@
 {
     using Models;
     using System;
-    using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
 
     /// <summary>
-    /// Helper class to MSLunches sample data into a <see cref="WebApiCoreLunchesContext"/>
+    /// Helper class to MSLunches sample data into a <see cref="MSLunchesContext"/>
     /// </summary>
     public static class DatabaseMSLunches
     {
         /// <summary>
-        /// Initializes a <see cref="WebApiCoreLunchesContext"/> with sample Data
+        /// Initializes a <see cref="MSLunchesContext"/> with sample Data
         /// </summary>
         /// <param name="dbContext">Context to be initialized with sample data</param>
-        public static void Initialize(WebApiCoreLunchesContext dbContext)
+        public static void Initialize(MSLunchesContext dbContext)
         {
             dbContext.Database.EnsureCreated();
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var id3 = Guid.NewGuid();
+            var id4 = Guid.NewGuid();
+            var id5 = Guid.NewGuid();
+            var id6 = Guid.NewGuid();
+            var id7 = Guid.NewGuid();
+            var id8 = Guid.NewGuid();
+            var id9 = Guid.NewGuid();
 
             if (!dbContext.MealTypes.Any())
             {
@@ -33,33 +40,31 @@
                 dbContext.MealTypes.AddRange(mealTypes);
             }
 
-            Meal[] meals = null;
-
             if (!dbContext.Meals.Any())
             {
-                meals = new[]
+                var meals = new[]
                 {
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Crepes de verdura y calabza", TypeId = 2},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pechugas grilladas al limón con arroz al curry", TypeId = 2},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milhojas de vegetales con ensalada", TypeId = 2},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de pescado con puré de calabaza", TypeId = 2},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Triangulitos integrales con vegetales y ensalada", TypeId = 2},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Arrollado de pollo con ensalada de champignones y papas al horno", TypeId = 1},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Canelones de jamón y queso con salsa bolognesa", TypeId = 1},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de pecero napilitana con arroz primavera", TypeId = 1},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Filet de merluza con puré", TypeId = 1},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas caseras completas con fritas", TypeId = 1},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de soja rellenas con ensalada", TypeId = 3},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de lentejas con ensalada", TypeId = 3},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Tarta capresse con ensalada", TypeId = 3},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Budincitos de acelga y calabaza con ensalada", TypeId = 3},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas veganas con calabazas en cubo", TypeId = 3},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Baguette de milanesa de carne con lechuga y tomate", TypeId = 4},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Postre de vainillas", TypeId = 5},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Alfajores de maizena", TypeId = 5},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Roll de dulce de leche", TypeId = 5},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Gelatina con frutas", TypeId = 5},
-                    new Meal { Id = Guid.NewGuid(), CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pastelitos escaraperla", TypeId = 5}
+                    new Meal { Id = id4, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Crepes de verdura y calabza", TypeId = 2},
+                    new Meal { Id = id5, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pechugas grilladas al limón con arroz al curry", TypeId = 2},
+                    new Meal { Id = id7, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milhojas de vegetales con ensalada", TypeId = 2},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de pescado con puré de calabaza", TypeId = 2},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Triangulitos integrales con vegetales y ensalada", TypeId = 2},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Arrollado de pollo con ensalada de champignones y papas al horno", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Canelones de jamón y queso con salsa bolognesa", TypeId = 1},
+                    new Meal { Id = id8, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de pecero napilitana con arroz primavera", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Filet de merluza con puré", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas caseras completas con fritas", TypeId = 1},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Milanesas de soja rellenas con ensalada", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Medallones de lentejas con ensalada", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Tarta capresse con ensalada", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Budincitos de acelga y calabaza con ensalada", TypeId = 3},
+                    new Meal { Id = id6, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Hamburguesas veganas con calabazas en cubo", TypeId = 3},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Baguette de milanesa de carne con lechuga y tomate", TypeId = 4},
+                    new Meal { Id=id9, CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Postre de vainillas", TypeId = 5},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Alfajores de maizena", TypeId = 5},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Roll de dulce de leche", TypeId = 5},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Gelatina con frutas", TypeId = 5},
+                    new Meal { CreatedBy = "System", CreatedOn = DateTime.Now, Name = "Pastelitos escaraperla", TypeId = 5}
                 };
 
                 dbContext.Meals.AddRange(meals);
@@ -67,55 +72,63 @@
 
             if (!dbContext.Lunches.Any())
             {
-                var lunches = new List<Lunch>();
-
-                if (meals != null)
+                var lunches = new[]
                 {
-                    var firstDayOfTheWeek = GetFirstDayOfWeek(DateTime.Today, CultureInfo.CurrentCulture);
-                    if (firstDayOfTheWeek.DayOfWeek == DayOfWeek.Sunday)
-                        firstDayOfTheWeek = firstDayOfTheWeek.AddDays(1);
-
-                    var type = meals.First().TypeId;
-                    var date = new DateTime(firstDayOfTheWeek.Ticks);
-                    meals = meals.OrderBy(a => a.TypeId).ToArray();
-
-                    foreach (var meal in meals)
-                    {
-                        date = date.AddDays(1);
-                        if (type != meal.TypeId)
-                        {
-                            type = meal.TypeId;
-                            date = new DateTime(firstDayOfTheWeek.Ticks);
-                        }
-
-                        lunches.Add(new Lunch
-                        {
-                            MealId = meal.Id,
-                            CreatedBy = "System",
-                            CreatedOn = DateTime.Now,
-                            Id = Guid.NewGuid(),
-                            Date = date
-                        });
+                    new Lunch {
+                        Id = id1,
+                        MealId = id4,
+                        Date = DateTime.Today,
+                        CreatedBy = "System"
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id6,
+                        Date = DateTime.Today,
+                        CreatedBy = "System"
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id8,
+                        Date = DateTime.Today.AddDays(-1),
+                        CreatedBy = "System"
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id9,
+                        Date = DateTime.Today.AddDays(-1),
+                        CreatedBy = "System"
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id7,
+                        Date = DateTime.Today.AddDays(-1),
+                        CreatedBy = "System"
+                    },
+                    new Lunch {
+                        Id = Guid.NewGuid(),
+                        MealId = id5,
+                        Date = DateTime.Today.AddDays(1)
                     }
-                }
+                };
                 dbContext.Lunches.AddRange(lunches);
             }
 
+            if (!dbContext.UserLunches.Any())
+            {
+                var userLunches = new[]
+                {
+                    new UserLunch {
+                        Id = id3,
+                        UserId = "google-oauth2|100788380982430215896",
+                        LunchId = id1,
+                        CreatedBy = "System"
+                    },
+                };
+
+                dbContext.UserLunches.AddRange(userLunches);
+            }
+
             dbContext.SaveChanges();
-        }
-
-        /// <summary>
-        /// Returns the first day of the week that the specified date 
-        /// is in. 
-        /// </summary>
-        private static DateTime GetFirstDayOfWeek(DateTime dayInWeek, CultureInfo cultureInfo)
-        {
-            DayOfWeek firstDay = cultureInfo.DateTimeFormat.FirstDayOfWeek;
-            DateTime firstDayInWeek = dayInWeek.Date;
-            while (firstDayInWeek.DayOfWeek != firstDay)
-                firstDayInWeek = firstDayInWeek.AddDays(-1);
-
-            return firstDayInWeek;
         }
     }
 }
