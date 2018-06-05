@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSLunches.Data.EF;
 using MSLunches.Data.Models;
+using MSLunches.Domain.Exceptions;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -48,9 +49,7 @@ namespace MSLunches.Domain.Services
 
         public async Task<Lunch> CreateAsync(Lunch lunch)
         {
-            lunch.CreatedOn = DateTime.Now;
-            _dbContext.Lunches
-                      .Add(lunch);
+            await AddLunch(lunch);
             await _dbContext.SaveChangesAsync();
             return lunch;
         }
@@ -70,37 +69,28 @@ namespace MSLunches.Domain.Services
 
             foreach (var lunchToUpdate in lunchesToUpdate)
             {
-                await UpdateAsync(lunchToUpdate);
+                await ChangeLunch(lunchToUpdate);
             }
 
             foreach (var lunchToCreate in lunchesToCreate)
             {
-                await CreateAsync(lunchToCreate);
+                await AddLunch(lunchToCreate);
             }
 
+            await _dbContext.SaveChangesAsync();
             return await _dbContext.Lunches.Where(x => x.Date >= dateFrom && x.Date <= dateTo).ToListAsync();
         }
 
         public async Task<Lunch> UpdateAsync(Lunch lunch)
         {
-            var lunchToUpdate = await _dbContext.Lunches
-                                                     .FirstOrDefaultAsync(u => u.Id == lunch.Id);
-
-            if (lunchToUpdate == null) return null;
-
-            lunchToUpdate.Date = lunch.Date;
-            lunchToUpdate.MealId = lunch.MealId;
-            lunchToUpdate.UpdatedBy = lunch.UpdatedBy;
-            lunchToUpdate.UpdatedOn = DateTime.Now;
-
+            var res = await ChangeLunch(lunch);
             await _dbContext.SaveChangesAsync();
-            return lunchToUpdate;
+            return res;
         }
 
         public async Task<int> DeleteByIdAsync(Guid lunchId)
         {
-            var lunch = await _dbContext.Lunches
-                                              .FirstOrDefaultAsync(item => item.Id == lunchId);
+            var lunch = await _dbContext.Lunches.FindAsync(lunchId);
             if (lunch == null)
             {
                 return 0;
@@ -115,8 +105,8 @@ namespace MSLunches.Domain.Services
         {
             var daysInWeek = GetDaysInWeek();
             return await _dbContext.Lunches
-                                   .Where(x => daysInWeek.Contains(x.Date))
-                                   .ToListAsync();
+                .Where(x => daysInWeek.Contains(x.Date))
+                .ToListAsync();
         }
 
         public async Task<List<Lunch>> GetLunchesBetweenDatesAsync(DateTime dateFrom, DateTime dateTo)
@@ -132,6 +122,38 @@ namespace MSLunches.Domain.Services
 
         #region Private Methods
 
+        private async Task<Lunch> ChangeLunch(Lunch lunch)
+        {
+            var lunchToUpdate = await _dbContext.Lunches.FindAsync(lunch.Id);
+
+            if (lunchToUpdate == null)
+                throw new NotFoundException($"Lunch with id {lunch.Id} was not found");
+
+            lunchToUpdate.Date = lunch.Date.Date;
+            lunchToUpdate.MealId = lunch.MealId;
+            lunchToUpdate.UpdatedBy = lunch.UpdatedBy;
+            lunchToUpdate.UpdatedOn = DateTime.Now;
+            return lunchToUpdate;
+        }
+
+        private async Task AddLunch(Lunch lunch)
+        {
+            var meal = await _dbContext.Meals.FindAsync(lunch.MealId);
+            if (meal == null)
+            {
+                throw new ValidationException($"meal with id {lunch.MealId}, does not exist");
+            }
+
+            if (await _dbContext.Lunches.AnyAsync(a => a.Date == lunch.Date.Date && a.Meal.TypeId == meal.TypeId))
+            {
+                throw new ValidationException($"lunch with the same meal and date already exist");
+            }
+
+            lunch.CreatedOn = DateTime.Now;
+            lunch.Date = lunch.Date.Date;
+            await _dbContext.Lunches.AddAsync(lunch);
+        }
+
         /// <summary>
         /// Get the days in the week of that belongs today
         /// </summary>
@@ -140,8 +162,8 @@ namespace MSLunches.Domain.Services
         {
             var now = DateTime.Now;
             var currentDay = now.DayOfWeek;
-            int days = (int)currentDay;
-            DateTime sunday = now.AddDays(-days);
+            var days = (int)currentDay;
+            var sunday = now.AddDays(-days);
             return Enumerable.Range(0, 7)
                              .Select(d => sunday.AddDays(d))
                              .ToList();

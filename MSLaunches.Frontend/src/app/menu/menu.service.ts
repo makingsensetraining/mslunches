@@ -51,6 +51,7 @@ export class MenuService {
         if (!lunch) {
           let newLunch: Lunch;
           newLunch = {
+            id: null,
             date: date,
             mealId: '',
             typeId: mealType.id
@@ -100,6 +101,7 @@ export class MenuService {
   private mapToLunch(body: any): Lunch {
     let result: Lunch;
     result = {
+      id: body.id,
       mealId: body.meal.id,
       typeId: body.meal.typeId,
       date: new Date(body.date)
@@ -141,7 +143,8 @@ export class MenuService {
   private mapToBackend(lunch: Lunch): any {
     return {
       mealid: lunch.mealId,
-      date: lunch.date
+      date: lunch.date,
+      id: lunch.id
     };
   }
 }

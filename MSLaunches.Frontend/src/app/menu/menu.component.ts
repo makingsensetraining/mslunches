@@ -1,17 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { filter, finalize, mergeMap } from 'rxjs/operators';
-
-import { MenuService } from './menu.service';
-
-import { MealGrouped } from '@app/core/Models/meal-grouped.model';
-import { MealType } from '@app/core/Models/meal-type.model';
-import { Meal } from '@app/core/Models/meal.model';
-import * as moment from 'moment';
-import * as _ from 'lodash';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Lunch } from '@app/core/Models/lunch.model';
-import { LunchComponent } from '@app/lunch/lunch.component';
-import { LunchService } from '@app/lunch/lunch.service';
-import { Observable } from 'rxjs/Observable';
+import { MealType } from '@app/core/Models/meal-type.model';
+import { MenuService } from './menu.service';
 
 @Component({
   selector: 'app-menu',
@@ -25,7 +16,10 @@ export class MenuComponent implements OnInit {
   isLoading: boolean;
   lunchesLoaded: Promise<boolean>;
 
-  constructor(private menuService: MenuService) {
+  constructor(
+    private menuService: MenuService,
+    private router: Router
+  ) {
     this.isLoading = true;
   }
 

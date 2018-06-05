@@ -116,23 +116,23 @@ export class LunchService {
     }
 
     private fillDates(weekly: Array<WeeklyLunches>): Array<WeeklyLunches> {
-        weekly.forEach(dailyLunch => {
+        weekly.forEach(weeklyLunch => {
             let startOfTheweek: moment.Moment;
-            if (!!dailyLunch.lunches && dailyLunch.lunches.length < 5) {
-                startOfTheweek = moment(dailyLunch.date, 'DD/MM/YYYY').startOf('isoWeek');
+            if (!!weeklyLunch.lunches && weeklyLunch.lunches.length < 5) {
+                startOfTheweek = moment(weeklyLunch.date, 'DD/MM/YYYY').startOf('isoWeek');
                 for (let i = 0; i < 5; i++) {
-                    if (!dailyLunch.lunches.some(item =>
+                    if (!weeklyLunch.lunches.some(item =>
                         item.date.getDate() === startOfTheweek.toDate().getDate())
                     ) {
-                        dailyLunch.lunches.push({
+                        weeklyLunch.lunches.push({
                             date: startOfTheweek.toDate(),
                             lunches: new Array<UserLunch>()
                         });
                     }
                     startOfTheweek.add(1, 'days');
                 }
-                dailyLunch.lunches = dailyLunch.lunches.sort(this.dateSorter);
             }
+            weeklyLunch.lunches = weeklyLunch.lunches.sort(this.dateSorter);
         });
 
         return weekly;
@@ -161,10 +161,10 @@ export class LunchService {
     }
 
     private dateSorter(a: DailyTypedLunches, b: DailyTypedLunches): number {
-        if (a.date < b.date) {
+        if (a.date.getDate() < b.date.getDate()) {
             return -1;
         }
-        if (b.date < a.date) {
+        if (b.date.getDate() < a.date.getDate()) {
             return 1;
         }
         return 0;

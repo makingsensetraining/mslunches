@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MSLunches.Api.Filters;
 using MSLunches.Api.Models.Request;
@@ -14,6 +15,7 @@ namespace MSLunches.Api.Controllers
 {
     [Route("api/lunches")]
     [Produces("Application/json")]
+    [Authorize]
     [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class LunchController : Controller
     {
