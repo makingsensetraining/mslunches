@@ -24,7 +24,7 @@ namespace MSLunches.Domain.Services.Interfaces
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<Lunch> CreateAsync(Lunch lunch);
 
-        Task<int> CreateLunchesAsync(List<Lunch> lunches);
+        Task<int> BatchSaveAsync(List<Lunch> lunches);
 
         /// <summary>
         /// Deletes a lunch by Id
@@ -38,6 +38,13 @@ namespace MSLunches.Domain.Services.Interfaces
         /// </summary>
         /// <returns>List with all the existing lunchs</returns>
         Task<List<Lunch>> GetAsync();
+
+        /// <summary>
+        /// Gets all the existing lunchs between dates
+        /// </summary>
+        /// <returns>List with all the existing lunches between dates</returns>
+        Task<List<Lunch>> GetLunchesBetweenDatesAsync(DateTime dateFrom, DateTime dateTo);
+
 
         /// <summary>
         /// Updates a lunch

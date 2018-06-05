@@ -198,10 +198,10 @@ export class LunchService {
             id: body.id,
             userLunchId: null,
             description: body.meal.name,
-            type: body.meal.mealType.description,
+            type: body.meal.type.description,
             date: body.date,
             isSelected: false,
-            isSelectable: body.meal.mealType.isSelectable
+            isSelectable: body.meal.type.isSelectable
         };
 
         return result;

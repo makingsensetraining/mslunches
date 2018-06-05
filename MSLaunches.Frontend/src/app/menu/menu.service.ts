@@ -6,41 +6,79 @@ import { of } from 'rxjs/observable/of';
 import { Meal } from '../core/Models/meal.model';
 import { MealType } from '../core/Models/meal-type.model';
 import * as moment from 'moment';
+import { Lunch } from '@app/core/Models/lunch.model';
 
 @Injectable()
 export class MenuService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   private credentialsKey = 'credentials';
   private routes = {
-    getMealTypes(): string {
-      return `/mealtypes`;
+    mealTypes(): string {
+      return '/mealtypes';
+    },
+    meals(): string {
+      return '/meals';
+    },
+    saveLunches(): string {
+      return '/lunches/batchsave';
+    },
+    getLunchesBetweenDates(dateFrom: Date, dateTo: Date): string {
+      return `/lunches/BetweenDates/${dateFrom.toISOString()}/${dateTo.toISOString()}`;
     }
   };
 
+  getMeals(): Observable<Array<Meal>> {
+    return this.httpClient.get(this.routes.meals())
+      .pipe(map(this.mapMeals));
+  }
+
   getMealTypes(): Observable<Array<MealType>> {
-    return this.httpClient.get(this.routes.getMealTypes()).pipe(map(this.mapToArrayOfMealType.bind(this)));
+    return this.httpClient.get(this.routes.mealTypes())
+      .pipe(map(this.mapToArrayOfMealType.bind(this)));
+  }
+
+  getLunches(dateFrom: Date, dateTo: Date): Observable<Array<Lunch>> {
+    return this.httpClient
+      .get(this.routes.getLunchesBetweenDates(dateFrom, dateTo))
+      .pipe(map(this.mapToArrayOfLunches.bind(this)));
+  }
+
+  fillLunches(dates: Array<Date>, mealTypes: Array<MealType>, lunches: Array<Lunch>): Observable<Array<Lunch>> {
+    dates.forEach(date => {
+      mealTypes.forEach(mealType => {
+        const lunch = lunches.find(x => x.typeId === mealType.id && x.date.toDateString() === date.toDateString());
+        if (!lunch) {
+          let newLunch: Lunch;
+          newLunch = {
+            date: date,
+            mealId: '',
+            typeId: mealType.id
+          };
+          lunches.push(newLunch);
+        }
+      });
+    });
+    return of(lunches);
   }
 
   getNextWeekDates(date: Date): Observable<Array<Date>> {
     return of(this.GetNextWeekDates(date));
   }
 
-  private mapToArrayOfMeal(body: Array<any>): Array<Meal> {
-    let result: Array<Meal> = new Array<Meal>();
-    result = body.map(this.mapToMeal);
-    return result;
+  BatchSave(lunches: Array<Lunch>): Observable<string> {
+    const userId = JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
+    return this.httpClient
+      .post(this.routes.saveLunches(), lunches.map(this.mapToBackend))
+      .pipe(map((a: any) => a.LunchId));
   }
 
-  private mapToMeal(body: any): Meal {
-    let result: Meal;
-    result = {
-      name: body.name,
-      id: body.id,
-      typeId: body.mealType.id,
-      typeDescriptcion: body.mealType.id
-    };
-    return result;
+  sortMeals(meals: Array<Meal>, mealTypes: Array<MealType>): Array<MealType> {
+    mealTypes.forEach(mealType => {
+      mealType.meals = meals.filter(meal => meal.typeId === mealType.id);
+    });
+
+    return mealTypes;
   }
 
   private mapToArrayOfMealType(body: Array<any>): Array<MealType> {
@@ -49,12 +87,22 @@ export class MenuService {
     return result;
   }
 
-  mapToMealType(body: any): MealType {
+  private mapToMealType(body: any): MealType {
     let result: MealType;
     result = {
       name: body.description,
       id: body.id,
       meals: body.meals
+    };
+    return result;
+  }
+
+  private mapToLunch(body: any): Lunch {
+    let result: Lunch;
+    result = {
+      mealId: body.meal.id,
+      typeId: body.meal.typeId,
+      date: new Date(body.date)
     };
     return result;
   }
@@ -69,5 +117,31 @@ export class MenuService {
       startOfTheweek.add(1, 'days');
     }
     return dates;
+  }
+
+  private mapToArrayOfLunches(body: Array<any>): Array<Lunch> {
+    let result: Array<Lunch> = new Array<Lunch>();
+    result = body.map(this.mapToLunch);
+    return result;
+  }
+
+  private mapMeals(meals: Array<any>): Array<Meal> {
+    const result = new Array<Meal>();
+    meals.forEach(element => {
+      result.push({
+        id: element.id,
+        name: element.name,
+        typeDescriptcion: element.type.description,
+        typeId: element.type.id,
+      });
+    });
+    return result;
+  }
+
+  private mapToBackend(lunch: Lunch): any {
+    return {
+      mealid: lunch.mealId,
+      date: lunch.date
+    };
   }
 }

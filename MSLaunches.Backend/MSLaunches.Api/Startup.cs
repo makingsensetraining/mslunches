@@ -40,7 +40,7 @@ namespace MSLunches.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MSLunchesContext>(options => options.UseInMemoryDatabase(Environment.MachineName));
+            services.AddDbContext<WebApiCoreLunchesContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Add framework services.
             services.AddMvc().AddJsonOptions(

@@ -1,4 +1,6 @@
-﻿namespace MSLunches.Data.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MSLunches.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
