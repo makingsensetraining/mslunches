@@ -20,7 +20,7 @@
         [Required]
         public int TypeId { get; set; }
 
-        public virtual MealType MealType { get; set; }
+        public virtual MealType Type { get; set; }
 
     }
 }

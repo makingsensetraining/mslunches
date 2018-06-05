@@ -42,7 +42,7 @@ namespace MSLunches.Domain.Services
         {
             var contex = _dbContext.Lunches
                 .Include(a => a.Meal)
-                    .ThenInclude(a => a.MealType);
+                    .ThenInclude(a => a.Type);
             return await contex.ToListAsync();
         }
 
@@ -60,15 +60,25 @@ namespace MSLunches.Domain.Services
         /// </summary>
         /// <param name="lunches"></param>
         /// <returns></returns>
-        public async Task<int> BatchSaveAsync(List<Lunch> lunches)
+        public async Task<List<Lunch>> BatchSaveAsync(List<Lunch> lunches)
         {
             var dateFrom = lunches.Min(x => x.Date).Date;
-            var dateTo = lunches.Max(x => x.Date);
-            var lunchesToRemove = _dbContext.Lunches.Where(x => x.Date >= dateFrom && x.Date <= dateTo);
-            _dbContext.Lunches.RemoveRange(lunchesToRemove);
+            var dateTo = lunches.Max(x => x.Date).Date;
 
-            await _dbContext.Lunches.AddRangeAsync(lunches);
-            return await _dbContext.SaveChangesAsync();
+            var lunchesToUpdate = lunches.Where(a => a.Id != Guid.Empty);
+            var lunchesToCreate = lunches.Where(a => a.Id == Guid.Empty);
+
+            foreach (var lunchToUpdate in lunchesToUpdate)
+            {
+                await UpdateAsync(lunchToUpdate);
+            }
+
+            foreach (var lunchToCreate in lunchesToCreate)
+            {
+                await CreateAsync(lunchToCreate);
+            }
+
+            return await _dbContext.Lunches.Where(x => x.Date >= dateFrom && x.Date <= dateTo).ToListAsync();
         }
 
         public async Task<Lunch> UpdateAsync(Lunch lunch)
@@ -114,7 +124,7 @@ namespace MSLunches.Domain.Services
             var contex = _dbContext.Lunches
                 .Where(x => x.Date >= dateFrom && x.Date <= dateTo)
                 .Include(a => a.Meal)
-                .ThenInclude(a => a.MealType);
+                .ThenInclude(a => a.Type);
             return await contex.ToListAsync();
         }
 

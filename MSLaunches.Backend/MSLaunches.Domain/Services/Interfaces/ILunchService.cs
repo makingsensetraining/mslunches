@@ -24,7 +24,12 @@ namespace MSLunches.Domain.Services.Interfaces
         /// <returns>An integer indicating the amount of affected rows</returns>
         Task<Lunch> CreateAsync(Lunch lunch);
 
-        Task<int> BatchSaveAsync(List<Lunch> lunches);
+        /// <summary>
+        /// Saves lunches on a batch manner
+        /// </summary>
+        /// <param name="lunches"></param>
+        /// <returns></returns>
+        Task<List<Lunch>> BatchSaveAsync(List<Lunch> lunches);
 
         /// <summary>
         /// Deletes a lunch by Id

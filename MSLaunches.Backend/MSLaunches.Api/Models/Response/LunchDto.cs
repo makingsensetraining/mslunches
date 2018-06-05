@@ -20,9 +20,9 @@ namespace MSLunches.Api.Models.Response
         public DateTimeOffset UpdatedOn { get; set; }
 
         /// <summary>
-        /// Meal Identifier attached to this lunch
+        /// Meal
         /// </summary>
-        public Guid MealId { get; set; }
+        public MealDto Meal { get; set; }
 
         /// <summary>
         /// Date of the lunch

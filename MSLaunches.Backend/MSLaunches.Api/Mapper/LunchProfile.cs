@@ -2,6 +2,7 @@
 using MSLunches.Api.Models.Request;
 using MSLunches.Api.Models.Response;
 using MSLunches.Data.Models;
+using System;
 
 namespace MSLunches.Api.Mapper
 {
@@ -11,7 +12,7 @@ namespace MSLunches.Api.Mapper
         {
             CreateMap<Lunch, LunchDto>()
                 .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
-                .ForMember(d => d.MealId, o => o.MapFrom(s => s.MealId))
+                .ForMember(d => d.Meal, o => o.MapFrom(s => s.Meal))
                 .ForMember(d => d.Date, o => o.MapFrom(s => s.Date))
                 .ForMember(d => d.CreatedOn, o => o.MapFrom(s => s.CreatedOn))
                 .ForMember(d => d.UpdatedOn, o => o.MapFrom(s => s.UpdatedOn));
@@ -19,6 +20,11 @@ namespace MSLunches.Api.Mapper
             CreateMap<InputLunchDto, Lunch>()
                 .ForMember(d => d.MealId, o => o.MapFrom(s => s.MealId))
                 .ForMember(d => d.Date, o => o.MapFrom(s => s.Date));
+
+            CreateMap<InputBatchLunchDto, Lunch>()
+                .ForMember(d => d.MealId, o => o.MapFrom(s => s.MealId))
+                .ForMember(d => d.Date, o => o.MapFrom(s => s.Date))
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.Id ?? Guid.Empty));
         }
     }
 }

@@ -7,6 +7,7 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
@@ -48,18 +49,6 @@ namespace MSLunches.Api.Controllers
         {
             return Ok(_mapper.Map<List<LunchDto>>(
                 await _lunchService.GetAsync()));
-        }
-
-        /// <summary>
-        /// Gets a list of lunchs
-        /// </summary>
-        /// <response code="200">A list of lunchs</response>
-        /// <return>A list of lunchs</return>
-        [HttpGet("BetweenDates/{dateFrom}/{DateTo}/")]
-        [ProducesResponseType(typeof(List<Lunch>), 200)]
-        public async Task<IActionResult> GetLunchesBetweenDates(DateTime dateFrom, DateTime dateTo)
-        {
-            return Ok(await _lunchService.GetLunchesBetweenDatesAsync(dateFrom, dateTo));
         }
 
         /// <summary>
@@ -124,13 +113,27 @@ namespace MSLunches.Api.Controllers
         [HttpPost("batchsave")]
         [ValidateModel]
         [ProducesResponseType(typeof(List<LunchDto>), 200)]
-        public async Task<IActionResult> BatchSave([FromBody]List<InputLunchDto> lunches)
+        public async Task<IActionResult> BatchSave([FromBody]List<InputBatchLunchDto> lunches)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunches == null) return BadRequest();
 
-            var result = await _lunchService.BatchSaveAsync(
-                _mapper.Map<List<Lunch>>(lunches));
+            var lunchesToSave = _mapper.Map<List<Lunch>>(lunches);
+            lunchesToSave.ForEach(a =>
+            {
+                if (a.Id != Guid.Empty)
+                {
+                    a.UpdatedBy = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    a.UpdatedOn = DateTime.Now;
+                }
+                else
+                {
+                    a.CreatedBy = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    a.CreatedOn = DateTime.Now;
+                }
+            });
+
+            var result = await _lunchService.BatchSaveAsync(lunchesToSave);
 
             return Ok(_mapper.Map<List<LunchDto>>(result));
         }
@@ -173,19 +176,6 @@ namespace MSLunches.Api.Controllers
             return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
 
-<<<<<<< HEAD
         #endregion
-=======
-        /// <summary>
-        /// A list of available lunches by week
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("LunchesAvailables")]
-        [ProducesResponseType(typeof(List<Lunch>), 200)]
-        public async Task<IActionResult> LunchesAvailables()
-        {
-            return Ok(await _lunchService.GetAllLunchesAvailableInWeek());
-        }
->>>>>>> 01735b5b3fa17d603a74c9195c8827641f4b0bc3
     }
 }
