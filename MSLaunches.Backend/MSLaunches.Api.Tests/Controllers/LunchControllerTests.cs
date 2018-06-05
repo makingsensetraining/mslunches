@@ -125,7 +125,7 @@ namespace MSLunches.Api.Tests.Controllers
             var createdResponse = Assert.IsType<CreatedAtActionResult>(result);
             var resultLunch = Assert.IsType<LunchDto>(createdResponse.Value);
 
-            Assert.Equal(lunch.MealId, resultLunch.MealId);
+            Assert.Equal(lunch.MealId, resultLunch.Meal.Id);
             Assert.Equal(lunch.Date, resultLunch.Date);
 
             _lunchService.Verify(a => a.CreateAsync(
@@ -240,7 +240,7 @@ namespace MSLunches.Api.Tests.Controllers
         private bool Equals(LunchDto lunch1, Lunch lunch2)
         {
             return lunch1.Id == lunch2.Id
-                && lunch1.MealId == lunch2.MealId
+                && lunch1.Meal.Id == lunch2.MealId
                 && lunch1.Date == lunch2.Date;
         }
 

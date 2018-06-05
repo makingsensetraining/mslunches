@@ -27,6 +27,6 @@ namespace MSLunches.Api.Models.Response
         /// <summary>
         /// Type of the meal
         /// </summary>
-        public int TypeId { get; set; }
+        public MealTypeDto Type { get; set; }
     }
 }

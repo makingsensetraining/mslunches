@@ -47,7 +47,7 @@ namespace MSLunches.Data.EF
 
             modelBuilder.Entity<MealType>()
                         .HasMany(e => e.Meals)
-                        .WithOne(e => e.MealType)
+                        .WithOne(e => e.Type)
                         .HasForeignKey(e => e.TypeId);
 
             modelBuilder.Entity<Lunch>()

@@ -57,7 +57,7 @@ namespace MSLunches.Api.Tests.Controllers
             {
                 var expected = sampleMeals.SingleOrDefault(u => u.Id == meal.Id);
                 Assert.Equal(expected.Name, meal.Name);
-                Assert.Equal(expected.TypeId, meal.TypeId);
+                Assert.Equal(expected.TypeId, meal.Type.Id);
             }
         }
 
@@ -83,7 +83,7 @@ namespace MSLunches.Api.Tests.Controllers
             var meal = Assert.IsType<MealDto>(okObjectResult.Value);
 
             Assert.Equal(sampleMeal.Name, meal.Name);
-            Assert.Equal(sampleMeal.TypeId, meal.TypeId);
+            Assert.Equal(sampleMeal.TypeId, meal.Type.Id);
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             Assert.Equal(expected.Id, meal.Id);
             Assert.Equal(expected.Name, meal.Name);
-            Assert.Equal(expected.TypeId, meal.TypeId);
+            Assert.Equal(expected.TypeId, meal.Type.Id);
         }
 
         [Fact]

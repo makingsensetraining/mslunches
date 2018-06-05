@@ -7,6 +7,7 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
@@ -76,15 +77,18 @@ namespace MSLunches.Api.Controllers
         /// <response code="422">UserLunch could not be created - Already exists</response>
         [HttpPost]
         [ValidateModel]
-        [ProducesResponseType(typeof(UserLunchDto), 204)]
+        [ProducesResponseType(typeof(UserLunchDto), 201)]
         public async Task<IActionResult> Create(
             [FromRoute]string userId,
             [FromBody]InputUserLunchDto userLunch)
         {
             if (userLunch == null) return BadRequest();
 
-            var result = await _userLunchService.CreateAsync(
-                _mapper.Map<UserLunch>(userLunch));
+            var lunch = _mapper.Map<UserLunch>(userLunch);
+            lunch.UserId = userId;
+            lunch.CreatedBy = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var result = await _userLunchService.CreateAsync(lunch);
 
             return CreatedAtAction(
                 nameof(Get),
