@@ -10,7 +10,7 @@ namespace MSLunches.Api.Controllers
 {
     [Route("api/mealtypes")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorResponse), 500)]
+    [ProducesResponseType(typeof(ErrorDto), 500)]
     public class MealTypeController : Controller
     {
         private readonly IMealTypeService _mealTypeService;

@@ -32,7 +32,7 @@ namespace MSLunches.Api.Middleware
             var isUserBlocked = context.User.HasClaim(c => c.Type == "UserStatus" && c.Value == "Blocked");
             if (isUserBlocked)
             {
-                var message = JsonConvert.SerializeObject(new ErrorResponse("Unauthorized"));
+                var message = JsonConvert.SerializeObject(new ErrorDto("Unauthorized"));
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 await context.Response.WriteAsync(message);

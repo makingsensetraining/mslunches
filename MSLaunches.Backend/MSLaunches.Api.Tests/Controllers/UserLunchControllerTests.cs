@@ -40,7 +40,7 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.GetAll(userId);
 
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var listResult = Assert.IsAssignableFrom<IEnumerable<UserLunchResponse>>(okResult.Value);
+            var listResult = Assert.IsAssignableFrom<IEnumerable<UserLunchDto>>(okResult.Value);
 
             foreach (var userLunch in listOfUserLunch)
             {
@@ -65,7 +65,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             var result = await classUnderTest.Get(id);
             var okresult = Assert.IsType<OkObjectResult>(result);
-            var userLunchResult = Assert.IsType<UserLunchResponse>(okresult.Value);
+            var userLunchResult = Assert.IsType<UserLunchDto>(okresult.Value);
             Assert.True(Equals(userLunch, userLunchResult));
             _userLunchService.Verify(a => a.GetByIdAsync(It.Is<Guid>(g => g == id)), Times.Once);
         }
@@ -92,7 +92,7 @@ namespace MSLunches.Api.Tests.Controllers
         {
             var userId = "userId1234";
             var userLunch = GetSampleUserLunch(userId: userId);
-            var userLunchDto = new UserLunchRequest
+            var userLunchDto = new InputUserLunchDto
             {
                 Approved = userLunch.Approved,
                 LunchId = userLunch.LunchId,
@@ -112,7 +112,7 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.Create(userId, userLunchDto);
 
             var okresult = Assert.IsType<CreatedAtActionResult>(result);
-            var createdLunch = Assert.IsType<UserLunchResponse>(okresult.Value);
+            var createdLunch = Assert.IsType<UserLunchDto>(okresult.Value);
             Assert.True(Equals(createdLunch, userLunchDto));
             _userLunchService.Verify(a => a.GetUserLunchByUserAndLunchIdAsync(
                 It.Is<string>(u => u == userId),
@@ -126,7 +126,7 @@ namespace MSLunches.Api.Tests.Controllers
         {
             var classUnderTest = new UserLunchController(_userLunchService.Object);
             var userId = "userid1234";
-            var userLunchDto = new UserLunchRequest
+            var userLunchDto = new InputUserLunchDto
             {
                 Approved = true,
                 LunchId = Guid.NewGuid(),
@@ -162,7 +162,7 @@ namespace MSLunches.Api.Tests.Controllers
             var id = Guid.NewGuid();
             var userId = "userId123";
             var lunch = GetSampleUserLunch(id: id, userId: userId);
-            var inputLunch = new UserLunchRequest()
+            var inputLunch = new InputUserLunchDto()
             {
                 Approved = lunch.Approved,
                 LunchId = lunch.LunchId,
@@ -186,7 +186,7 @@ namespace MSLunches.Api.Tests.Controllers
             var classUnderTest = new UserLunchController(_userLunchService.Object);
             var id = Guid.NewGuid();
             var userId = "userId123";
-            var inputLunch = new UserLunchRequest
+            var inputLunch = new InputUserLunchDto
             {
                 Approved = true,
                 LunchId = Guid.NewGuid(),
@@ -257,17 +257,17 @@ namespace MSLunches.Api.Tests.Controllers
             && us1.LunchId == us2.LunchId
             && us1.UserId == us2.UserId;
 
-        private bool Equals(UserLunch us1, UserLunchRequest us2) =>
+        private bool Equals(UserLunch us1, InputUserLunchDto us2) =>
             us1.Approved == us2.Approved
             && us1.LunchId == us2.LunchId
             && us1.UserId == us2.UserId;
 
-        private bool Equals(UserLunch us1, UserLunchResponse us2) =>
+        private bool Equals(UserLunch us1, UserLunchDto us2) =>
             us1.Approved == us2.Approved
             && us1.LunchId == us2.LunchId
             && us1.UserId == us2.UserId;
 
-        private bool Equals(UserLunchResponse us1, UserLunchRequest us2) =>
+        private bool Equals(UserLunchDto us1, InputUserLunchDto us2) =>
             us1.Approved == us2.Approved
             && us1.LunchId == us2.LunchId
             && us1.UserId == us2.UserId;

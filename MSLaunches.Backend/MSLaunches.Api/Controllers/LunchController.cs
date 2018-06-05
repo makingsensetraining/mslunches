@@ -13,7 +13,7 @@ namespace MSLunches.Api.Controllers
 {
     [Route("api/lunches")]
     [Produces("Application/json")]
-    [ProducesResponseType(typeof(ErrorResponse), 500)]
+    [ProducesResponseType(typeof(ErrorDto), 500)]
     public class LunchController : Controller
     {
         private readonly ILunchService _lunchService;
@@ -29,11 +29,11 @@ namespace MSLunches.Api.Controllers
         /// <response code="200">A list of lunches</response>
         /// <return>A list of lunchs</return>
         [HttpGet]
-        [ProducesResponseType(typeof(List<LunchResponse>), 200)]
+        [ProducesResponseType(typeof(List<LunchDto>), 200)]
         public async Task<IActionResult> GetAll()
         {
             return Ok((await _lunchService.GetAsync())
-                .Select(lunch => new LunchResponse(lunch)));
+                .Select(lunch => new LunchDto(lunch)));
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace MSLunches.Api.Controllers
         /// <return>A lunchs</return>
         [HttpGet("{id}")]
         [ValidateModel]
-        [ProducesResponseType(typeof(LunchResponse), 200)]
+        [ProducesResponseType(typeof(LunchDto), 200)]
         public async Task<IActionResult> Get(Guid id)
         {
             var lunch = await _lunchService.GetByIdAsync(id);
@@ -54,18 +54,18 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(new LunchResponse(lunch));
+            return Ok(new LunchDto(lunch));
         }
 
         /// <summary>
         /// Creates a new Lunch
         /// </summary>
-        /// <param name="lunch" cref="LunchRequest">User data</param>
+        /// <param name="lunch" cref="InputLunchDto">User data</param>
         /// <response code="201">User created</response>
         [HttpPost]
         [ValidateModel]
-        [ProducesResponseType(typeof(LunchResponse), 201)]
-        public async Task<IActionResult> Create([FromBody]LunchRequest lunch)
+        [ProducesResponseType(typeof(LunchDto), 201)]
+        public async Task<IActionResult> Create([FromBody]InputLunchDto lunch)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunch == null) return BadRequest();
@@ -78,13 +78,13 @@ namespace MSLunches.Api.Controllers
 
             var result = await _lunchService.CreateAsync(lunchToCreate);
 
-            return CreatedAtAction(nameof(Get), new { id = result.Id }, new LunchResponse(result));
+            return CreatedAtAction(nameof(Get), new { id = result.Id }, new LunchDto(result));
         }
 
         [HttpPost]
         [ValidateModel]
         [ProducesResponseType(typeof(Lunch), 201)]
-        public async Task<IActionResult> BatchSave([FromBody]List<LunchRequest> lunches)
+        public async Task<IActionResult> BatchSave([FromBody]List<InputLunchDto> lunches)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunches == null) return BadRequest();
@@ -110,12 +110,12 @@ namespace MSLunches.Api.Controllers
         /// Updates an meal given his id
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the meal</param>
-        ///<param name="lunchDto" cref="LunchRequest">Lunch model</param>
+        ///<param name="lunchDto" cref="InputLunchDto">Lunch model</param>
         ///<response code="204">Lunch created</response>
         ///<response code="404">Lunch not found / Lunch could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]LunchRequest lunchDto)
+        public async Task<IActionResult> Update(Guid id, [FromBody]InputLunchDto lunchDto)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunchDto == null) return BadRequest();
@@ -155,23 +155,23 @@ namespace MSLunches.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("LunchesAvailables")]
-        [ProducesResponseType(typeof(List<LunchResponse>), 200)]
+        [ProducesResponseType(typeof(List<LunchDto>), 200)]
         public async Task<IActionResult> LunchesAvailables()
         {
             return Ok((await _lunchService.GetAllLunchesAvailableInWeek())
-                .Select(a => new LunchResponse(a)));
+                .Select(a => new LunchDto(a)));
         }
 
 
         /// <summary>
         /// Creates a new UserLunch
         /// </summary>
-        /// <param name="lunches" cref="LunchRequest">Lunch model</param>
+        /// <param name="lunches" cref="InputLunchDto">Lunch model</param>
         /// <response code="204">Lunch created</response>
         /// <response code="404">Lunch could not be created</response>
         [HttpPost("LunchSelection")]
         [ValidateModel]
-        public async Task<IActionResult> LunchSelection([FromBody]List<LunchRequest> lunches)
+        public async Task<IActionResult> LunchSelection([FromBody]List<InputLunchDto> lunches)
         {
             if (lunches == null)
             {

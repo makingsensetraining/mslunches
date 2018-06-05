@@ -45,7 +45,7 @@ namespace MSLunches.Api.Tests.Controllers
             _mealService.Verify(mock => mock.GetAsync(), Times.Once);
 
             var okObjectResult = Assert.IsType<OkObjectResult>(result); ;
-            var meals = Assert.IsAssignableFrom<IEnumerable<MealResponse>>(okObjectResult.Value);
+            var meals = Assert.IsAssignableFrom<IEnumerable<MealDto>>(okObjectResult.Value);
 
             Assert.Equal(sampleMeals.Count, meals.Count());
             foreach (var meal in meals)
@@ -76,7 +76,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             
             var okObjectResult = Assert.IsType<OkObjectResult>(result);
-            var meal = Assert.IsType<MealResponse>(okObjectResult.Value);
+            var meal = Assert.IsType<MealDto>(okObjectResult.Value);
 
             Assert.Equal(sampleMeal.Name, meal.Name);
             Assert.Equal(sampleMeal.TypeId, meal.TypeId);
@@ -108,7 +108,7 @@ namespace MSLunches.Api.Tests.Controllers
             // Arrange
             var controller = new MealController(_mealService.Object);
             var expected = GetSampleMeal();
-            var sampleMeal = new MealRequest
+            var sampleMeal = new InputMealDto
             {
                 Name = expected.Name,
                 TypeId = expected.TypeId
@@ -124,7 +124,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             Assert.IsType<CreatedAtActionResult>(result);
             var createdResult = result as CreatedAtActionResult;
-            var meal = createdResult.Value as MealResponse;
+            var meal = createdResult.Value as MealDto;
 
             Assert.Equal(expected.Id, meal.Id);
             Assert.Equal(expected.Name, meal.Name);
@@ -158,7 +158,7 @@ namespace MSLunches.Api.Tests.Controllers
             // Arrange
             var controller = new MealController(_mealService.Object);
             var expected = GetSampleMeal();
-            var sampleMeal = new MealRequest
+            var sampleMeal = new InputMealDto
             {
                 Name = expected.Name,
                 TypeId = expected.TypeId
@@ -256,9 +256,9 @@ namespace MSLunches.Api.Tests.Controllers
             };
         }
 
-        private MealRequest GetSampleInputMealDto()
+        private InputMealDto GetSampleInputMealDto()
         {
-            return new MealRequest
+            return new InputMealDto
             {
                 Name = "Papas fritas",
                 TypeId = 1

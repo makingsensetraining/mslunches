@@ -2,7 +2,7 @@
 
 namespace MSLunches.Api.Models.Request
 {
-    public class MealRequest
+    public class InputMealDto
     {
         /// <summary>
         /// Name of the meal.

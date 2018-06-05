@@ -3,11 +3,11 @@ using System;
 
 namespace MSLunches.Api.Models.Response
 {
-    public class MealResponse
+    public class MealDto
     {
-        public MealResponse() { }
+        public MealDto() { }
 
-        public MealResponse(Meal meal)
+        public MealDto(Meal meal)
         {
             Id = meal.Id;
             CreatedOn = meal.CreatedOn;
@@ -16,11 +16,29 @@ namespace MSLunches.Api.Models.Response
             TypeId = meal.TypeId;
         }
 
+        /// <summary>
+        /// Meal Identifier
+        /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Creation Date
+        /// </summary>
         public DateTimeOffset CreatedOn { get; set; }
+
+        /// <summary>
+        /// Last Update date
+        /// </summary>
         public DateTimeOffset UpdatedOn { get; set; }
 
+        /// <summary>
+        /// Name of the meal
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Type of the meal
+        /// </summary>
         public int TypeId { get; set; }
     }
 }

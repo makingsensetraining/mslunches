@@ -3,13 +3,13 @@ namespace MSLunches.Api.Models.Response
     /// <summary>
     /// Error data transfer object
     /// </summary>
-    internal class ErrorResponse
+    internal class ErrorDto
     {
         /// <summary>
         /// Creates a new instance of an error Response
         /// </summary>
         /// <param name="error"></param>
-        public ErrorResponse(string error)
+        public ErrorDto(string error)
         {
             Error = error;
         }

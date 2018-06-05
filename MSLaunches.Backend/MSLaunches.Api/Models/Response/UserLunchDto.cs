@@ -3,11 +3,11 @@ using System;
 
 namespace MSLunches.Api.Models.Response
 {
-    public class UserLunchResponse
+    public class UserLunchDto
     {
-        public UserLunchResponse() { }
+        public UserLunchDto() { }
 
-        public UserLunchResponse(UserLunch userLunch)
+        public UserLunchDto(UserLunch userLunch)
         {
             Id = userLunch.Id;
             CreatedOn = userLunch.CreatedOn;
@@ -17,12 +17,34 @@ namespace MSLunches.Api.Models.Response
             Approved = userLunch.Approved;
         }
 
+        /// <summary>
+        /// User Lunch Identifier
+        /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Creation Date
+        /// </summary>
         public DateTimeOffset CreatedOn { get; set; }
+
+        /// <summary>
+        /// Last Update date
+        /// </summary>
         public DateTimeOffset UpdatedOn { get; set; }
 
+        /// <summary>
+        /// Lunch Identifier
+        /// </summary>
         public Guid LunchId { get; set; }
+
+        /// <summary>
+        /// User Identifier
+        /// </summary>
         public string UserId { get; set; }
+
+        /// <summary>
+        /// Aprovation
+        /// </summary>
         public bool Approved { get; set; }
     }
 }
