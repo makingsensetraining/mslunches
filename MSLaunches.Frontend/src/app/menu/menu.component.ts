@@ -36,11 +36,14 @@ export class MenuComponent implements OnInit {
       const dateTo = dates[dates.length - 1];
       this.menuService.getMealTypes().subscribe(mealTypes => {
         this.mealTypes = mealTypes;
-        this.menuService.getLunches(dateFrom, dateTo).subscribe(lunches => {
-          this.menuService.fillLunches(this.dates, this.mealTypes, lunches).subscribe(menuLunches => {
-            this.lunches = menuLunches;
-            this.lunchesLoaded = Promise.resolve(true);
-            this.isLoading = false;
+        this.menuService.getMeals().subscribe(meals => {
+          this.mealTypes = this.menuService.sortMeals(meals, mealTypes);
+          this.menuService.getLunches(dateFrom, dateTo).subscribe(lunches => {
+            this.menuService.fillLunches(this.dates, this.mealTypes, lunches).subscribe(menuLunches => {
+              this.lunches = menuLunches;
+              this.lunchesLoaded = Promise.resolve(true);
+              this.isLoading = false;
+            });
           });
         });
       });
