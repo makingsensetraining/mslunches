@@ -3,20 +3,20 @@ using MSLunches.Data.Models;
 
 namespace MSLunches.Data.EF
 {
-    public class WebApiCoreLunchesContext : DbContext
+    public class MSLunchesContext : DbContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebApiCoreLunchesContext"/> class.
+        /// Initializes a new instance of the <see cref="MSLunchesContext"/> class.
         ///
         /// DbContextOptions parameter is required by AspNet core initialization
         /// </summary>
-        /// <param name="options">Options used to create this <see cref="WebApiCoreLunchesContext"/> instance </param>
-        public WebApiCoreLunchesContext(DbContextOptions options) : base(options) { }
+        /// <param name="options">Options used to create this <see cref="MSLunchesContext"/> instance </param>
+        public MSLunchesContext(DbContextOptions options) : base(options) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebApiCoreLunchesContext"/> class without parameters.
+        /// Initializes a new instance of the <see cref="MSLunchesContext"/> class without parameters.
         /// </summary>
-        public WebApiCoreLunchesContext() : base() { }
+        public MSLunchesContext() : base() { }
 
         public virtual DbSet<Meal> Meals { get; set; }
         public virtual DbSet<MealType> MealTypes { get; set; }

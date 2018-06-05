@@ -13,7 +13,7 @@ namespace MSLunches.Domain.Services
     {
         #region Members
 
-        private readonly WebApiCoreLunchesContext _dbContext;
+        private readonly MSLunchesContext _dbContext;
 
         #endregion
 
@@ -22,8 +22,8 @@ namespace MSLunches.Domain.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="UserLunchService"/> class.
         /// </summary>
-        /// <param name="dbContext"><see cref="WebApiCoreLunchesContext"/> instance required to access database </param>
-        public UserLunchService(WebApiCoreLunchesContext dbContext)
+        /// <param name="dbContext"><see cref="MSLunchesContext"/> instance required to access database </param>
+        public UserLunchService(MSLunchesContext dbContext)
         {
             _dbContext = dbContext;
         }

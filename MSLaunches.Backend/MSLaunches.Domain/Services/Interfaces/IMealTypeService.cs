@@ -1,5 +1,4 @@
 ﻿using MSLunches.Data.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,7 +14,7 @@ namespace MSLunches.Domain.Services.Interfaces
         /// </summary>
         /// <param name="mealTypeId">Id of the mealType to be retrieved</param>
         /// <returns>A <see cref="MealType"/> object if the mealType is found, otherwise null</returns>
-        Task<MealType> GetByIdAsync(Guid mealTypeId);
+        Task<MealType> GetByIdAsync(int mealTypeId);
 
         /// <summary>
         /// Gets all the existing mealTypes
