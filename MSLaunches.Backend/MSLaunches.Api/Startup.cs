@@ -102,7 +102,8 @@ namespace MSLunches.Api
             services.AddAutoMapper(new[] {
                 typeof(LunchProfile),
                 typeof(MealProfile),
-                typeof(UserLunchProfile)
+                typeof(UserLunchProfile),
+                typeof(MealTypeProfile)
             });
         }
 

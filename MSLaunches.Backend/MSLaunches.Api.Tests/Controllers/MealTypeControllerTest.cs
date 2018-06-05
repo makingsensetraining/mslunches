@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using MSLunches.Api.Controllers;
 using MSLunches.Api.Models.Response;
+using MSLunches.Api.Tests.Controllers.MapperConfig;
 using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System.Collections.Generic;
@@ -13,10 +15,12 @@ namespace MSLunches.Api.Tests.Controllers
     public class MealTypeControllerTest
     {
         private Mock<IMealTypeService> _mealTypeService;
+        private IMapper _mapper;
 
         public MealTypeControllerTest()
         {
             _mealTypeService = new Mock<IMealTypeService>();
+            _mapper = new TestMapperConfiguration().CreateMapper();
         }
 
         #region GetAll Tests
@@ -24,7 +28,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task GetAll_ReturnsListOfMealType()
         {
-            var classUnderTest = new MealTypeController(_mealTypeService.Object);
+            var classUnderTest = new MealTypeController(_mealTypeService.Object, _mapper);
             var listOfMealTypes = new List<MealType>()
             {
                 GetSampleMealType(1),
@@ -53,7 +57,7 @@ namespace MSLunches.Api.Tests.Controllers
         [Fact]
         public async Task Get_ReturnsAMealType()
         {
-            var classUnderTest = new MealTypeController(_mealTypeService.Object);
+            var classUnderTest = new MealTypeController(_mealTypeService.Object, _mapper);
             var mealType = GetSampleMealType(1);
 
             _mealTypeService.Setup(s => s.GetByIdAsync(It.Is<int>(i => i == mealType.Id))).ReturnsAsync(mealType);

@@ -110,7 +110,7 @@ namespace MSLunches.Api.Tests.Controllers
             var classUnderTest = new LunchController(_lunchService.Object, _mapper);
             var lunch = GetSampleLunch();
 
-            var lunchDto = new LunchRequest
+            var lunchDto = new InputLunchDto
             {
                 Date = lunch.Date,
                 MealId = lunch.MealId
@@ -123,7 +123,7 @@ namespace MSLunches.Api.Tests.Controllers
             var result = await classUnderTest.Create(lunchDto);
 
             var createdResponse = Assert.IsType<CreatedAtActionResult>(result);
-            var resultLunch = Assert.IsType<LunchResponse>(createdResponse.Value);
+            var resultLunch = Assert.IsType<LunchDto>(createdResponse.Value);
 
             Assert.Equal(lunch.MealId, resultLunch.MealId);
             Assert.Equal(lunch.Date, resultLunch.Date);
@@ -154,7 +154,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             var id = Guid.NewGuid();
             var lunch = GetSampleLunch(id);
-            var lunchDto = new LunchRequest
+            var lunchDto = new InputLunchDto
             {
                 Date = lunch.Date,
                 MealId = lunch.MealId
@@ -162,7 +162,7 @@ namespace MSLunches.Api.Tests.Controllers
 
             _lunchService.Setup(a => a.UpdateAsync(
                 It.Is<Lunch>(l =>
-                        l.MealId == lunchDto.MealId
+                    l.MealId == lunchDto.MealId
                     && l.Date == lunchDto.Date
                     && l.Id == id)))
                 .ReturnsAsync(lunch);

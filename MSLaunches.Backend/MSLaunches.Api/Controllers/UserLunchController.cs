@@ -36,8 +36,8 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(List<UserLunchDto>), 200)]
         public async Task<IActionResult> GetAll(string userId)
         {
-            return Ok((await _userLunchService.GetAsync(userId))
-                .Select(userLunch => new UserLunchDto(userLunch)));
+            return Ok(_mapper.Map<List<UserLunchDto>>(
+                await _userLunchService.GetAsync(userId)));
         }
 
         /// <summary>
@@ -58,14 +58,14 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(new UserLunchDto(lunch));
+            return Ok(_mapper.Map<UserLunchDto>(lunch));
         }
 
         /// <summary>
         /// Creates a new meal selection for user.
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="userLunch" cref="UserLunchRequest">UserLunch model</param>
+        /// <param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         /// <response code="204">UserLunch created</response>
         /// <response code="422">UserLunch could not be created - Already exists</response>
         [HttpPost]
@@ -73,7 +73,7 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(UserLunchDto), 204)]
         public async Task<IActionResult> Create(
             [FromRoute]string userId,
-            [FromBody]UserLunchRequest userLunch)
+            [FromBody]InputUserLunchDto userLunch)
         {
             if (userLunch == null) return BadRequest();
 
@@ -87,7 +87,7 @@ namespace MSLunches.Api.Controllers
             return CreatedAtAction(
                 nameof(Get),
                 new { userId, id = result.Id },
-                _mapper.Map<UserLunchResponse>(result));
+                _mapper.Map<UserLunchDto>(result));
         }
 
         ///<summary>
@@ -95,7 +95,7 @@ namespace MSLunches.Api.Controllers
         ///</summary>
         /// <param name="userId"></param>
         ///<param name="id" cref="Guid">Guid of the meal</param>
-        ///<param name="userLunch" cref="UserLunchRequest">UserLunch model</param>
+        ///<param name="userLunch" cref="InputUserLunchDto">UserLunch model</param>
         ///<response code="204">UserLunch created</response>
         ///<response code="404">UserLunch not found / UserLunch could not be updated</response>
         [HttpPut("{id}")]
@@ -103,7 +103,7 @@ namespace MSLunches.Api.Controllers
         public async Task<IActionResult> Update(
             [FromRoute]string userId,
             [FromRoute]Guid id,
-            [FromBody]UserLunchRequest userLunch)
+            [FromBody]InputUserLunchDto userLunch)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (userLunch == null) return BadRequest();

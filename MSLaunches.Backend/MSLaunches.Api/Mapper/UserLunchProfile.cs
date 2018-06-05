@@ -9,7 +9,7 @@ namespace MSLunches.Api.Mapper
     {
         public UserLunchProfile()
         {
-            CreateMap<UserLunch, UserLunchResponse>()
+            CreateMap<UserLunch, UserLunchDto>()
                 .ForMember(s => s.Approved, o => o.MapFrom(s => s.Approved))
                 .ForMember(s => s.CreatedOn, o => o.MapFrom(s => s.CreatedOn))
                 .ForMember(s => s.Id, o => o.MapFrom(s => s.Id))
@@ -17,7 +17,7 @@ namespace MSLunches.Api.Mapper
                 .ForMember(s => s.UpdatedOn, o => o.MapFrom(s => s.UpdatedOn))
                 .ForMember(s => s.UserId, o => o.MapFrom(s => s.UserId));
 
-            CreateMap<UserLunchRequest, UserLunch>()
+            CreateMap<InputUserLunchDto, UserLunch>()
                 .ForMember(s => s.Approved, o => o.MapFrom(s => s.Approved))
                 .ForMember(s => s.LunchId, o => o.MapFrom(s => s.LunchId))
                 .ForMember(s => s.UserId, o => o.MapFrom(s => s.UserId));

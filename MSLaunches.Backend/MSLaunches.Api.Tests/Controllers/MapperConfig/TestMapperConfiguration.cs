@@ -11,6 +11,7 @@ namespace MSLunches.Api.Tests.Controllers.MapperConfig
                 cfg.AddProfile<LunchProfile>();
                 cfg.AddProfile<MealProfile>();
                 cfg.AddProfile<UserLunchProfile>();
+                cfg.AddProfile<MealTypeProfile>();
             })
         {
         }

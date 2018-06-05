@@ -7,7 +7,6 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSLunches.Api.Controllers
@@ -17,8 +16,14 @@ namespace MSLunches.Api.Controllers
     [ProducesResponseType(typeof(ErrorResponse), 500)]
     public class LunchController : Controller
     {
+        #region Fields
+
         private readonly ILunchService _lunchService;
         private readonly IMapper _mapper;
+
+        #endregion
+
+        #region Constructor
 
         public LunchController(
             ILunchService lunchService,
@@ -27,6 +32,10 @@ namespace MSLunches.Api.Controllers
             _lunchService = lunchService;
             _mapper = mapper;
         }
+
+        #endregion
+
+        #region Query Endpoints
 
         /// <summary>
         /// Gets a list of lunches
@@ -37,8 +46,8 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(List<LunchDto>), 200)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok((await _lunchService.GetAsync())
-                .Select(lunch => new LunchDto(lunch)));
+            return Ok(_mapper.Map<List<LunchDto>>(
+                await _lunchService.GetAsync()));
         }
 
         /// <summary>
@@ -59,8 +68,12 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(new LunchDto(lunch));
+            return Ok(_mapper.Map<LunchDto>(lunch));
         }
+
+        #endregion
+
+        #region Command Endpoints
 
         /// <summary>
         /// Creates a new Lunch
@@ -78,57 +91,44 @@ namespace MSLunches.Api.Controllers
             var result = await _lunchService.CreateAsync(
                 _mapper.Map<Lunch>(lunch));
 
-            return CreatedAtAction(nameof(Get), new { id = result.Id }, new LunchDto(result));
+            return CreatedAtAction(
+                nameof(Get),
+                new { id = result.Id },
+                _mapper.Map<LunchDto>(result));
         }
 
         [HttpPost]
         [ValidateModel]
-        [ProducesResponseType(typeof(Lunch), 201)]
+        [ProducesResponseType(typeof(List<LunchDto>), 200)]
         public async Task<IActionResult> BatchSave([FromBody]List<InputLunchDto> lunches)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunches == null) return BadRequest();
 
-            var listLunches = new List<Lunch>();
-            foreach (var lunch in lunches)
-            {
-                var lunchToCreate = new Lunch
-                {
-                    Date = lunch.Date,
-                    MealId = lunch.MealId
+            var result = await _lunchService.CreateLunchesAsync(
+                _mapper.Map<List<Lunch>>(lunches));
 
-                };
-                listLunches.Add(lunchToCreate);
-            }
-
-            var result = await _lunchService.CreateLunchesAsync(listLunches);
-
-            return Ok(result);
+            return Ok(_mapper.Map<List<LunchDto>>(result));
         }
 
         ///<summary>
         /// Updates an meal given his id
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the meal</param>
-        ///<param name="lunchDto" cref="LunchRequest">Lunch model</param>
+        ///<param name="lunchDto" cref="LunchDto">Lunch model</param>
         ///<response code="204">Lunch created</response>
         ///<response code="404">Lunch not found / Lunch could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]LunchRequest lunchDto)
+        public async Task<IActionResult> Update(Guid id, [FromBody]InputLunchDto lunchDto)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (lunchDto == null) return BadRequest();
 
-            var lunchToUpdate = new Lunch
-            {
-                Id = id,
-                Date = lunchDto.Date,
-                MealId = lunchDto.MealId,
-                UpdatedBy = "Test" //TODO: Add user.
-            };
+            var lunch = _mapper.Map<Lunch>(lunchDto);
+            lunch.Id = id;
 
-            var result = await _lunchService.UpdateAsync(lunchToUpdate);
+            var result = await _lunchService.UpdateAsync(lunch);
 
             if (result == null) return NotFound();
 
@@ -150,48 +150,6 @@ namespace MSLunches.Api.Controllers
             return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
         }
 
-        /// <summary>
-        /// A list of available lunches by week
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("LunchesAvailables")]
-        [ProducesResponseType(typeof(List<LunchDto>), 200)]
-        public async Task<IActionResult> LunchesAvailables()
-        {
-            return Ok(_mapper.Map<LunchDto>(
-                await _lunchService.GetAllLunchesAvailableInWeek()));
-        }
-
-
-        /// <summary>
-        /// Creates a new UserLunch
-        /// </summary>
-        /// <param name="lunches" cref="InputLunchDto">Lunch model</param>
-        /// <response code="204">Lunch created</response>
-        /// <response code="404">Lunch could not be created</response>
-        [HttpPost("LunchSelection")]
-        [ValidateModel]
-        public async Task<IActionResult> LunchSelection([FromBody]List<InputLunchDto> lunches)
-        {
-            if (lunches == null)
-            {
-                return BadRequest();
-            }
-            var lunchList = new List<Lunch>();
-            foreach (var lunchDto in lunches)
-            {
-                var lunch = new Lunch
-                {
-                    Id = Guid.NewGuid(),
-                    MealId = lunchDto.MealId,
-                    Date = lunchDto.Date,
-                    CreatedBy = "Test"
-                    // TODO: get createdBy from current meal
-                };
-                lunchList.Add(lunch);
-            }
-            var affectedRows = await _lunchService.CreateLunchesAsync(lunchList);
-            return affectedRows == 0 ? NotFound() : NoContent() as IActionResult;
-        }
+        #endregion
     }
 }

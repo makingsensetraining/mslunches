@@ -36,8 +36,7 @@ namespace MSLunches.Api.Controllers
         [ProducesResponseType(typeof(List<MealDto>), 200)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok((await _mealService.GetAsync())
-                .Select(meal => new MealDto(meal)));
+            return Ok(_mapper.Map<List<MealDto>>(await _mealService.GetAsync()));
         }
 
         /// <summary>
@@ -58,18 +57,18 @@ namespace MSLunches.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(new MealDto(meal));
+            return Ok(_mapper.Map<MealDto>(meal));
         }
 
         /// <summary>
         /// Creates a new meal
         /// </summary>
-        /// <param name="meal" cref="MealRequest">Meal model</param>
+        /// <param name="meal" cref="InputMealDto">Meal model</param>
         /// <response code="204">Meal created</response>
         /// <response code="404">Meal could not be created</response>
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody]MealRequest meal)
+        public async Task<IActionResult> Create([FromBody]InputMealDto meal)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
@@ -80,19 +79,19 @@ namespace MSLunches.Api.Controllers
             return CreatedAtAction(
                 nameof(Get),
                 new { id = result.Id },
-                _mapper.Map<MealResponse>(result));
+                _mapper.Map<MealDto>(result));
         }
 
         ///<summary>
         /// Updates an meal given his id
         ///</summary>
         ///<param name="id" cref="Guid">Guid of the meal</param>
-        ///<param name="meal" cref="MealRequest">Meal model</param>
+        ///<param name="meal" cref="InputMealDto">Meal model</param>
         ///<response code="204">Meal created</response>
         ///<response code="404">Meal not found / Meal could not be updated</response>
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> Update(Guid id, [FromBody]MealRequest meal)
+        public async Task<IActionResult> Update(Guid id, [FromBody]InputMealDto meal)
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (meal == null) return BadRequest();
