@@ -78,7 +78,7 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Creates a new Lunch
         /// </summary>
-        /// <param name="lunch" cref="LunchRequest">User data</param>
+        /// <param name="lunch" cref="InputLunchDto">User data</param>
         /// <response code="201">User created</response>
         [HttpPost]
         [ValidateModel]

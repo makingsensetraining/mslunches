@@ -10,6 +10,7 @@ using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MSLunches.Api.Tests.Controllers
@@ -86,7 +87,7 @@ namespace MSLunches.Api.Tests.Controllers
         }
 
         [Fact]
-        public async void Get_ReturnsNotFound_WhenMealNotExists()
+        public async Task Get_ReturnsNotFound_WhenMealNotExists()
         {
             // Arrange
             var controller = new MealController(_mealService.Object, _mapper);

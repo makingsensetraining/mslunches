@@ -83,10 +83,6 @@ namespace MSLunches.Api.Controllers
         {
             if (userLunch == null) return BadRequest();
 
-            var existingUserLunch = await _userLunchService.GetUserLunchByUserAndLunchIdAsync(userId, userLunch.LunchId);
-            if (existingUserLunch != null)
-                return StatusCode(422, new ErrorResponse("User Lunch already exists"));
-
             var result = await _userLunchService.CreateAsync(
                 _mapper.Map<UserLunch>(userLunch));
 
@@ -94,7 +90,6 @@ namespace MSLunches.Api.Controllers
                 nameof(Get),
                 new { userId, id = result.Id },
                 _mapper.Map<UserLunchDto>(result));
-                new UserLunchDto(result));
         }
 
         ///<summary>
@@ -114,20 +109,15 @@ namespace MSLunches.Api.Controllers
         {
             // TODO: Fix validation attribute, it's not working as expected.
             if (userLunch == null) return BadRequest();
-            var result = await _userLunchService.UpdateAsync(
-                _mapper.Map<UserLunch>(userLunch));
+
+            var lunch = _mapper.Map<UserLunch>(userLunch);
+            lunch.Id = id;
+            lunch.UserId = userId;
+
+            var result = await _userLunchService.UpdateAsync(lunch);
 
             if (result == null) return NotFound();
-            var userLunchToUpdate = new UserLunch
-            {
-                Id = id,
-                LunchId = userLunch.LunchId,
-                UserId = userId,
-                Approved = userLunch.Approved,
-                UpdatedBy = "Test" //TODO: Add user.
-            };
 
-            var result = await _userLunchService.UpdateAsync(userLunchToUpdate);
             return NoContent();
         }
 
