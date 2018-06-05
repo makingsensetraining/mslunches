@@ -23,6 +23,7 @@ namespace MSLunches.Domain.Tests.Services
 
             using (var context = new MSLunchesContext(dbOptions))
             {
+                context.MealTypes.Add(GetSampleMealType());
                 context.Meals.Add(meal1);
                 context.Meals.Add(meal2);
                 context.SaveChanges();
@@ -215,7 +216,7 @@ namespace MSLunches.Domain.Tests.Services
         private DbContextOptions<MSLunchesContext> GetDbOptions(string context)
         {
             var optionsBuilder = new DbContextOptionsBuilder<MSLunchesContext>();
-            optionsBuilder.UseInMemoryDatabase("GetByIdAsync_ShouldReturnUser");
+            optionsBuilder.UseInMemoryDatabase(context);
             return optionsBuilder.Options;
         }
 
@@ -226,6 +227,16 @@ namespace MSLunches.Domain.Tests.Services
                 Id = id ?? Guid.NewGuid(),
                 TypeId = 1,
                 Name = "Test"
+            };
+        }
+
+        private MealType GetSampleMealType(int id = 1)
+        {
+            return new MealType
+            {
+                Description = "somedesc",
+                Id = id,
+                IsSelectable = true
             };
         }
 

@@ -92,10 +92,10 @@ namespace MSLunches.Api
             services.AddTransient<IAuthZeroService>(sp => new AuthZeroService(sp.GetRequiredService<IAuthZeroClient>()));
 
             // Register Services
-            services.AddTransient<IMealService>(sp => new MealService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
-            services.AddTransient<IUserLunchService>(sp => new UserLunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
-            services.AddTransient<ILunchService>(sp => new LunchService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
-            services.AddTransient<IMealTypeService>(sp => new MealTypeService(sp.GetRequiredService<WebApiCoreLunchesContext>()));
+            services.AddTransient<IMealService>(sp => new MealService(sp.GetRequiredService<MSLunchesContext>()));
+            services.AddTransient<IUserLunchService>(sp => new UserLunchService(sp.GetRequiredService<MSLunchesContext>()));
+            services.AddTransient<ILunchService>(sp => new LunchService(sp.GetRequiredService<MSLunchesContext>()));
+            services.AddTransient<IMealTypeService>(sp => new MealTypeService(sp.GetRequiredService<MSLunchesContext>()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

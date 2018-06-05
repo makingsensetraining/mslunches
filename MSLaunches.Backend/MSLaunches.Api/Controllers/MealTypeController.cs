@@ -13,11 +13,11 @@ namespace MSLunches.Api.Controllers
     [Route("api/mealtypes")]
     [Produces("Application/json")]
     [ProducesResponseType(typeof(ErrorDto), 500)]
-    public class MealTypeTypeController : Controller
+    public class MealTypeController : Controller
     {
         private readonly IMealTypeService _mealTypeService;
 
-        public MealTypeTypeController(IMealTypeService mealTypeService)
+        public MealTypeController(IMealTypeService mealTypeService)
         {
             _mealTypeService = mealTypeService;
         }
@@ -37,14 +37,14 @@ namespace MSLunches.Api.Controllers
         /// <summary>
         /// Gets a mealType based on his id
         /// </summary>
-        /// <param name="id" cref="Guid">Guid of the mealType</param>
+        /// <param name="id" cref="int">identifier of the mealType</param>
         /// <response code="200">The mealType that has the given id</response>
         /// <response code="404">MealType with the given id was not found</response>
         /// <return>A mealTypes</return>
         [HttpGet("{id}")]
         [ValidateModel]
         [ProducesResponseType(typeof(MealType), 200)]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> Get(int id)
         {
             var mealType = await _mealTypeService.GetByIdAsync(id);
             if (mealType == null)
