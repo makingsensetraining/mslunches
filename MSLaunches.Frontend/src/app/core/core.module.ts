@@ -15,6 +15,7 @@ import { HttpService } from './http/http.service';
 import { ApiPrefixInterceptor } from './http/api-prefix.interceptor';
 import { AuthorizationInterceptor } from './http/authorization.interceptor';
 import { ErrorHandlerInterceptor } from './http/error-handler.interceptor';
+import { ApiRoutesService } from '@app/core/api.routes.service';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { ErrorHandlerInterceptor } from './http/error-handler.interceptor';
   ],
   providers: [
     AuthenticationService,
+    ApiRoutesService,
     AuthenticationGuard,
     I18nService,
     ApiPrefixInterceptor,

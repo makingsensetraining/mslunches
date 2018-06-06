@@ -39,12 +39,17 @@ namespace MSLunches.Domain.Services
                                    .FindAsync(lunchId);
         }
 
-        public async Task<List<Lunch>> GetAsync()
+        public async Task<List<Lunch>> GetAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
-            var contex = _dbContext.Lunches
+            var context = _dbContext.Lunches
                 .Include(a => a.Meal)
                     .ThenInclude(a => a.Type);
-            return await contex.ToListAsync();
+
+            return await context
+                .Where(lunch => 
+                    (!startDate.HasValue || startDate <= lunch.Date)
+                    && (!endDate.HasValue || endDate >= lunch.Date))
+                .ToListAsync();
         }
 
         public async Task<Lunch> CreateAsync(Lunch lunch)
@@ -107,15 +112,6 @@ namespace MSLunches.Domain.Services
             return await _dbContext.Lunches
                 .Where(x => daysInWeek.Contains(x.Date))
                 .ToListAsync();
-        }
-
-        public async Task<List<Lunch>> GetLunchesBetweenDatesAsync(DateTime dateFrom, DateTime dateTo)
-        {
-            var contex = _dbContext.Lunches
-                .Where(x => x.Date >= dateFrom && x.Date <= dateTo)
-                .Include(a => a.Meal)
-                .ThenInclude(a => a.Type);
-            return await contex.ToListAsync();
         }
 
         #endregion

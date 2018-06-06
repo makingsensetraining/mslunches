@@ -47,22 +47,13 @@ namespace MSLunches.Api.Controllers
         /// <return>A list of lunchs</return>
         [HttpGet]
         [ProducesResponseType(typeof(List<LunchDto>), 200)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null)
         {
-            return Ok(_mapper.Map<List<LunchDto>>(
-                await _lunchService.GetAsync()));
-        }
 
-        /// <summary>
-        /// Gets a list of lunchs
-        /// </summary>
-        /// <response code="200">A list of lunchs</response>
-        /// <return>A list of lunchs</return>
-        [HttpGet("BetweenDates/{dateFrom}/{DateTo}/")]
-        [ProducesResponseType(typeof(List<Lunch>), 200)]
-        public async Task<IActionResult> GetLunchesBetweenDates(DateTime dateFrom, DateTime dateTo)
-        {
-            return Ok(await _lunchService.GetLunchesBetweenDatesAsync(dateFrom, dateTo));
+            return Ok(_mapper.Map<List<LunchDto>>(
+                await _lunchService.GetAsync(startDate, endDate)));
         }
 
         /// <summary>

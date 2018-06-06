@@ -1,46 +1,38 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
-import { Meal } from '../core/Models/meal.model';
-import { MealType } from '../core/Models/meal-type.model';
+import { map } from 'rxjs/operators';
+
 import * as moment from 'moment';
+
 import { Lunch } from '@app/core/Models/lunch.model';
+import { MealType } from '@app/core/Models/meal-type.model';
+import { Meal } from '@app/core/Models/meal.model';
+import { ApiRoutesService } from '@app/core/api.routes.service';
+
+const credentialsKey = 'credentials';
 
 @Injectable()
 export class MenuService {
-  constructor(private httpClient: HttpClient) { }
-
-  private credentialsKey = 'credentials';
-  private routes = {
-    mealTypes(): string {
-      return '/mealtypes';
-    },
-    meals(): string {
-      return '/meals';
-    },
-    saveLunches(): string {
-      return '/lunches/batchsave';
-    },
-    getLunchesBetweenDates(dateFrom: Date, dateTo: Date): string {
-      return `/lunches/BetweenDates/${dateFrom.toISOString()}/${dateTo.toISOString()}`;
-    }
-  };
+  constructor(
+    private httpClient: HttpClient,
+    private routes: ApiRoutesService
+  ) { }
 
   getMeals(): Observable<Array<Meal>> {
-    return this.httpClient.get(this.routes.meals())
+    return this.httpClient.get(this.routes.getMeals())
       .pipe(map(this.mapMeals));
   }
 
   getMealTypes(): Observable<Array<MealType>> {
-    return this.httpClient.get(this.routes.mealTypes())
+    return this.httpClient.get(this.routes.getMealTypes())
       .pipe(map(this.mapToArrayOfMealType.bind(this)));
   }
 
   getLunches(dateFrom: Date, dateTo: Date): Observable<Array<Lunch>> {
     return this.httpClient
-      .get(this.routes.getLunchesBetweenDates(dateFrom, dateTo))
+      .get(this.routes.getLunches(dateFrom, dateTo))
       .pipe(map(this.mapToArrayOfLunches.bind(this)));
   }
 
@@ -54,7 +46,8 @@ export class MenuService {
             id: null,
             date: date,
             mealId: '',
-            typeId: mealType.id
+            typeId: mealType.id,
+            mealName: ''
           };
           lunches.push(newLunch);
         }
@@ -68,9 +61,8 @@ export class MenuService {
   }
 
   BatchSave(lunches: Array<Lunch>): Observable<string> {
-    const userId = JSON.parse(localStorage.getItem(this.credentialsKey)).userId;
     return this.httpClient
-      .post(this.routes.saveLunches(), lunches.map(this.mapToBackend))
+      .post(this.routes.batchSaveLunches(), lunches.map(this.mapToBackend))
       .pipe(map((a: any) => a.LunchId));
   }
 
@@ -103,9 +95,11 @@ export class MenuService {
     result = {
       id: body.id,
       mealId: body.meal.id,
+      mealName: body.meal.name,
       typeId: body.meal.typeId,
       date: new Date(body.date)
     };
+    console.log(result);
     return result;
   }
 

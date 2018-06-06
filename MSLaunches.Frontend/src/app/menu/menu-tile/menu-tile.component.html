@@ -1,6 +1,23 @@
+<input
+  id="typeahead-focus"
+  type="text"
+  class="form-control"
+  [(ngModel)]="lunch"
+  [ngbTypeahead]="search"
+  (focus)="focus$.next($event.target.value)"
+  (click)="click$.next($event.target.value)"
+  (selectItem)="selectItem";
+  #instance="ngbTypeahead"
+  [resultFormatter]="outputFormatter"
+  [inputFormatter]="inputFormatter"
+/>
+
+
+<!--
 <select name="meal" [(ngModel)]="lunch.mealId" class="form-control">
   <option value="" disabled>Choose a meal</option>
   <option *ngFor="let meal of meals" [(ngValue)]="meal.id">
     {{ meal.name }}
   </option>
 </select>
+-->

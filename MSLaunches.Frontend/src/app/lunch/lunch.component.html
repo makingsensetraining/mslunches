@@ -1,33 +1,30 @@
-<div class="container-fluid">
-    <div class="jumbotron text-center">
-        <app-loader [isLoading]="isLoading"></app-loader>
-        <div [hidden]="isLoading">
-            <div *ngIf="!!lunches">
-                <div class="container fill-father no-margin" *ngFor="let weeklylunch of lunches">
-                    <div class="row fill-father">
-                        <div class="col-md-1"></div>
-                        <div class="col-md-2 no-padding" *ngFor="let dailyLunch of weeklylunch.lunches">
-                            
-                                <div class="col header-col">
-                                    <span translate>{{dailyLunch.date | date : 'EEEE'}}</span><br />
-                                    <span class="header-date">{{dailyLunch.date | date : 'yyyy-MM-dd'}}</span>
-                                </div>
-                            
-                            <ul class="list-group no-padding" 
-                                *ngIf="!dailyLunch.lunches || dailyLunch.lunches.length === 0; else elseBlock">
-                                <li class="list-group-item no-padding">NONE</li>
-                            </ul>
-                            <ng-template #elseBlock>
-                                <ul class="list-group no-padding" >
-                                    <li class="list-group-item no-padding" *ngFor="let lunch of dailyLunch.lunches">
-                                        <app-lunch-tile [canBeSelected]="canBeSelected" [lunch]="lunch" class="fill-father" (lunchSelected)="setLunchSelected($event)" ></app-lunch-tile>
-                                    </li>
-                                </ul>
-                            </ng-template>
+<app-loader [isLoading]="isLoading"></app-loader>
+<div [hidden]="isLoading">
+    <div *ngIf="!!lunches">
+        <div class="container fill-father no-margin" *ngFor="let weeklylunch of lunches">
+            <h3 translate> {{ resolveWeekLabel(weeklylunch.date) }}</h3>
+            <div class="row fill-father">
+                <div class="col-md-1"></div>
+                <div class="col-md-2 no-padding" *ngFor="let dailyLunch of weeklylunch.lunches">
+                    
+                        <div class="col header-col">
+                            <span translate>{{dailyLunch.date | date : 'EEEE'}}</span><br />
+                            <span class="header-date">{{dailyLunch.date | date : 'yyyy-MM-dd'}}</span>
                         </div>
-                        <div class="col-md-1"></div>
-                    </div>
+                    
+                    <ul class="list-group no-padding" 
+                        *ngIf="!dailyLunch.lunches || dailyLunch.lunches.length === 0; else elseBlock">
+                        <li class="list-group-item no-padding">NONE</li>
+                    </ul>
+                    <ng-template #elseBlock>
+                        <ul class="list-group no-padding" >
+                            <li class="list-group-item no-padding" *ngFor="let lunch of dailyLunch.lunches" [ngClass]="{'li-active': lunch.isSelected}">
+                                <app-lunch-tile [canBeSelected]="canBeSelected" [lunch]="lunch" class="fill-father" (lunchSelected)="setLunchSelected($event)" ></app-lunch-tile>
+                            </li>
+                        </ul>
+                    </ng-template>
                 </div>
+                <div class="col-md-1"></div>
             </div>
         </div>
     </div>

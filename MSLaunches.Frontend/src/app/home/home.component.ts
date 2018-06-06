@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
+import { tupleTypeAnnotation } from 'babel-types';
 
 @Component({
   selector: 'app-home',
@@ -8,11 +9,17 @@ import { finalize } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit {
   isLoading: boolean;
+  isModifiable: boolean;
 
   constructor() { }
 
   ngOnInit() {
+    this.isModifiable = false;
     this.isLoading = false;
+  }
+
+  modifySelection() {
+    this.isModifiable = !this.isModifiable;
   }
 
 }

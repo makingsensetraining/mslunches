@@ -9,42 +9,37 @@ import { DailyTypedLunches } from '@app/core/Models/daily-typed-lunches.model';
 import { UserLunch } from '@app/core/Models/user-lunch.model';
 import { UserSelection } from '@app/core/Models/user-selection.model';
 import { WeeklyLunches } from '@app/core/Models/weekly-lunches.model';
+import { ApiRoutesService } from '@app/core/api.routes.service';
 
+const credentialsKey = 'credentials';
 
 @Injectable()
 export class LunchService {
-    private credentialsKey = 'credentials';
-    private routes = {
-        getLunches: '/lunches',
-        getGeneric(userId: string): string {
-            return `/users/${userId}/lunches`;
-        },
-        getAccessor(userId: string, lunchId: string): string {
-            return this.getGeneric(userId) + `/${lunchId}`;
-        }
-    };
 
-    constructor(private httpClient: HttpClient) {
-    }
+    constructor(
+        private httpClient: HttpClient,
+        private routes: ApiRoutesService
+    ) { }
 
     //#region public methods
 
     getLunches(startDate?: Date, endDate?: Date): Observable<Array<UserLunch>> {
         return this.httpClient
-            .get(this.routes.getLunches)
+            .get(this.routes.getLunches(startDate, endDate))
             .pipe(map(this.mapToArrayOfLaunch.bind(this)));
     }
 
     getUserLunches(): Observable<Array<UserLunch>> {
         const userId: string =
-            JSON.parse(localStorage.getItem(this.credentialsKey)).userId;
-
-        return this.getLunches()
+            JSON.parse(localStorage.getItem(credentialsKey)).userId;
+        const startDate =  moment(Date.now()).startOf('isoWeek').toDate();
+        const endDate =  moment(Date.now()).startOf('isoWeek').add('day', 14).toDate();
+        return this.getLunches(startDate, endDate)
             .pipe(
                 mergeMap(menu => {
-                    return this.httpClient.get(this.routes.getGeneric(userId)).pipe(
+                    return this.httpClient.get(this.routes.getUserLunches(userId)).pipe(
                         map((value: any[]) =>
-                            this.mergeUserLunchs(this.mapToArrayOfUserSelection(value), menu))
+                            this.mergeUserLunches(this.mapToArrayOfUserSelection(value), menu))
                     );
                 })
             );
@@ -70,21 +65,25 @@ export class LunchService {
     }
 
     save(lunch: UserLunch): Observable<string> {
-        const userId = JSON.parse(localStorage.getItem(this.credentialsKey)).userId;
+        const userId = JSON.parse(localStorage.getItem(credentialsKey)).userId;
         if (!lunch.userLunchId || lunch.userLunchId.length === 0) {
-            return this.httpClient.post(this.routes.getGeneric(userId), this.mapToBackEnd(lunch))
+            return this.httpClient.post(this.routes.userLunchResource(userId), this.mapToBackEnd(lunch))
                 .pipe(
-                    map((a: any) => a.userLunchId)
+                    map((a: any) => a.id)
                 );
         } else {
-            return this.httpClient.put(this.routes.getAccessor(userId, lunch.userLunchId), this.mapToBackEnd(lunch))
+            return this.httpClient
+                .put(this.routes.userLunchResource(
+                    userId,
+                    lunch.userLunchId),
+                    this.mapToBackEnd(lunch))
                 .pipe(map((a: any) => lunch.userLunchId));
         }
     }
 
     delete(lunch: UserLunch): Observable<string> {
-        const userId = JSON.parse(localStorage.getItem(this.credentialsKey)).userId;
-        return this.httpClient.delete(this.routes.getAccessor(userId, lunch.userLunchId))
+        const userId = JSON.parse(localStorage.getItem(credentialsKey)).userId;
+        return this.httpClient.delete(this.routes.userLunchResource(userId, lunch.userLunchId))
             .pipe(map(a => 'Deleted'));
     }
 
@@ -92,7 +91,7 @@ export class LunchService {
 
     //#region private methods
 
-    private mergeUserLunchs(userSelections: Array<UserSelection>, menu: Array<UserLunch>): Array<UserLunch> {
+    private mergeUserLunches(userSelections: Array<UserSelection>, menu: Array<UserLunch>): Array<UserLunch> {
         userSelections.forEach(userSelection => {
             // Find the lunch
             const matchingLunch: UserLunch = menu.find(a => a.id === userSelection.lunchId);

@@ -42,14 +42,7 @@ namespace MSLunches.Domain.Services.Interfaces
         /// Gets all the existing lunchs
         /// </summary>
         /// <returns>List with all the existing lunchs</returns>
-        Task<List<Lunch>> GetAsync();
-
-        /// <summary>
-        /// Gets all the existing lunchs between dates
-        /// </summary>
-        /// <returns>List with all the existing lunches between dates</returns>
-        Task<List<Lunch>> GetLunchesBetweenDatesAsync(DateTime dateFrom, DateTime dateTo);
-
+        Task<List<Lunch>> GetAsync(DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Updates a lunch

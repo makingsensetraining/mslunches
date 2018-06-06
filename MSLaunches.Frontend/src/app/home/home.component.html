@@ -1,1 +1,16 @@
-<app-lunch [canBeSelected]="false"></app-lunch>
+<div class="container-fluid">
+    <div class="jumbotron text-center">
+        <h2 translate>Lunches</h2> 
+        <p>
+            <button type="button" class="btn btn-primary" (click)="modifySelection()">
+                <span *ngIf="!isModifiable; else elseBlock" translate>
+                    Modify Selection
+                </span>
+                <ng-template #elseBlock translate>
+                    Apply
+                </ng-template> 
+            </button>
+        </p>
+        <app-lunch [canBeSelected]="isModifiable"></app-lunch>
+    </div>
+</div>
