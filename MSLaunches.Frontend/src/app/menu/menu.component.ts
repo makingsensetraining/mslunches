@@ -45,7 +45,10 @@ export class MenuComponent implements OnInit {
   }
 
   Save() {
-    this.menuService.BatchSave(this.lunches.filter(x => !!x.mealId)).subscribe();
+    this.menuService.BatchSave(this.lunches.filter(x => !!x.mealId)).subscribe(() => {
+      this.isLoading = true;
+      this.ngOnInit();
+    });
   }
 
   getLunchByDateAndType(date: Date, mealType: MealType) {

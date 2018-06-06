@@ -82,7 +82,6 @@ describe('AuthenticationService', () => {
         request.subscribe(() => {
           expect(authenticationService.isAuthenticated()).toBe(false);
           expect(authenticationService.credentials).toBeNull();
-          expect(sessionStorage.getItem(credentialsKey)).toBeNull();
           expect(localStorage.getItem(credentialsKey)).toBeNull();
           window.location.hash = '';
         });

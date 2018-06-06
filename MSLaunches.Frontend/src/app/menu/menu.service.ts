@@ -68,7 +68,7 @@ export class MenuService {
   }
 
   BatchSave(lunches: Array<Lunch>): Observable<string> {
-    const userId = JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
+    const userId = JSON.parse(localStorage.getItem(this.credentialsKey)).userId;
     return this.httpClient
       .post(this.routes.saveLunches(), lunches.map(this.mapToBackend))
       .pipe(map((a: any) => a.LunchId));

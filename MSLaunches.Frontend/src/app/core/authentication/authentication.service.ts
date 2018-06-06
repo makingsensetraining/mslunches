@@ -102,7 +102,7 @@ export class AuthenticationService {
    * @return {Credentials} The user credentials or null if the user is not authenticated.
    */
   get credentials(): Credentials | null {
-    return JSON.parse(sessionStorage.getItem(credentialsKey));
+    return JSON.parse(localStorage.getItem(credentialsKey));
   }
 
   /**
@@ -121,12 +121,11 @@ export class AuthenticationService {
    */
   private setCredentials(credentials?: Credentials): boolean {
     if (credentials) {
-      const storage = sessionStorage;
+      const storage = localStorage;
       storage.setItem(credentialsKey, JSON.stringify(credentials));
       this._hashHandled.next(true);
       return true;
     } else {
-      sessionStorage.removeItem(credentialsKey);
       localStorage.removeItem(credentialsKey);
       this._hashHandled.next(true);
       return false;

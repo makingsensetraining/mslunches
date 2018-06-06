@@ -11,7 +11,7 @@ import { environment } from '@env/environment';
 export class AuthorizationInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const credentials = sessionStorage.getItem('credentials');
+    const credentials = localStorage.getItem('credentials');
     let clonedRequest = request;
     if (credentials) {
       clonedRequest = request.clone({

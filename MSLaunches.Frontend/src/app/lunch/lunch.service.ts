@@ -37,7 +37,7 @@ export class LunchService {
 
     getUserLunches(): Observable<Array<UserLunch>> {
         const userId: string =
-            JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
+            JSON.parse(localStorage.getItem(this.credentialsKey)).userId;
 
         return this.getLunches()
             .pipe(
@@ -70,7 +70,7 @@ export class LunchService {
     }
 
     save(lunch: UserLunch): Observable<string> {
-        const userId = JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
+        const userId = JSON.parse(localStorage.getItem(this.credentialsKey)).userId;
         if (!lunch.userLunchId || lunch.userLunchId.length === 0) {
             return this.httpClient.post(this.routes.getGeneric(userId), this.mapToBackEnd(lunch))
                 .pipe(
@@ -83,7 +83,7 @@ export class LunchService {
     }
 
     delete(lunch: UserLunch): Observable<string> {
-        const userId = JSON.parse(sessionStorage.getItem(this.credentialsKey)).userId;
+        const userId = JSON.parse(localStorage.getItem(this.credentialsKey)).userId;
         return this.httpClient.delete(this.routes.getAccessor(userId, lunch.userLunchId))
             .pipe(map(a => 'Deleted'));
     }

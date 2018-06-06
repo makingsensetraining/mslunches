@@ -11,10 +11,14 @@ namespace MSLunches.Domain.Services.Interfaces
     public interface IUserLunchService
     {
         /// <summary>
-        /// Gets all the existing lunchs
+        /// Gets all the existing lunchs, 
+        /// if setted star date and end date returns only a subset
         /// </summary>
+        /// <param name="userId"> owner of the lunches </param>
+        /// <param name="startDate"> start date filter </param>
+        /// <param name="endDate">end date filter </param>
         /// <returns>List with all the existing lunchs</returns>
-        Task<List<UserLunch>> GetAsync(string userId);
+        Task<List<UserLunch>> GetAsync(string userId, DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Gets a userLunch by Id

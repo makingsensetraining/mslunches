@@ -7,6 +7,7 @@ using MSLunches.Data.Models;
 using MSLunches.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -37,10 +38,14 @@ namespace MSLunches.Api.Controllers
         /// <return>A list of UserLunch</return>
         [HttpGet]
         [ProducesResponseType(typeof(List<UserLunchDto>), 200)]
-        public async Task<IActionResult> GetAll(string userId)
+        public async Task<IActionResult> GetAll(
+            [FromRoute] string userId,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null)
         {
-            return Ok(_mapper.Map<List<UserLunchDto>>(
-                await _userLunchService.GetAsync(userId)));
+            var result = (await _userLunchService.GetAsync(userId, startDate, endDate));
+
+            return Ok(_mapper.Map<List<UserLunchDto>>(result));
         }
 
         /// <summary>
@@ -138,7 +143,7 @@ namespace MSLunches.Api.Controllers
             var affectedRows = await _userLunchService.DeleteByIdAsync(id);
             return NoContent();
         }
-        
+
         #endregion
     }
 }

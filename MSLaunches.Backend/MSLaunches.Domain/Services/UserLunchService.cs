@@ -40,10 +40,12 @@ namespace MSLunches.Domain.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<UserLunch>> GetAsync(string userId)
+        public async Task<List<UserLunch>> GetAsync(string userId, DateTime? startDate = null, DateTime? endDate = null)
         {
             return await _dbContext.UserLunches
-                .Where(a => a.UserId == userId)
+                .Where(us => us.UserId == userId
+                    && (!startDate.HasValue || startDate >= us.Lunch.Date)
+                    && (!endDate.HasValue || endDate <= us.Lunch.Date))
                 .ToListAsync();
         }
 
@@ -66,6 +68,9 @@ namespace MSLunches.Domain.Services
             var requestedLunch = await _dbContext.Lunches.FirstOrDefaultAsync(a => a.Id == userLunch.LunchId);
             if (requestedLunch == null)
                 throw new NotFoundException($"Lunch with id {userLunch.LunchId} does not exist");
+
+            if (await _dbContext.UserLunches.AnyAsync(ul => ul.UserId == userLunch.UserId && ul.Lunch.Date.Date == requestedLunch.Date.Date))
+                throw new ValidationException("User already has a lunch selected on that date");
 
             ValidateExpiration(requestedLunch);
 

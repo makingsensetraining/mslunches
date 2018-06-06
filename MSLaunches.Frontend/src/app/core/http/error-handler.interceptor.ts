@@ -35,7 +35,6 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
     }
 
     if (response instanceof HttpErrorResponse && response.status === 401) {
-      sessionStorage.removeItem(this.credentialsKey);
       localStorage.removeItem(this.credentialsKey);
       this.router.navigate(['/login'], { replaceUrl: true });
     }
