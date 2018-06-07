@@ -2,11 +2,11 @@
   id="typeahead-focus"
   type="text"
   class="form-control"
-  [(ngModel)]="lunch"
+  [(ngModel)]="selectedMeal"
   [ngbTypeahead]="search"
   (focus)="focus$.next($event.target.value)"
   (click)="click$.next($event.target.value)"
-  (selectItem)="selectItem";
+  (ngModelChange)="updateLunch()"
   #instance="ngbTypeahead"
   [resultFormatter]="outputFormatter"
   [inputFormatter]="inputFormatter"

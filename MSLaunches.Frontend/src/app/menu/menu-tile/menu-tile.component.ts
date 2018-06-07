@@ -11,16 +11,26 @@ import { debounceTime, distinctUntilChanged, merge, filter, map } from 'rxjs/ope
   templateUrl: 'menu-tile.component.html',
   styleUrls: ['menu-tile.component.scss']
 })
-export class MenuTileComponent {
+export class MenuTileComponent implements OnInit {
   @Input() meals: Array<Meal>;
   @Input() lunch: Lunch;
+  selectedMeal: Meal;
 
   @ViewChild('instance') instance: NgbTypeahead;
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 
+  ngOnInit() {
+    this.selectedMeal = {
+      id: this.lunch.mealId,
+      name: this.lunch.mealName,
+      typeId: this.meals[0].typeId,
+      typeDescriptcion: this[0].typeDescriptcion
+    };
+  }
+
   outputFormatter = (result: Meal) => result.name;
-  inputFormatter = (value: Lunch) => value.mealName;
+  inputFormatter = (value: Meal) => value.name;
 
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -32,8 +42,13 @@ export class MenuTileComponent {
         : this.meals.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     )
 
-    selectItem = (event: NgbTypeaheadSelectItemEvent) => {
-      this.lunch.mealId = event.item.id;
-      this.lunch.mealName = event.item.name;
-    }
+  selectItem = (event: NgbTypeaheadSelectItemEvent) => {
+    this.lunch.mealId = event.item.id;
+    this.lunch.mealName = event.item.name;
+  }
+
+  updateLunch = () => {
+    this.lunch.mealName = this.selectedMeal.name;
+    this.lunch.mealId = this.selectedMeal.id;
+  }
 }
